@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Your First Julia Pull Request</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+      <div class="container">
+                    
+      <h1 id="introduction">Introduction</h1>
+
+<p>I get a lot of people who say they want to start contributing to Julia. I link to our spot on <a href="http://up-for-grabs.net/#/tags/julia">Up For Grabs</a> and Iain Dunning’s great <a href="https://github.com/IainNZ/ContributeToJulia">Contribute To Julia</a> repo. But we don’t see a lot of new people opening PRs. I started out a year ago, opening <a href="https://github.com/JuliaLang/julia/pull/9558">my first PR</a>, and I was <em>so scared</em>. I had no idea what I was doing! Now, I have more than 200 commits to Julia master. I decided to make a detailed pictures-and-text guide of how I:</p>
+
+<ul>
+  <li>Find something to work on in Julia</li>
+  <li>Fix the thing</li>
+  <li>Test my fix</li>
+  <li>Get my local git repo in order</li>
+  <li>Submit a PR</li>
+  <li>Revise and respond to feedback </li>
+</ul>
+
+<p>I use OSX day to day, and all of this should work on Linux too. The steps to get going on Windows are a little more involved but once you have a working Julia build, you are good to go.</p>
+
+<h1 id="getting-started---cloning-and-building-julia">Getting Started - Cloning and Building Julia</h1>
+
+<p>The first thing you will need is a local clone of the Julia repo. The Julia repo is hosted on <a href="https://github.com/JuliaLang/julia">Github</a>, and <a href="https://github.com/JuliaLang/julia/blob/master/README.md">README.md</a> has instructions on how to get started. You can follow along there, or, in most cases (I call my “work” directory <code>Projects</code>),</p>
+
+<pre><code class="language-bash">cd ~/Projects
+git clone https://github.com/JuliaLang/julia.git
+cd julia
+make -j 8
+</code></pre>
+
+<p>I use <code>https</code> because I have 2FA on and I use personal access tokens. SSH is fine too. Since I’m on a fancypants iMac, I make with 8 threads (<code>-j 8</code> tells <code>make</code> how many cores it can use for the build). If this is your first time building <code>julia</code>, now would be a great time to get a coffee. The initial build takes a while.</p>
+
+<p>If you’re reading this, you probably don’t have commit access to Julia. That’s fine - we can follow <a href="https://help.github.com/articles/fork-a-repo/">the Github help article on forking</a>. Make sure to add <em>your</em> fork as a remote for your git repo. What I did:</p>
+
+<p><code>git remote add kshyatt https://github.com/kshyatt/julia.git</code></p>
+
+<p>I call my own personal forks of things <code>kshyatt</code> and the organizational copy <code>origin</code>, but any name you can remember works.</p>
+
+<h1 id="make-sure-were-up-to-date">Make Sure We’re Up To Date</h1>
+
+<p>During the interim between cloning and building, new commits might have made it into Julia master. We need to make sure we’re up to date. I do this using:</p>
+
+<pre><code class="language-bash">git checkout master
+git fetch
+git status
+git pull origin master
+</code></pre>
+
+<p>This gets our <code>master</code> branch up to date with the remote one from <code>origin</code> (in my case from the JuliaLang repo).</p>
+
+<h1 id="find-something-to-work-on">Find Something To Work On</h1>
+
+<p>Let’s head on over to Julia’s <a href="https://github.com/JuliaLang/julia/issues">issues page</a>, which has many issues that take a lot of expert attention. Not all do, though.<br />
+Usually, problems/feature requests/bugs that are appropriate for new contributors to tackle are filed under the <a href="https://github.com/JuliaLang/julia/issues?q=is%3Aopen+is%3Aissue+label%3A%22intro+issue%22">intro-issue</a> label. You can get to it by clicking on the labels header like so:</p>
+
+<p><img src="/assets/firstpr/labels.png" alt="labels" /><br />
+<img src="/assets/firstpr/introissue.png" alt="introissue" /></p>
+
+<p>I’ll pick <a href="https://github.com/JuliaLang/julia/issues/13096">my own issue</a>, which is about missing features in our linear algebra library. Here’s a screencap of it:</p>
+
+<p><img src="/assets/firstpr/myissue.png" alt="myissue" /></p>
+
+<p>I picked the first item to work on - <code>full</code> doesn’t work for <code>Symmetric{SparseMatrixCSC}</code> types! The first thing to do is to make sure this is still a problem, since the issue is kind of old.</p>
+
+<h1 id="reproducing-the-failure">Reproducing The Failure</h1>
+
+<p>Going back to the terminal, I make a test symmetric sparse matrix and attempt to call <code>full</code> on it.</p>
+
+<pre><code class="language-julia">a = sprand(5,5,0.2) #make a 5x5 sparse matrix with random elements
+a = Symmetric(a + a.') #make it symmetric
+full(a)
+</code></pre>
+<p>and what did I see, but:</p>
+
+<p><img src="/assets/firstpr/reproduce.png" alt="reproduce" /></p>
+
+<p>So I’ve reproduced the failure.</p>
+
+<h1 id="finding-the-problem">Finding The Problem</h1>
+
+<p>The error I got suggests that the problem is with something called <code>copytri!</code>.<br />
+<code>Symmetric</code> is a tag we put around another matrix type. It’s defined in <code>base/linalg/symmetric.jl</code>. Below, I’ve opened the file up in vim (or you can go look at the <a href="https://github.com/JuliaLang/julia/blob/5e9dbd867edffcf41811cc94a8659d9888264a6c/base/linalg/symmetric.jl#L30">old blob</a> on GitHub):</p>
+
+<p>What the error above tells us is that Julia has no <code>copytri!</code> method that takes a <code>SparseMatrixCSC</code> as an argument. We can see all <code>copytri!</code> methods using the aptly-named <code>methods</code> function:</p>
+
+<p><img src="/assets/firstpr/methods.png" alt="methods" /></p>
+
+<p><code>copytri!</code> is <em>not</em> exported from the <code>Base.LinAlg</code> module. There are two methods, and just like the error says, neither method takes <code>SparseMatrixCSC</code>. So we need to:</p>
+
+<ul>
+  <li>Add a <code>copytri!</code> method for sparse matrices</li>
+  <li>Add tests for the method</li>
+  <li>Make sure the method works, fix it if it doesn’t</li>
+  <li>Submit a PR</li>
+</ul>
+
+<h1 id="adding-the-method">Adding the method</h1>
+
+<p>It looks like the current <code>copytri!</code> methods all live in <code>base/linalg/matmul.jl</code>. The matrix multiplication methods for sparse matrices all live in <code>base/sparse/linalg.jl</code>, so let’s put our function there.</p>
+
+<p>I opened the sparse file as a pane next to the dense one since we can probably build our new method with some slight modifications to the dense one. This might not have optimal performance, but it’s enough to get started.</p>
+
+<p><img src="/assets/firstpr/copycopytri.png" alt="copy" /></p>
+
+<p>First, we need to modify the argument list. Our <code>copytri!</code> will take <code>SparseMatrixCSC</code>s as its first argument. We can leave the others untouched for now.</p>
+
+<p><img src="/assets/firstpr/fixargs.png" alt="fixargs" /></p>
+
+<p><code>copytri!</code> is supposed to copy one triangle of <code>A</code> into the other (since the lower/upper triangles of a symmetric/Hermitian matrix are {c}transposes of each other).<br />
+The most naive thing we can do is just add the matrix <code>A</code> and its transpose.</p>
+
+<h1 id="writing-a-test">Writing a test</h1>
+
+<p>The tests for this file are in <code>test/sparsedir/sparse.jl</code>. The top of the file is a pretty reasonable place to put this test. Let’s start off with:</p>
+
+<p>And running it shows:</p>
+
+<p>Welp. Something went wrong here!</p>
+
+                                
+      </div><!-- /.container -->
+  </body>
+      <footer>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+</html>
