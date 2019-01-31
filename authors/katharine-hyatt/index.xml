@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Katharine Hyatt on Academic</title>
-    <link>/authors/katharine-hyatt/</link>
-    <description>Recent content in Katharine Hyatt on Academic</description>
+    <title>Katharine Hyatt</title>
+    <link>https://kshyatt.github.io/authors/katharine-hyatt/</link>
+    <description>Recent content on Katharine Hyatt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>&amp;copy; 2019</copyright>
     <lastBuildDate>Thu, 31 Jan 2019 11:27:44 -0500</lastBuildDate>
     
-	<atom:link href="/authors/katharine-hyatt/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://kshyatt.github.io/authors/katharine-hyatt/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Running Cluster Jobs Remotely </title>
-      <link>/post/sshcluster/</link>
+      <link>https://kshyatt.github.io/post/sshcluster/</link>
       <pubDate>Thu, 31 Jan 2019 11:27:44 -0500</pubDate>
       
-      <guid>/post/sshcluster/</guid>
+      <guid>https://kshyatt.github.io/post/sshcluster/</guid>
       <description>A Journey Through Laziness Quite often, I&amp;rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).
 This is kind of a pain, so I tried out using ClusterManagers.</description>
     </item>
     
     <item>
       <title>Juliacon 2015</title>
-      <link>/talk/juliacon2015/</link>
+      <link>https://kshyatt.github.io/talk/juliacon2015/</link>
       <pubDate>Thu, 31 Jan 2019 11:22:28 -0500</pubDate>
       
-      <guid>/talk/juliacon2015/</guid>
+      <guid>https://kshyatt.github.io/talk/juliacon2015/</guid>
       <description></description>
     </item>
     

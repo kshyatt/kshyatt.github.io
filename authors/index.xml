@@ -1,49 +1,50 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Authors on Academic</title>
-    <link>/authors/</link>
-    <description>Recent content in Authors on Academic</description>
+    <title>Authors on Katharine Hyatt</title>
+    <link>https://kshyatt.github.io/authors/</link>
+    <description>Recent content in Authors on Katharine Hyatt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>&amp;copy; 2019</copyright>
     <lastBuildDate>Thu, 31 Jan 2019 11:01:17 -0500</lastBuildDate>
     
-	<atom:link href="/authors/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://kshyatt.github.io/authors/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Ann B. Kallin, Katharine Hyatt, Rajiv R. P. Singh, Roger G. Melko</title>
-      <link>/authors/ann-b.-kallin-katharine-hyatt-rajiv-r.-p.-singh-roger-g.-melko/</link>
+      <link>https://kshyatt.github.io/authors/ann-b.-kallin-katharine-hyatt-rajiv-r.-p.-singh-roger-g.-melko/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:17 -0500</pubDate>
       
-      <guid>/authors/ann-b.-kallin-katharine-hyatt-rajiv-r.-p.-singh-roger-g.-melko/</guid>
+      <guid>https://kshyatt.github.io/authors/ann-b.-kallin-katharine-hyatt-rajiv-r.-p.-singh-roger-g.-melko/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Katharine Hyatt</title>
-      <link>/authors/katharine-hyatt/</link>
+      <link>https://kshyatt.github.io/authors/katharine-hyatt/</link>
       <pubDate>Thu, 31 Jan 2019 11:27:44 -0500</pubDate>
       
-      <guid>/authors/katharine-hyatt/</guid>
+      <guid>https://kshyatt.github.io/authors/katharine-hyatt/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Katharine Hyatt, James R. Garrison, Andrew C. Potter, Bela Bauer</title>
-      <link>/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</link>
+      <link>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
       
-      <guid>/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</guid>
+      <guid>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Katharine Hyatt, James R. Garrison, Bela Bauer</title>
-      <link>/authors/katharine-hyatt-james-r.-garrison-bela-bauer/</link>
+      <link>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-bela-bauer/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
       
-      <guid>/authors/katharine-hyatt-james-r.-garrison-bela-bauer/</guid>
+      <guid>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-bela-bauer/</guid>
       <description></description>
     </item>
     

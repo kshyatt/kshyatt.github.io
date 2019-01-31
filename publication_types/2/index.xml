@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>2 on Academic</title>
-    <link>/publication_types/2/</link>
-    <description>Recent content in 2 on Academic</description>
+    <title>2 on Katharine Hyatt</title>
+    <link>https://kshyatt.github.io/publication_types/2/</link>
+    <description>Recent content in 2 on Katharine Hyatt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>&amp;copy; 2019</copyright>
     <lastBuildDate>Thu, 31 Jan 2019 11:01:17 -0500</lastBuildDate>
     
-	<atom:link href="/publication_types/2/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://kshyatt.github.io/publication_types/2/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</title>
-      <link>/publication/nlce/</link>
+      <link>https://kshyatt.github.io/publication/nlce/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:17 -0500</pubDate>
       
-      <guid>/publication/nlce/</guid>
+      <guid>https://kshyatt.github.io/publication/nlce/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Extracting Entanglement Geometry from Quantum States</title>
-      <link>/publication/disentangling/</link>
+      <link>https://kshyatt.github.io/publication/disentangling/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
       
-      <guid>/publication/disentangling/</guid>
+      <guid>https://kshyatt.github.io/publication/disentangling/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Many-body localization in the presence of a small bath</title>
-      <link>/publication/bilayer/</link>
+      <link>https://kshyatt.github.io/publication/bilayer/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
       
-      <guid>/publication/bilayer/</guid>
+      <guid>https://kshyatt.github.io/publication/bilayer/</guid>
       <description></description>
     </item>
     

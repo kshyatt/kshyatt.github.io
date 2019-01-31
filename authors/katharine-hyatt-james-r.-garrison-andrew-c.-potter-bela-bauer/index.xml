@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Katharine Hyatt, James R. Garrison, Andrew C. Potter, Bela Bauer on Academic</title>
-    <link>/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</link>
-    <description>Recent content in Katharine Hyatt, James R. Garrison, Andrew C. Potter, Bela Bauer on Academic</description>
+    <title>Katharine Hyatt, James R. Garrison, Andrew C. Potter, Bela Bauer on Katharine Hyatt</title>
+    <link>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</link>
+    <description>Recent content in Katharine Hyatt, James R. Garrison, Andrew C. Potter, Bela Bauer on Katharine Hyatt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>&amp;copy; 2019</copyright>
     <lastBuildDate>Thu, 31 Jan 2019 11:01:12 -0500</lastBuildDate>
     
-	<atom:link href="/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Many-body localization in the presence of a small bath</title>
-      <link>/publication/bilayer/</link>
+      <link>https://kshyatt.github.io/publication/bilayer/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
       
-      <guid>/publication/bilayer/</guid>
+      <guid>https://kshyatt.github.io/publication/bilayer/</guid>
       <description></description>
     </item>
     

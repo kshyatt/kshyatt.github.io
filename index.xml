@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Academic on Academic</title>
-    <link>/</link>
-    <description>Recent content in Academic on Academic</description>
+    <title>Katharine Hyatt on Katharine Hyatt</title>
+    <link>https://kshyatt.github.io/</link>
+    <description>Recent content in Katharine Hyatt on Katharine Hyatt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>&amp;copy; 2019</copyright>
     <lastBuildDate>Sun, 15 Oct 2017 00:00:00 -0400</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Running Cluster Jobs Remotely </title>
-      <link>/post/sshcluster/</link>
+      <link>https://kshyatt.github.io/post/sshcluster/</link>
       <pubDate>Thu, 31 Jan 2019 11:27:44 -0500</pubDate>
       
-      <guid>/post/sshcluster/</guid>
+      <guid>https://kshyatt.github.io/post/sshcluster/</guid>
       <description>
 
 &lt;h2 id=&#34;a-journey-through-laziness&#34;&gt;A Journey Through Laziness&lt;/h2&gt;
@@ -91,46 +92,46 @@ julia&amp;gt; wait(rr)
     
     <item>
       <title>Juliacon 2015</title>
-      <link>/talk/juliacon2015/</link>
+      <link>https://kshyatt.github.io/talk/juliacon2015/</link>
       <pubDate>Thu, 31 Jan 2019 11:22:28 -0500</pubDate>
       
-      <guid>/talk/juliacon2015/</guid>
+      <guid>https://kshyatt.github.io/talk/juliacon2015/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</title>
-      <link>/publication/nlce/</link>
+      <link>https://kshyatt.github.io/publication/nlce/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:17 -0500</pubDate>
       
-      <guid>/publication/nlce/</guid>
+      <guid>https://kshyatt.github.io/publication/nlce/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Extracting Entanglement Geometry from Quantum States</title>
-      <link>/publication/disentangling/</link>
+      <link>https://kshyatt.github.io/publication/disentangling/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
       
-      <guid>/publication/disentangling/</guid>
+      <guid>https://kshyatt.github.io/publication/disentangling/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Many-body localization in the presence of a small bath</title>
-      <link>/publication/bilayer/</link>
+      <link>https://kshyatt.github.io/publication/bilayer/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
       
-      <guid>/publication/bilayer/</guid>
+      <guid>https://kshyatt.github.io/publication/bilayer/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Your First Julia Pull Request</title>
-      <link>/post/2016-01-28-firstpr/</link>
+      <link>https://kshyatt.github.io/post/2016-01-28-firstpr/</link>
       <pubDate>Thu, 28 Jan 2016 00:00:00 +0000</pubDate>
       
-      <guid>/post/2016-01-28-firstpr/</guid>
+      <guid>https://kshyatt.github.io/post/2016-01-28-firstpr/</guid>
       <description>
 
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
@@ -183,12 +184,12 @@ git pull origin master
 &lt;p&gt;Let&amp;rsquo;s head on over to Julia&amp;rsquo;s &lt;a href=&#34;https://github.com/JuliaLang/julia/issues&#34; target=&#34;_blank&#34;&gt;issues page&lt;/a&gt;, which has many issues that take a lot of expert attention. Not all do, though.
 Usually, problems/feature requests/bugs that are appropriate for new contributors to tackle are filed under the &lt;a href=&#34;https://github.com/JuliaLang/julia/issues?q=is%3Aopen+is%3Aissue+label%3A%22intro+issue%22&#34; target=&#34;_blank&#34;&gt;intro-issue&lt;/a&gt; label. You can get to it by clicking on the labels header like so:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/assets/firstpr/labels.png&#34; alt=&#34;labels&#34; /&gt;
-&lt;img src=&#34;/assets/firstpr/introissue.png&#34; alt=&#34;introissue&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/labels.png&#34; alt=&#34;labels&#34; /&gt;
+&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/introissue.png&#34; alt=&#34;introissue&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;I&amp;rsquo;ll pick &lt;a href=&#34;https://github.com/JuliaLang/julia/issues/13096&#34; target=&#34;_blank&#34;&gt;my own issue&lt;/a&gt;, which is about missing features in our linear algebra library. Here&amp;rsquo;s a screencap of it:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/assets/firstpr/myissue.png&#34; alt=&#34;myissue&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/myissue.png&#34; alt=&#34;myissue&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;I picked the first item to work on - &lt;code&gt;full&lt;/code&gt; doesn&amp;rsquo;t work for &lt;code&gt;Symmetric{SparseMatrixCSC}&lt;/code&gt; types! The first thing to do is to make sure this is still a problem, since the issue is kind of old.&lt;/p&gt;
 
@@ -203,7 +204,7 @@ full(a)
 
 &lt;p&gt;and what did I see, but:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/assets/firstpr/reproduce.png&#34; alt=&#34;reproduce&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/reproduce.png&#34; alt=&#34;reproduce&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;So I&amp;rsquo;ve reproduced the failure.&lt;/p&gt;
 
@@ -214,7 +215,7 @@ full(a)
 
 &lt;p&gt;What the error above tells us is that Julia has no &lt;code&gt;copytri!&lt;/code&gt; method that takes a &lt;code&gt;SparseMatrixCSC&lt;/code&gt; as an argument. We can see all &lt;code&gt;copytri!&lt;/code&gt; methods using the aptly-named &lt;code&gt;methods&lt;/code&gt; function:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/assets/firstpr/methods.png&#34; alt=&#34;methods&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/methods.png&#34; alt=&#34;methods&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;copytri!&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt; exported from the &lt;code&gt;Base.LinAlg&lt;/code&gt; module. There are two methods, and just like the error says, neither method takes &lt;code&gt;SparseMatrixCSC&lt;/code&gt;. So we need to:&lt;/p&gt;
 
@@ -231,11 +232,11 @@ full(a)
 
 &lt;p&gt;I opened the sparse file as a pane next to the dense one since we can probably build our new method with some slight modifications to the dense one. This might not have optimal performance, but it&amp;rsquo;s enough to get started.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/assets/firstpr/copycopytri.png&#34; alt=&#34;copy&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/copycopytri.png&#34; alt=&#34;copy&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;First, we need to modify the argument list. Our &lt;code&gt;copytri!&lt;/code&gt; will take &lt;code&gt;SparseMatrixCSC&lt;/code&gt;s as its first argument. We can leave the others untouched for now.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/assets/firstpr/fixargs.png&#34; alt=&#34;fixargs&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/fixargs.png&#34; alt=&#34;fixargs&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;copytri!&lt;/code&gt; is supposed to copy one triangle of &lt;code&gt;A&lt;/code&gt; into the other (since the lower/upper triangles of a symmetric/Hermitian matrix are {c}transposes of each other).
 The most naive thing we can do is just add the matrix &lt;code&gt;A&lt;/code&gt; and its transpose.&lt;/p&gt;
@@ -246,7 +247,7 @@ The most naive thing we can do is just add the matrix &lt;code&gt;A&lt;/code&gt;
 
 &lt;p&gt;And running it shows:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/assets/firstpr/firsttest.png&#34; alt=&#34;firsttest&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/firsttest.png&#34; alt=&#34;firsttest&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Welp. Something went wrong here!&lt;/p&gt;
 </description>
