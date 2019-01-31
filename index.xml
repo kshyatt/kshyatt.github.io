@@ -38,8 +38,9 @@
 
 &lt;h1 id=&#34;zeroth-step-setting-up-our-fork&#34;&gt;Zeroth Step: Setting Up Our Fork&lt;/h1&gt;
 
-&lt;p&gt;Having &lt;a href=&#34;https://help.github.com/articles/fork-a-repo/&#34; target=&#34;_blank&#34;&gt;forked&lt;/a&gt; the &lt;a href=&#34;https://github.com/julialang/julia&#34; target=&#34;_blank&#34;&gt;main julia repository&lt;/a&gt; to your GitHub account, you&amp;rsquo;re ready to create a local &lt;a href=&#34;https://git-scm.com/docs/git-clone&#34; target=&#34;_blank&#34;&gt;clone&lt;/a&gt; and let it know about both the upstream repos.
-I usually clone julia into a subdirectory of my home directory called &lt;code&gt;projects&lt;/code&gt;, so that on a new machine what happens is:&lt;/p&gt;
+&lt;p&gt;Having &lt;a href=&#34;https://help.github.com/articles/fork-a-repo/&#34; target=&#34;_blank&#34;&gt;forked&lt;/a&gt; the &lt;a href=&#34;https://github.com/julialang/julia&#34; target=&#34;_blank&#34;&gt;main julia repository&lt;/a&gt; to your GitHub account, you&amp;rsquo;re ready to create a local &lt;a href=&#34;https://git-scm.com/docs/git-clone&#34; target=&#34;_blank&#34;&gt;clone&lt;/a&gt; and let it know about both the upstream repos.&lt;/p&gt;
+
+&lt;p&gt;I usually clone julia into a subdirectory of my home directory called &lt;code&gt;projects&lt;/code&gt;, so that on a new machine what happens is:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd ~ # move to the home directory
 mkdir -p projects # create the projects directory if it doesn&#39;t already exist, otherwise do nothing
@@ -270,7 +271,7 @@ To github.com:kshyatt/julia.git
 
 &lt;p&gt;GitHub has also helpfully used my commit message to title the pull request, and I think it&amp;rsquo;s quite a nice title so I will leave it be. This PR is pretty self-explanatory so I won&amp;rsquo;t write a description in the big text box provided, but it doesn&amp;rsquo;t hurt to do this if you think it might not be obvious what your code does. Don&amp;rsquo;t worry about requesting a reviewer or adding labels if this is your first PR - a maintainer can handle that for you. If everything looks ok, press the &amp;ldquo;Create pull request&amp;rdquo; button. At this point, you can wait for some reviews and maintainers can give you detailed help if your PR needs some changes. It&amp;rsquo;s very common for a PR to need some tweaks &amp;ndash; it happens to me all the time! Although it can feel a little discouraging to have to keep making changes, maintainers are devoting the time to re-reviewing your PR because they think it&amp;rsquo;s good and want it to be the best it can be (just like Julia as a whole). If you want to see the real-life PR that I created in making this post, it&amp;rsquo;s right &lt;a href=&#34;https://github.com/JuliaLang/julia/pull/30921&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Less than half a minute after I opened the pull request, super speedy reviewer Matt Baumann thought it was alright to merge it.&lt;/p&gt;
+&lt;p&gt;Less than half a minute after I opened the pull request, super speedy reviewer Matt Bauman thought it was alright to merge it.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;review.png&#34; alt=&#34;Matt attack&#34; /&gt;&lt;/p&gt;
 
