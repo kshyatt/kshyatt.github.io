@@ -28,10 +28,11 @@
   
     
   
-  <meta name="description" content="Postdoctoral Scholar">
+  <meta name="description" content="A Journey Through Laziness Quite often, I&rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).
+This is kind of a pain, so I tried out using ClusterManagers.">
 
   
-  <link rel="alternate" hreflang="en-us" href="">
+  <link rel="alternate" hreflang="en-us" href="/post/sshcluster/">
 
   
 
@@ -105,7 +106,7 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="">
+  <link rel="canonical" href="/post/sshcluster/">
 
   
   
@@ -117,19 +118,22 @@
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Academic">
-  <meta property="og:url" content="">
-  <meta property="og:title" content="404 Page not found | Academic">
-  <meta property="og:description" content="Postdoctoral Scholar"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:url" content="/post/sshcluster/">
+  <meta property="og:title" content="Running Cluster Jobs Remotely  | Academic">
+  <meta property="og:description" content="A Journey Through Laziness Quite often, I&rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).
+This is kind of a pain, so I tried out using ClusterManagers."><meta property="og:image" content="/img/icon-192.png">
   <meta property="og:locale" content="en-us">
   
+  <meta property="article:published_time" content="2019-01-31T11:27:44-05:00">
   
+  <meta property="article:modified_time" content="2019-01-31T11:27:44-05:00">
+  
+
   
 
   
 
-  
-
-  <title>404 Page not found | Academic</title>
+  <title>Running Cluster Jobs Remotely  | Academic</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
@@ -326,57 +330,262 @@
   </div>
 </nav>
 
-<div class="container">
 
-  <h1>Page not found</h1>
-  <p>Perhaps you were looking for one of these?</p>
+<article class="article" itemscope itemtype="http://schema.org/Article">
 
   
-  
-  <h2>Posts</h2>
-  
-  <ul>
-    <li><a href="/post/sshcluster/">Running Cluster Jobs Remotely </a></li>
-  </ul>
-  
-  <ul>
-    <li><a href="/post/2016-01-28-firstpr/">Your First Julia Pull Request</a></li>
-  </ul>
-  
-  
 
-  
-  
-  <h2>Publications</h2>
-  
-  <ul>
-    <li><a href="/publication/nlce/">Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</a></li>
-  </ul>
-  
-  <ul>
-    <li><a href="/publication/disentangling/">Extracting Entanglement Geometry from Quantum States</a></li>
-  </ul>
-  
-  <ul>
-    <li><a href="/publication/bilayer/">Many-body localization in the presence of a small bath</a></li>
-  </ul>
-  
+
+
+
+
+
+
+
+
+
+
+
   
 
   
   
-  <h2>Talks</h2>
   
-  <ul>
-    <li><a href="/talk/juliacon2015/">Juliacon 2015</a></li>
-  </ul>
+<div class="article-container pt-3">
+  <h1 itemprop="name">Running Cluster Jobs Remotely </h1>
+
+  
+
+  
+    
+
+
+<meta content="2019-01-31 11:27:44 -0500 EST" itemprop="datePublished">
+<meta content="2019-01-31 11:27:44 -0500 EST" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+      <span itemprop="name">
+        <a href="/authors/katharine-hyatt/">Katharine Hyatt</a>
+      </span>
+    </span>
+    
+  </div>
   
   
 
   
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Jan 31, 2019</time>
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    3 min read
+  </span>
+  
+
+  
+  
+
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Running%20Cluster%20Jobs%20Remotely%20&amp;url=%2fpost%2fsshcluster%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2fsshcluster%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2fsshcluster%2f&amp;title=Running%20Cluster%20Jobs%20Remotely%20"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2fsshcluster%2f&amp;title=Running%20Cluster%20Jobs%20Remotely%20"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Running%20Cluster%20Jobs%20Remotely%20&amp;body=%2fpost%2fsshcluster%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
   
 
 </div>
+
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<h2 id="a-journey-through-laziness">A Journey Through Laziness</h2>
+
+<p>Quite often, I&rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).</p>
+
+<p>This is kind of a pain, so I tried out using <a href="https://github.com/JuliaParallel/ClusterManagers.jl" target="_blank">ClusterManagers.jl</a> and julia&rsquo;s native <code>addprocs</code> and remote worker functionality to automate this a bit.</p>
+
+<p>I have key-based login set up from <code>desktop</code> to <code>cluster</code> (the head node), and from <code>cluster</code> to its worker nodes.
+Let&rsquo;s call my script <code>my_bad_science.jl</code> (I read somewhere that just like in the code itself, your writing about the code should contain
+descriptive names).</p>
+
+<p>First, I wanted to open a REPL on the desktop (I could make this a script too, of course). All the below examples are julia 0.5.0.
+Then I opened an SSH tunnel to the cluster:</p>
+
+<pre><code class="language-julia">julia&gt; addprocs([(&quot;cluster_hostname&quot;,1)], tunnel=true, max_parallel=1, exename=&quot;/home/kshyatt/julia/v0.5/julia&quot;, sshflags=&quot;-vv&quot;)
+</code></pre>
+
+<p>I passed <code>-vv</code> (verbose) to SSH because otherwise the Julia worker tends to time out. <code>exename</code> is there to tell julia that it&rsquo;s not installed in the same place on the cluster as it is on my desktop.</p>
+
+<p>The output looks like:</p>
+
+<pre><code class="language-julia"># a bunch of verbose SSH chat happens here
+# removed to protect the guilty/innocent
+1-element Array{Int64,1}:
+ 2
+</code></pre>
+
+<p>Just like any other call to <code>addprocs</code>. Perfect! Now, on the remote head node, which is my worker, I will pull in my script:</p>
+
+<pre><code class="language-julia"># my bad science script
+
+using ClusterManagers.jl
+
+# our cluster uses PBS so
+ClusterManagers.addprocs_pbs(12)
+
+# now that the workers will have been loaded
+# I need to import the packages I need to do
+# the cool stuff
+
+using Distributions
+using research_utils # a private package of mine
+
+#fill up some parameter arrays
+Ls = collect(8:2:20)
+w  = 10. # disorder strength
+d  = Uniform(-w, w)
+disorder = [rand(d, L) for L in Ls]
+
+Hs = pmap(makeHamiltonians, Ls, disorder)   
+
+# some code down here to write out the
+# Hamiltonians to HDF5 - it's gross :(
+</code></pre>
+
+<p>What this will do is spawn a 12 worker job on the cluster, do the work, and write the results <em>on the cluster</em>. I could also have this script return something to the master worker on my desktop, if I wanted (perhaps timing information?).</p>
+
+<p>Finally, on my desktop REPL, all I need to do is:</p>
+
+<pre><code class="language-julia">julia&gt; rr = @spawnat 2 include(&quot;my_bad_science.jl&quot;)
+Future(2,1,5,Nullable{Any}())
+
+julia&gt; wait(rr)
+</code></pre>
+
+<p><code>@spawnat</code> returns a <code>Future</code>, and we need to <code>wait</code> for it to be finished. Or, we could <code>schedule</code> it and merrily go on our way, periodically checking to see if <code>rr</code> is finished.</p>
+
+<p>One could also imagine a fancier version of this, plotting data as it comes in from the cluster head node on one&rsquo;s desktop (so we could use something a bit prettier than <code>UnicodePlots.jl</code>). For that you might need a <code>RemoteChannel</code>.</p>
+
+<p>This is pretty short but it dramatically improved my lazing about, watching-job-results-come-in workflow. I hope it&rsquo;s useful to someone else!</p>
+
+    </div>
+
+    
+
+
+
+
+
+    
+      
+
+
+
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
 <div class="container">
   <footer class="site-footer">
   

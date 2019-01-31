@@ -6,10 +6,20 @@
     <description>Recent content in Katharine Hyatt on Academic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 31 Jan 2019 11:22:28 -0500</lastBuildDate>
+    <lastBuildDate>Thu, 31 Jan 2019 11:27:44 -0500</lastBuildDate>
     
 	<atom:link href="/authors/katharine-hyatt/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Running Cluster Jobs Remotely </title>
+      <link>/post/sshcluster/</link>
+      <pubDate>Thu, 31 Jan 2019 11:27:44 -0500</pubDate>
+      
+      <guid>/post/sshcluster/</guid>
+      <description>A Journey Through Laziness Quite often, I&amp;rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).
+This is kind of a pain, so I tried out using ClusterManagers.</description>
+    </item>
     
     <item>
       <title>Juliacon 2015</title>

@@ -10,6 +10,86 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Running Cluster Jobs Remotely </title>
+      <link>/post/sshcluster/</link>
+      <pubDate>Thu, 31 Jan 2019 11:27:44 -0500</pubDate>
+      
+      <guid>/post/sshcluster/</guid>
+      <description>
+
+&lt;h2 id=&#34;a-journey-through-laziness&#34;&gt;A Journey Through Laziness&lt;/h2&gt;
+
+&lt;p&gt;Quite often, I&amp;rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).&lt;/p&gt;
+
+&lt;p&gt;This is kind of a pain, so I tried out using &lt;a href=&#34;https://github.com/JuliaParallel/ClusterManagers.jl&#34; target=&#34;_blank&#34;&gt;ClusterManagers.jl&lt;/a&gt; and julia&amp;rsquo;s native &lt;code&gt;addprocs&lt;/code&gt; and remote worker functionality to automate this a bit.&lt;/p&gt;
+
+&lt;p&gt;I have key-based login set up from &lt;code&gt;desktop&lt;/code&gt; to &lt;code&gt;cluster&lt;/code&gt; (the head node), and from &lt;code&gt;cluster&lt;/code&gt; to its worker nodes.
+Let&amp;rsquo;s call my script &lt;code&gt;my_bad_science.jl&lt;/code&gt; (I read somewhere that just like in the code itself, your writing about the code should contain
+descriptive names).&lt;/p&gt;
+
+&lt;p&gt;First, I wanted to open a REPL on the desktop (I could make this a script too, of course). All the below examples are julia 0.5.0.
+Then I opened an SSH tunnel to the cluster:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;julia&amp;gt; addprocs([(&amp;quot;cluster_hostname&amp;quot;,1)], tunnel=true, max_parallel=1, exename=&amp;quot;/home/kshyatt/julia/v0.5/julia&amp;quot;, sshflags=&amp;quot;-vv&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I passed &lt;code&gt;-vv&lt;/code&gt; (verbose) to SSH because otherwise the Julia worker tends to time out. &lt;code&gt;exename&lt;/code&gt; is there to tell julia that it&amp;rsquo;s not installed in the same place on the cluster as it is on my desktop.&lt;/p&gt;
+
+&lt;p&gt;The output looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;# a bunch of verbose SSH chat happens here
+# removed to protect the guilty/innocent
+1-element Array{Int64,1}:
+ 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Just like any other call to &lt;code&gt;addprocs&lt;/code&gt;. Perfect! Now, on the remote head node, which is my worker, I will pull in my script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;# my bad science script
+
+using ClusterManagers.jl
+
+# our cluster uses PBS so
+ClusterManagers.addprocs_pbs(12)
+
+# now that the workers will have been loaded
+# I need to import the packages I need to do
+# the cool stuff
+
+using Distributions
+using research_utils # a private package of mine
+
+#fill up some parameter arrays
+Ls = collect(8:2:20)
+w  = 10. # disorder strength
+d  = Uniform(-w, w)
+disorder = [rand(d, L) for L in Ls]
+
+Hs = pmap(makeHamiltonians, Ls, disorder)   
+
+# some code down here to write out the
+# Hamiltonians to HDF5 - it&#39;s gross :(
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What this will do is spawn a 12 worker job on the cluster, do the work, and write the results &lt;em&gt;on the cluster&lt;/em&gt;. I could also have this script return something to the master worker on my desktop, if I wanted (perhaps timing information?).&lt;/p&gt;
+
+&lt;p&gt;Finally, on my desktop REPL, all I need to do is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;julia&amp;gt; rr = @spawnat 2 include(&amp;quot;my_bad_science.jl&amp;quot;)
+Future(2,1,5,Nullable{Any}())
+
+julia&amp;gt; wait(rr)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;@spawnat&lt;/code&gt; returns a &lt;code&gt;Future&lt;/code&gt;, and we need to &lt;code&gt;wait&lt;/code&gt; for it to be finished. Or, we could &lt;code&gt;schedule&lt;/code&gt; it and merrily go on our way, periodically checking to see if &lt;code&gt;rr&lt;/code&gt; is finished.&lt;/p&gt;
+
+&lt;p&gt;One could also imagine a fancier version of this, plotting data as it comes in from the cluster head node on one&amp;rsquo;s desktop (so we could use something a bit prettier than &lt;code&gt;UnicodePlots.jl&lt;/code&gt;). For that you might need a &lt;code&gt;RemoteChannel&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This is pretty short but it dramatically improved my lazing about, watching-job-results-come-in workflow. I hope it&amp;rsquo;s useful to someone else!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Juliacon 2015</title>
       <link>/talk/juliacon2015/</link>
       <pubDate>Thu, 31 Jan 2019 11:22:28 -0500</pubDate>
@@ -169,86 +249,6 @@ The most naive thing we can do is just add the matrix &lt;code&gt;A&lt;/code&gt;
 &lt;p&gt;&lt;img src=&#34;/assets/firstpr/firsttest.png&#34; alt=&#34;firsttest&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Welp. Something went wrong here!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Running Cluster Jobs Remotely</title>
-      <link>/post/2016-12-06-sshcluster/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2016-12-06-sshcluster/</guid>
-      <description>
-
-&lt;h2 id=&#34;a-journey-through-laziness&#34;&gt;A Journey Through Laziness&lt;/h2&gt;
-
-&lt;p&gt;Quite often, I&amp;rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).&lt;/p&gt;
-
-&lt;p&gt;This is kind of a pain, so I tried out using &lt;a href=&#34;https://github.com/JuliaParallel/ClusterManagers.jl&#34; target=&#34;_blank&#34;&gt;ClusterManagers.jl&lt;/a&gt; and julia&amp;rsquo;s native &lt;code&gt;addprocs&lt;/code&gt; and remote worker functionality to automate this a bit.&lt;/p&gt;
-
-&lt;p&gt;I have key-based login set up from &lt;code&gt;desktop&lt;/code&gt; to &lt;code&gt;cluster&lt;/code&gt; (the head node), and from &lt;code&gt;cluster&lt;/code&gt; to its worker nodes.
-Let&amp;rsquo;s call my script &lt;code&gt;my_bad_science.jl&lt;/code&gt; (I read somewhere that just like in the code itself, your writing about the code should contain
-descriptive names).&lt;/p&gt;
-
-&lt;p&gt;First, I wanted to open a REPL on the desktop (I could make this a script too, of course). All the below examples are julia 0.5.0.
-Then I opened an SSH tunnel to the cluster:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;julia&amp;gt; addprocs([(&amp;quot;cluster_hostname&amp;quot;,1)], tunnel=true, max_parallel=1, exename=&amp;quot;/home/kshyatt/julia/v0.5/julia&amp;quot;, sshflags=&amp;quot;-vv&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I passed &lt;code&gt;-vv&lt;/code&gt; (verbose) to SSH because otherwise the Julia worker tends to time out. &lt;code&gt;exename&lt;/code&gt; is there to tell julia that it&amp;rsquo;s not installed in the same place on the cluster as it is on my desktop.&lt;/p&gt;
-
-&lt;p&gt;The output looks like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;# a bunch of verbose SSH chat happens here
-# removed to protect the guilty/innocent
-1-element Array{Int64,1}:
- 2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Just like any other call to &lt;code&gt;addprocs&lt;/code&gt;. Perfect! Now, on the remote head node, which is my worker, I will pull in my script:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;# my bad science script
-
-using ClusterManagers.jl
-
-# our cluster uses PBS so
-ClusterManagers.addprocs_pbs(12)
-
-# now that the workers will have been loaded
-# I need to import the packages I need to do
-# the cool stuff
-
-using Distributions
-using research_utils # a private package of mine
-
-#fill up some parameter arrays
-Ls = collect(8:2:20)
-w  = 10. # disorder strength
-d  = Uniform(-w, w)
-disorder = [rand(d, L) for L in Ls]
-
-Hs = pmap(makeHamiltonians, Ls, disorder)   
-
-# some code down here to write out the
-# Hamiltonians to HDF5 - it&#39;s gross :(
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;What this will do is spawn a 12 worker job on the cluster, do the work, and write the results &lt;em&gt;on the cluster&lt;/em&gt;. I could also have this script return something to the master worker on my desktop, if I wanted (perhaps timing information?).&lt;/p&gt;
-
-&lt;p&gt;Finally, on my desktop REPL, all I need to do is:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;julia&amp;gt; rr = @spawnat 2 include(&amp;quot;my_bad_science.jl&amp;quot;)
-Future(2,1,5,Nullable{Any}())
-
-julia&amp;gt; wait(rr)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;@spawnat&lt;/code&gt; returns a &lt;code&gt;Future&lt;/code&gt;, and we need to &lt;code&gt;wait&lt;/code&gt; for it to be finished. Or, we could &lt;code&gt;schedule&lt;/code&gt; it and merrily go on our way, periodically checking to see if &lt;code&gt;rr&lt;/code&gt; is finished.&lt;/p&gt;
-
-&lt;p&gt;One could also imagine a fancier version of this, plotting data as it comes in from the cluster head node on one&amp;rsquo;s desktop (so we could use something a bit prettier than &lt;code&gt;UnicodePlots.jl&lt;/code&gt;). For that you might need a &lt;code&gt;RemoteChannel&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;This is pretty short but it dramatically improved my lazing about, watching-job-results-come-in workflow. I hope it&amp;rsquo;s useful to someone else!&lt;/p&gt;
 </description>
     </item>
     
