@@ -22,13 +22,19 @@
 
 &lt;h1 id=&#34;prereqs&#34;&gt;Prereqs&lt;/h1&gt;
 
-&lt;p&gt;To get started, we&amp;rsquo;re going to need a few things:
-  - Some basic &lt;code&gt;git&lt;/code&gt; knowledge: &lt;code&gt;git add&lt;/code&gt;, &lt;code&gt;git clone&lt;/code&gt;, &lt;code&gt;git commit&lt;/code&gt;, &lt;code&gt;git checkout&lt;/code&gt;, and &lt;code&gt;git push&lt;/code&gt;. If you need an introduction to &lt;code&gt;git&lt;/code&gt;, some decent options are:
-    - &lt;a href=&#34;https://help.github.com/articles/git-and-github-learning-resources/&#34; target=&#34;_blank&#34;&gt;The GitHub help pages&lt;/a&gt;
-    - &lt;a href=&#34;https://git-scm.com/docs&#34; target=&#34;_blank&#34;&gt;The official git docs&lt;/a&gt;
-    - &lt;a href=&#34;https://www.codecademy.com/learn/learn-git&#34; target=&#34;_blank&#34;&gt;The codecademy intro to git tutorial&lt;/a&gt;, which is free
-  - A source build of Julia, from &lt;code&gt;git clone git@github.com:JuliaLang/julia.git&lt;/code&gt; (I use SSH, HTTPS is fine too)
-  - A fork of Julia, since most people making their first pull requests will not have the ability to push branches to the main julia repository.&lt;/p&gt;
+&lt;p&gt;To get started, we&amp;rsquo;re going to need a few things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Some basic &lt;code&gt;git&lt;/code&gt; knowledge: &lt;code&gt;git add&lt;/code&gt;, &lt;code&gt;git clone&lt;/code&gt;, &lt;code&gt;git commit&lt;/code&gt;, &lt;code&gt;git checkout&lt;/code&gt;, and &lt;code&gt;git push&lt;/code&gt;. If you need an introduction to &lt;code&gt;git&lt;/code&gt;, some decent options are:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://help.github.com/articles/git-and-github-learning-resources/&#34; target=&#34;_blank&#34;&gt;The GitHub help pages&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://git-scm.com/docs&#34; target=&#34;_blank&#34;&gt;The official git docs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.codecademy.com/learn/learn-git&#34; target=&#34;_blank&#34;&gt;The codecademy intro to git tutorial&lt;/a&gt;, which is free&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;A source build of Julia, from &lt;code&gt;git clone git@github.com:JuliaLang/julia.git&lt;/code&gt; (I use SSH, HTTPS is fine too)&lt;/li&gt;
+&lt;li&gt;A fork of Julia, since most people making their first pull requests will not have the ability to push branches to the main julia repository.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h1 id=&#34;zeroth-step-setting-up-our-fork&#34;&gt;Zeroth Step: Setting Up Our Fork&lt;/h1&gt;
 
@@ -213,12 +219,16 @@ make test-secretbuffer
 
 &lt;h1 id=&#34;commiting-and-pushing&#34;&gt;Commiting and pushing&lt;/h1&gt;
 
-&lt;p&gt;We need to commit our changes and push them to a remote so that we can open a pull request, which will let someone review the proposed changes and (hopefully) merge them. Although it&amp;rsquo;s possible to do this from your &lt;code&gt;master&lt;/code&gt; branch, this can very quickly lead to tears. It&amp;rsquo;s better to:
-  1. Make a new &lt;code&gt;git&lt;/code&gt; branch
-  2. Commit the changes there
-  3. Push that branch to your fork
-  4. Open a pull request from the branch on your fork
-We can use &lt;a href=&#34;https://www.git-scm.com/docs/git-checkout&#34; target=&#34;_blank&#34;&gt;&lt;code&gt;git checkout -b&lt;/code&gt;&lt;/a&gt; to both create a new branch and move over onto it, which will drag all our changes along with. &lt;code&gt;git checkout -b&lt;/code&gt; is a shorter way of saying &lt;code&gt;git branch $BRANCH_NAME &amp;amp;&amp;amp; git checkout $BRANCH_NAME&lt;/code&gt;. You can choose whatever you like for the branch name, but I tend to prepend with my initials and then use a short description of what the changes were. As an example:&lt;/p&gt;
+&lt;p&gt;We need to commit our changes and push them to a remote so that we can open a pull request, which will let someone review the proposed changes and (hopefully) merge them. Although it&amp;rsquo;s possible to do this from your &lt;code&gt;master&lt;/code&gt; branch, this can very quickly lead to tears. It&amp;rsquo;s better to:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Make a new &lt;code&gt;git&lt;/code&gt; branch&lt;/li&gt;
+&lt;li&gt;Commit the changes there&lt;/li&gt;
+&lt;li&gt;Push that branch to your fork&lt;/li&gt;
+&lt;li&gt;Open a pull request from the branch on your fork&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;We can use &lt;a href=&#34;https://www.git-scm.com/docs/git-checkout&#34; target=&#34;_blank&#34;&gt;&lt;code&gt;git checkout -b&lt;/code&gt;&lt;/a&gt; to both create a new branch and move over onto it, which will drag all our changes along with. &lt;code&gt;git checkout -b&lt;/code&gt; is a shorter way of saying &lt;code&gt;git branch $BRANCH_NAME &amp;amp;&amp;amp; git checkout $BRANCH_NAME&lt;/code&gt;. You can choose whatever you like for the branch name, but I tend to prepend with my initials and then use a short description of what the changes were. As an example:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git checkout -b ksh/sbtest
 &lt;/code&gt;&lt;/pre&gt;

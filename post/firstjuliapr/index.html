@@ -124,7 +124,7 @@
   
   <meta property="article:published_time" content="2019-01-31T13:39:26-05:00">
   
-  <meta property="article:modified_time" content="2019-01-31T16:04:58-05:00">
+  <meta property="article:modified_time" content="2019-01-31T16:09:44-05:00">
   
 
   
@@ -359,7 +359,7 @@
 
 
 <meta content="2019-01-31 13:39:26 -0500 EST" itemprop="datePublished">
-<meta content="2019-01-31 16:04:58 -0500 EST" itemprop="dateModified">
+<meta content="2019-01-31 16:09:44 -0500 EST" itemprop="dateModified">
 
 <div class="article-metadata">
 
@@ -480,13 +480,19 @@
 
 <h1 id="prereqs">Prereqs</h1>
 
-<p>To get started, we&rsquo;re going to need a few things:
-  - Some basic <code>git</code> knowledge: <code>git add</code>, <code>git clone</code>, <code>git commit</code>, <code>git checkout</code>, and <code>git push</code>. If you need an introduction to <code>git</code>, some decent options are:
-    - <a href="https://help.github.com/articles/git-and-github-learning-resources/" target="_blank">The GitHub help pages</a>
-    - <a href="https://git-scm.com/docs" target="_blank">The official git docs</a>
-    - <a href="https://www.codecademy.com/learn/learn-git" target="_blank">The codecademy intro to git tutorial</a>, which is free
-  - A source build of Julia, from <code>git clone git@github.com:JuliaLang/julia.git</code> (I use SSH, HTTPS is fine too)
-  - A fork of Julia, since most people making their first pull requests will not have the ability to push branches to the main julia repository.</p>
+<p>To get started, we&rsquo;re going to need a few things:</p>
+
+<ul>
+<li>Some basic <code>git</code> knowledge: <code>git add</code>, <code>git clone</code>, <code>git commit</code>, <code>git checkout</code>, and <code>git push</code>. If you need an introduction to <code>git</code>, some decent options are:
+
+<ul>
+<li><a href="https://help.github.com/articles/git-and-github-learning-resources/" target="_blank">The GitHub help pages</a></li>
+<li><a href="https://git-scm.com/docs" target="_blank">The official git docs</a></li>
+<li><a href="https://www.codecademy.com/learn/learn-git" target="_blank">The codecademy intro to git tutorial</a>, which is free</li>
+</ul></li>
+<li>A source build of Julia, from <code>git clone git@github.com:JuliaLang/julia.git</code> (I use SSH, HTTPS is fine too)</li>
+<li>A fork of Julia, since most people making their first pull requests will not have the ability to push branches to the main julia repository.</li>
+</ul>
 
 <h1 id="zeroth-step-setting-up-our-fork">Zeroth Step: Setting Up Our Fork</h1>
 
@@ -671,12 +677,16 @@ make test-secretbuffer
 
 <h1 id="commiting-and-pushing">Commiting and pushing</h1>
 
-<p>We need to commit our changes and push them to a remote so that we can open a pull request, which will let someone review the proposed changes and (hopefully) merge them. Although it&rsquo;s possible to do this from your <code>master</code> branch, this can very quickly lead to tears. It&rsquo;s better to:
-  1. Make a new <code>git</code> branch
-  2. Commit the changes there
-  3. Push that branch to your fork
-  4. Open a pull request from the branch on your fork
-We can use <a href="https://www.git-scm.com/docs/git-checkout" target="_blank"><code>git checkout -b</code></a> to both create a new branch and move over onto it, which will drag all our changes along with. <code>git checkout -b</code> is a shorter way of saying <code>git branch $BRANCH_NAME &amp;&amp; git checkout $BRANCH_NAME</code>. You can choose whatever you like for the branch name, but I tend to prepend with my initials and then use a short description of what the changes were. As an example:</p>
+<p>We need to commit our changes and push them to a remote so that we can open a pull request, which will let someone review the proposed changes and (hopefully) merge them. Although it&rsquo;s possible to do this from your <code>master</code> branch, this can very quickly lead to tears. It&rsquo;s better to:</p>
+
+<ol>
+<li>Make a new <code>git</code> branch</li>
+<li>Commit the changes there</li>
+<li>Push that branch to your fork</li>
+<li>Open a pull request from the branch on your fork</li>
+</ol>
+
+<p>We can use <a href="https://www.git-scm.com/docs/git-checkout" target="_blank"><code>git checkout -b</code></a> to both create a new branch and move over onto it, which will drag all our changes along with. <code>git checkout -b</code> is a shorter way of saying <code>git branch $BRANCH_NAME &amp;&amp; git checkout $BRANCH_NAME</code>. You can choose whatever you like for the branch name, but I tend to prepend with my initials and then use a short description of what the changes were. As an example:</p>
 
 <pre><code class="language-bash">git checkout -b ksh/sbtest
 </code></pre>
