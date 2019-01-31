@@ -10,6 +10,15 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Juliacon 2015</title>
+      <link>/talk/juliacon2015/</link>
+      <pubDate>Thu, 31 Jan 2019 11:22:28 -0500</pubDate>
+      
+      <guid>/talk/juliacon2015/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</title>
       <link>/publication/nlce/</link>
       <pubDate>Thu, 31 Jan 2019 11:01:17 -0500</pubDate>

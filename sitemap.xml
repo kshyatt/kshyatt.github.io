@@ -4,6 +4,14 @@
     
     <url>
     
+      <loc>/talk/juliacon2015/</loc>
+      <lastmod>2019-01-31T11:22:28-05:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/publication/nlce/</loc>
       <lastmod>2019-01-31T11:01:17-05:00</lastmod>
     </url>
@@ -112,6 +120,15 @@
     <url>
     
       <loc>/categories/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/authors/katharine-hyatt/</loc>
+      <lastmod>2019-01-31T11:22:28-05:00</lastmod>
       <priority>0</priority>
     </url>
     
