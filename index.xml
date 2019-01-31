@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Academic on Academic</title>
+    <link>/</link>
+    <description>Recent content in Academic on Academic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 15 Oct 2017 00:00:00 -0400</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</title>
+      <link>/publication/nlce/</link>
+      <pubDate>Thu, 31 Jan 2019 11:01:17 -0500</pubDate>
+      
+      <guid>/publication/nlce/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Extracting Entanglement Geometry from Quantum States</title>
+      <link>/publication/disentangling/</link>
+      <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
+      
+      <guid>/publication/disentangling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Many-body localization in the presence of a small bath</title>
+      <link>/publication/bilayer/</link>
+      <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
+      
+      <guid>/publication/bilayer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Your First Julia Pull Request</title>
+      <link>/post/2016-01-28-firstpr/</link>
+      <pubDate>Thu, 28 Jan 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2016-01-28-firstpr/</guid>
+      <description>
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;I get a lot of people who say they want to start contributing to Julia. I link to our spot on &lt;a href=&#34;http://up-for-grabs.net/#/tags/julia&#34; target=&#34;_blank&#34;&gt;Up For Grabs&lt;/a&gt; and Iain Dunning&amp;rsquo;s great &lt;a href=&#34;https://github.com/IainNZ/ContributeToJulia&#34; target=&#34;_blank&#34;&gt;Contribute To Julia&lt;/a&gt; repo. But we don&amp;rsquo;t see a lot of new people opening PRs. I started out a year ago, opening &lt;a href=&#34;https://github.com/JuliaLang/julia/pull/9558&#34; target=&#34;_blank&#34;&gt;my first PR&lt;/a&gt;, and I was &lt;em&gt;so scared&lt;/em&gt;. I had no idea what I was doing! Now, I have more than 200 commits to Julia master. I decided to make a detailed pictures-and-text guide of how I:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Find something to work on in Julia&lt;/li&gt;
+&lt;li&gt;Fix the thing&lt;/li&gt;
+&lt;li&gt;Test my fix&lt;/li&gt;
+&lt;li&gt;Get my local git repo in order&lt;/li&gt;
+&lt;li&gt;Submit a PR&lt;/li&gt;
+&lt;li&gt;Revise and respond to feedback&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I use OSX day to day, and all of this should work on Linux too. The steps to get going on Windows are a little more involved but once you have a working Julia build, you are good to go.&lt;/p&gt;
+
+&lt;h1 id=&#34;getting-started-cloning-and-building-julia&#34;&gt;Getting Started - Cloning and Building Julia&lt;/h1&gt;
+
+&lt;p&gt;The first thing you will need is a local clone of the Julia repo. The Julia repo is hosted on &lt;a href=&#34;https://github.com/JuliaLang/julia&#34; target=&#34;_blank&#34;&gt;Github&lt;/a&gt;, and &lt;a href=&#34;https://github.com/JuliaLang/julia/blob/master/README.md&#34; target=&#34;_blank&#34;&gt;README.md&lt;/a&gt; has instructions on how to get started. You can follow along there, or, in most cases (I call my &amp;ldquo;work&amp;rdquo; directory &lt;code&gt;Projects&lt;/code&gt;),&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd ~/Projects
+git clone https://github.com/JuliaLang/julia.git
+cd julia
+make -j 8
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I use &lt;code&gt;https&lt;/code&gt; because I have 2FA on and I use personal access tokens. SSH is fine too. Since I&amp;rsquo;m on a fancypants iMac, I make with 8 threads (&lt;code&gt;-j 8&lt;/code&gt; tells &lt;code&gt;make&lt;/code&gt; how many cores it can use for the build). If this is your first time building &lt;code&gt;julia&lt;/code&gt;, now would be a great time to get a coffee. The initial build takes a while.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re reading this, you probably don&amp;rsquo;t have commit access to Julia. That&amp;rsquo;s fine - we can follow &lt;a href=&#34;https://help.github.com/articles/fork-a-repo/&#34; target=&#34;_blank&#34;&gt;the Github help article on forking&lt;/a&gt;. Make sure to add &lt;em&gt;your&lt;/em&gt; fork as a remote for your git repo. What I did:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;git remote add kshyatt https://github.com/kshyatt/julia.git&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;I call my own personal forks of things &lt;code&gt;kshyatt&lt;/code&gt; and the organizational copy &lt;code&gt;origin&lt;/code&gt;, but any name you can remember works.&lt;/p&gt;
+
+&lt;h1 id=&#34;make-sure-we-re-up-to-date&#34;&gt;Make Sure We&amp;rsquo;re Up To Date&lt;/h1&gt;
+
+&lt;p&gt;During the interim between cloning and building, new commits might have made it into Julia master. We need to make sure we&amp;rsquo;re up to date. I do this using:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git checkout master
+git fetch
+git status
+git pull origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This gets our &lt;code&gt;master&lt;/code&gt; branch up to date with the remote one from &lt;code&gt;origin&lt;/code&gt; (in my case from the JuliaLang repo).&lt;/p&gt;
+
+&lt;h1 id=&#34;find-something-to-work-on&#34;&gt;Find Something To Work On&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;rsquo;s head on over to Julia&amp;rsquo;s &lt;a href=&#34;https://github.com/JuliaLang/julia/issues&#34; target=&#34;_blank&#34;&gt;issues page&lt;/a&gt;, which has many issues that take a lot of expert attention. Not all do, though.
+Usually, problems/feature requests/bugs that are appropriate for new contributors to tackle are filed under the &lt;a href=&#34;https://github.com/JuliaLang/julia/issues?q=is%3Aopen+is%3Aissue+label%3A%22intro+issue%22&#34; target=&#34;_blank&#34;&gt;intro-issue&lt;/a&gt; label. You can get to it by clicking on the labels header like so:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/assets/firstpr/labels.png&#34; alt=&#34;labels&#34; /&gt;
+&lt;img src=&#34;/assets/firstpr/introissue.png&#34; alt=&#34;introissue&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ll pick &lt;a href=&#34;https://github.com/JuliaLang/julia/issues/13096&#34; target=&#34;_blank&#34;&gt;my own issue&lt;/a&gt;, which is about missing features in our linear algebra library. Here&amp;rsquo;s a screencap of it:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/assets/firstpr/myissue.png&#34; alt=&#34;myissue&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I picked the first item to work on - &lt;code&gt;full&lt;/code&gt; doesn&amp;rsquo;t work for &lt;code&gt;Symmetric{SparseMatrixCSC}&lt;/code&gt; types! The first thing to do is to make sure this is still a problem, since the issue is kind of old.&lt;/p&gt;
+
+&lt;h1 id=&#34;reproducing-the-failure&#34;&gt;Reproducing The Failure&lt;/h1&gt;
+
+&lt;p&gt;Going back to the terminal, I make a test symmetric sparse matrix and attempt to call &lt;code&gt;full&lt;/code&gt; on it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;a = sprand(5,5,0.2) #make a 5x5 sparse matrix with random elements
+a = Symmetric(a + a.&#39;) #make it symmetric
+full(a)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and what did I see, but:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/assets/firstpr/reproduce.png&#34; alt=&#34;reproduce&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So I&amp;rsquo;ve reproduced the failure.&lt;/p&gt;
+
+&lt;h1 id=&#34;finding-the-problem&#34;&gt;Finding The Problem&lt;/h1&gt;
+
+&lt;p&gt;The error I got suggests that the problem is with something called &lt;code&gt;copytri!&lt;/code&gt;.
+&lt;code&gt;Symmetric&lt;/code&gt; is a tag we put around another matrix type. It&amp;rsquo;s defined in &lt;code&gt;base/linalg/symmetric.jl&lt;/code&gt;. Below, I&amp;rsquo;ve opened the file up in vim (or you can go look at the &lt;a href=&#34;https://github.com/JuliaLang/julia/blob/5e9dbd867edffcf41811cc94a8659d9888264a6c/base/linalg/symmetric.jl#L30&#34; target=&#34;_blank&#34;&gt;old blob&lt;/a&gt; on GitHub):&lt;/p&gt;
+
+&lt;p&gt;What the error above tells us is that Julia has no &lt;code&gt;copytri!&lt;/code&gt; method that takes a &lt;code&gt;SparseMatrixCSC&lt;/code&gt; as an argument. We can see all &lt;code&gt;copytri!&lt;/code&gt; methods using the aptly-named &lt;code&gt;methods&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/assets/firstpr/methods.png&#34; alt=&#34;methods&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;copytri!&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt; exported from the &lt;code&gt;Base.LinAlg&lt;/code&gt; module. There are two methods, and just like the error says, neither method takes &lt;code&gt;SparseMatrixCSC&lt;/code&gt;. So we need to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add a &lt;code&gt;copytri!&lt;/code&gt; method for sparse matrices&lt;/li&gt;
+&lt;li&gt;Add tests for the method&lt;/li&gt;
+&lt;li&gt;Make sure the method works, fix it if it doesn&amp;rsquo;t&lt;/li&gt;
+&lt;li&gt;Submit a PR&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;adding-the-method&#34;&gt;Adding the method&lt;/h1&gt;
+
+&lt;p&gt;It looks like the current &lt;code&gt;copytri!&lt;/code&gt; methods all live in &lt;code&gt;base/linalg/matmul.jl&lt;/code&gt;. The matrix multiplication methods for sparse matrices all live in &lt;code&gt;base/sparse/linalg.jl&lt;/code&gt;, so let&amp;rsquo;s put our function there.&lt;/p&gt;
+
+&lt;p&gt;I opened the sparse file as a pane next to the dense one since we can probably build our new method with some slight modifications to the dense one. This might not have optimal performance, but it&amp;rsquo;s enough to get started.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/assets/firstpr/copycopytri.png&#34; alt=&#34;copy&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;First, we need to modify the argument list. Our &lt;code&gt;copytri!&lt;/code&gt; will take &lt;code&gt;SparseMatrixCSC&lt;/code&gt;s as its first argument. We can leave the others untouched for now.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/assets/firstpr/fixargs.png&#34; alt=&#34;fixargs&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;copytri!&lt;/code&gt; is supposed to copy one triangle of &lt;code&gt;A&lt;/code&gt; into the other (since the lower/upper triangles of a symmetric/Hermitian matrix are {c}transposes of each other).
+The most naive thing we can do is just add the matrix &lt;code&gt;A&lt;/code&gt; and its transpose.&lt;/p&gt;
+
+&lt;h1 id=&#34;writing-a-test&#34;&gt;Writing a test&lt;/h1&gt;
+
+&lt;p&gt;The tests for this file are in &lt;code&gt;test/sparsedir/sparse.jl&lt;/code&gt;. The top of the file is a pretty reasonable place to put this test. Let&amp;rsquo;s start off with:&lt;/p&gt;
+
+&lt;p&gt;And running it shows:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/assets/firstpr/firsttest.png&#34; alt=&#34;firsttest&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Welp. Something went wrong here!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Running Cluster Jobs Remotely</title>
+      <link>/post/2016-12-06-sshcluster/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2016-12-06-sshcluster/</guid>
+      <description>
+
+&lt;h2 id=&#34;a-journey-through-laziness&#34;&gt;A Journey Through Laziness&lt;/h2&gt;
+
+&lt;p&gt;Quite often, I&amp;rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).&lt;/p&gt;
+
+&lt;p&gt;This is kind of a pain, so I tried out using &lt;a href=&#34;https://github.com/JuliaParallel/ClusterManagers.jl&#34; target=&#34;_blank&#34;&gt;ClusterManagers.jl&lt;/a&gt; and julia&amp;rsquo;s native &lt;code&gt;addprocs&lt;/code&gt; and remote worker functionality to automate this a bit.&lt;/p&gt;
+
+&lt;p&gt;I have key-based login set up from &lt;code&gt;desktop&lt;/code&gt; to &lt;code&gt;cluster&lt;/code&gt; (the head node), and from &lt;code&gt;cluster&lt;/code&gt; to its worker nodes.
+Let&amp;rsquo;s call my script &lt;code&gt;my_bad_science.jl&lt;/code&gt; (I read somewhere that just like in the code itself, your writing about the code should contain
+descriptive names).&lt;/p&gt;
+
+&lt;p&gt;First, I wanted to open a REPL on the desktop (I could make this a script too, of course). All the below examples are julia 0.5.0.
+Then I opened an SSH tunnel to the cluster:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;julia&amp;gt; addprocs([(&amp;quot;cluster_hostname&amp;quot;,1)], tunnel=true, max_parallel=1, exename=&amp;quot;/home/kshyatt/julia/v0.5/julia&amp;quot;, sshflags=&amp;quot;-vv&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I passed &lt;code&gt;-vv&lt;/code&gt; (verbose) to SSH because otherwise the Julia worker tends to time out. &lt;code&gt;exename&lt;/code&gt; is there to tell julia that it&amp;rsquo;s not installed in the same place on the cluster as it is on my desktop.&lt;/p&gt;
+
+&lt;p&gt;The output looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;# a bunch of verbose SSH chat happens here
+# removed to protect the guilty/innocent
+1-element Array{Int64,1}:
+ 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Just like any other call to &lt;code&gt;addprocs&lt;/code&gt;. Perfect! Now, on the remote head node, which is my worker, I will pull in my script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;# my bad science script
+
+using ClusterManagers.jl
+
+# our cluster uses PBS so
+ClusterManagers.addprocs_pbs(12)
+
+# now that the workers will have been loaded
+# I need to import the packages I need to do
+# the cool stuff
+
+using Distributions
+using research_utils # a private package of mine
+
+#fill up some parameter arrays
+Ls = collect(8:2:20)
+w  = 10. # disorder strength
+d  = Uniform(-w, w)
+disorder = [rand(d, L) for L in Ls]
+
+Hs = pmap(makeHamiltonians, Ls, disorder)   
+
+# some code down here to write out the
+# Hamiltonians to HDF5 - it&#39;s gross :(
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What this will do is spawn a 12 worker job on the cluster, do the work, and write the results &lt;em&gt;on the cluster&lt;/em&gt;. I could also have this script return something to the master worker on my desktop, if I wanted (perhaps timing information?).&lt;/p&gt;
+
+&lt;p&gt;Finally, on my desktop REPL, all I need to do is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;julia&amp;gt; rr = @spawnat 2 include(&amp;quot;my_bad_science.jl&amp;quot;)
+Future(2,1,5,Nullable{Any}())
+
+julia&amp;gt; wait(rr)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;@spawnat&lt;/code&gt; returns a &lt;code&gt;Future&lt;/code&gt;, and we need to &lt;code&gt;wait&lt;/code&gt; for it to be finished. Or, we could &lt;code&gt;schedule&lt;/code&gt; it and merrily go on our way, periodically checking to see if &lt;code&gt;rr&lt;/code&gt; is finished.&lt;/p&gt;
+
+&lt;p&gt;One could also imagine a fancier version of this, plotting data as it comes in from the cluster head node on one&amp;rsquo;s desktop (so we could use something a bit prettier than &lt;code&gt;UnicodePlots.jl&lt;/code&gt;). For that you might need a &lt;code&gt;RemoteChannel&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This is pretty short but it dramatically improved my lazing about, watching-job-results-come-in workflow. I hope it&amp;rsquo;s useful to someone else!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
