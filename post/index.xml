@@ -13,6 +13,15 @@
     
     
     <item>
+      <title>Making a first Julia pull request</title>
+      <link>https://kshyatt.github.io/post/firstjuliapr/</link>
+      <pubDate>Thu, 31 Jan 2019 13:39:26 -0500</pubDate>
+      
+      <guid>https://kshyatt.github.io/post/firstjuliapr/</guid>
+      <description>In this post I&amp;rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&amp;rsquo;ll be working off commit 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767 if you want to follow along. I do almost all my development on macOS and Linux, so some of the shell commands will be a little different if you&amp;rsquo;re on Windows.</description>
+    </item>
+    
+    <item>
       <title>Running Cluster Jobs Remotely </title>
       <link>https://kshyatt.github.io/post/sshcluster/</link>
       <pubDate>Thu, 31 Jan 2019 11:27:44 -0500</pubDate>
@@ -20,15 +29,6 @@
       <guid>https://kshyatt.github.io/post/sshcluster/</guid>
       <description>A Journey Through Laziness Quite often, I&amp;rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).
 This is kind of a pain, so I tried out using ClusterManagers.</description>
-    </item>
-    
-    <item>
-      <title>Your First Julia Pull Request</title>
-      <link>https://kshyatt.github.io/post/2016-01-28-firstpr/</link>
-      <pubDate>Thu, 28 Jan 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://kshyatt.github.io/post/2016-01-28-firstpr/</guid>
-      <description>Introduction I get a lot of people who say they want to start contributing to Julia. I link to our spot on Up For Grabs and Iain Dunning&amp;rsquo;s great Contribute To Julia repo. But we don&amp;rsquo;t see a lot of new people opening PRs. I started out a year ago, opening my first PR, and I was so scared. I had no idea what I was doing! Now, I have more than 200 commits to Julia master.</description>
     </item>
     
   </channel>

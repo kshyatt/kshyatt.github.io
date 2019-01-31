@@ -11,6 +11,273 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Making a first Julia pull request</title>
+      <link>https://kshyatt.github.io/post/firstjuliapr/</link>
+      <pubDate>Thu, 31 Jan 2019 13:39:26 -0500</pubDate>
+      
+      <guid>https://kshyatt.github.io/post/firstjuliapr/</guid>
+      <description>
+
+&lt;p&gt;In this post I&amp;rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&amp;rsquo;ll be working off commit &lt;code&gt;0b0a394b3e7741d38f00dbb29895b6ba6a7d0767&lt;/code&gt; if you want to follow along. I do almost all my development on macOS and Linux, so some of the shell commands will be a little different if you&amp;rsquo;re on Windows.&lt;/p&gt;
+
+&lt;h1 id=&#34;prereqs&#34;&gt;Prereqs&lt;/h1&gt;
+
+&lt;p&gt;To get started, we&amp;rsquo;re going to need a few things:
+  - Some basic &lt;code&gt;git&lt;/code&gt; knowledge: &lt;code&gt;git add&lt;/code&gt;, &lt;code&gt;git clone&lt;/code&gt;, &lt;code&gt;git commit&lt;/code&gt;, &lt;code&gt;git checkout&lt;/code&gt;, and &lt;code&gt;git push&lt;/code&gt;. If you need an introduction to &lt;code&gt;git&lt;/code&gt;, some decent options are:
+    - &lt;a href=&#34;https://help.github.com/articles/git-and-github-learning-resources/&#34; target=&#34;_blank&#34;&gt;The GitHub help pages&lt;/a&gt;
+    - &lt;a href=&#34;https://git-scm.com/docs&#34; target=&#34;_blank&#34;&gt;The official git docs&lt;/a&gt;
+    - &lt;a href=&#34;https://www.codecademy.com/learn/learn-git&#34; target=&#34;_blank&#34;&gt;The codecademy intro to git tutorial&lt;/a&gt;, which is free
+  - A source build of Julia, from &lt;code&gt;git clone git@github.com:JuliaLang/julia.git&lt;/code&gt; (I use SSH, HTTPS is fine too)
+  - A fork of Julia, since most people making their first pull requests will not have the ability to push branches to the main julia repository.&lt;/p&gt;
+
+&lt;h1 id=&#34;zeroth-step-setting-up-our-fork&#34;&gt;Zeroth Step: Setting Up Our Fork&lt;/h1&gt;
+
+&lt;p&gt;Having &lt;a href=&#34;https://help.github.com/articles/fork-a-repo/&#34; target=&#34;_blank&#34;&gt;forked&lt;/a&gt; the &lt;a href=&#34;https://github.com/julialang/julia&#34; target=&#34;_blank&#34;&gt;main julia repository&lt;/a&gt; to your GitHub account, you&amp;rsquo;re ready to create a local &lt;a href=&#34;https://git-scm.com/docs/git-clone&#34; target=&#34;_blank&#34;&gt;clone&lt;/a&gt; and let it know about both the upstream repos.
+I usually clone julia into a subdirectory of my home directory called &lt;code&gt;projects&lt;/code&gt;, so that on a new machine what happens is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd ~ # move to the home directory
+mkdir -p projects # create the projects directory if it doesn&#39;t already exist, otherwise do nothing
+cd projects # move to the kshyatt/projects directory
+git clone git@github.com:JuliaLang/julia.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will copy the repository from GitHub, including the current state of all the source code as well as all its history. We can look at the &lt;em&gt;remotes&lt;/em&gt; of our clone to see other copies of the julia repository our clone is aware of (can fetch/pull/push against). Since we cloned from GitHub, the repository already knows about it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~/projects $ cd julia # move down into the julia directory post clone
+~/projects/julia $ git remote -v # list remotes and their URLs
+origin	git@github.com:JuliaLang/julia.git (fetch)
+origin	git@github.com:JuliaLang/julia.git (push)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So our repository knows about its &amp;ldquo;parent&amp;rdquo;. But we probably don&amp;rsquo;t have the ability to write directly to the main Julia repositiory (yet &amp;ndash; who knows what the future holds?), which means we won&amp;rsquo;t be able to create our own branches there. Instead, we will need to use a repository copy we do have the ability to write to &amp;ndash; our fork &amp;ndash; to make our coming changes visible to the wide world. If we cloned from the JuliaLang repo, we need to add another remote for our fork. Usually this will have a URL like: &lt;code&gt;https://github.com/$USERNAME/julia.git&lt;/code&gt; or &lt;code&gt;git@github.com:$USERNAME/julia.git&lt;/code&gt; where &lt;code&gt;$USERNAME&lt;/code&gt; is your GitHub username. To let &lt;code&gt;git&lt;/code&gt; know about the second remote, we use &lt;a href=&#34;https://git-scm.com/docs/git-remote&#34; target=&#34;_blank&#34;&gt;&lt;code&gt;git remote add&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git remote add $REMOTE_NAME git@github.com:$USERNAME/julia.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;$REMOTE_NAME&lt;/code&gt; is the &lt;em&gt;local&lt;/em&gt; alias we want to call the second remote by. The remote we cloned from (JuliaLang) gets the alias &lt;code&gt;origin&lt;/code&gt;. You can pick any alias you like which doesn&amp;rsquo;t conflict with an existing one. I often use &lt;code&gt;kshyatt&lt;/code&gt; because even in the grim depths of 3:24am I can usually remember my own name. So when I do the remote add, it looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git remote add kshyatt git@github.com:kshyatt/julia.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And afterwards, if we look at the remotes &lt;code&gt;git&lt;/code&gt; knows about:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~/projects/julia $ git remote -v # list remotes and their URLs
+kshyatt	git@github.com:kshyatt/julia.git (fetch)
+kshyatt	git@github.com:kshyatt/julia.git (push)
+origin	git@github.com:JuliaLang/julia.git (fetch)
+origin	git@github.com:JuliaLang/julia.git (push)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With a fork and local knowledge of it, we&amp;rsquo;re ready to find some changes to make.&lt;/p&gt;
+
+&lt;h1 id=&#34;the-hunt-for-red-lines&#34;&gt;The Hunt for Red Lines&lt;/h1&gt;
+
+&lt;p&gt;There are many kinds of contributions a person can make to an open source project:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;New features&lt;/li&gt;
+&lt;li&gt;Performance improvements&lt;/li&gt;
+&lt;li&gt;Bug fixes&lt;/li&gt;
+&lt;li&gt;Test coverage&lt;/li&gt;
+&lt;li&gt;Documentation improvements&lt;/li&gt;
+&lt;li&gt;Usage examples&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you&amp;rsquo;re just starting out contributing to Julia, and don&amp;rsquo;t have an obvious idea for a feature or a performance enhancement you could write, writing tests or improving docs are a great way to get started. People often disagree about the desirability of a new feature but I almost never see anyone say we should have fewer tests! Writing tests is a good way to learn how Julia works &amp;ndash; or doesn&amp;rsquo;t, if you find a bug. We don&amp;rsquo;t want to write tests just for the sake of having them, though &amp;ndash; we want to test as many julia features as possible in as little time as possible. If we&amp;rsquo;re writing new tests, it&amp;rsquo;s always a good idea to keep the test coverage in mind. Test coverage measures which lines of base (and stdlib) Julia are exercised by the tests. We keep this information current at &lt;a href=&#34;https://codecov.io/gh/julialang/julia&#34; target=&#34;_blank&#34;&gt;codecov&lt;/a&gt;. Here&amp;rsquo;s a screenshot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;codecovlanding.png&#34; alt=&#34;Codecov landing page&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can see the attractive sunburst picture, and a history of recent commits showing their total coverage percentage. On a lark, I picked &lt;code&gt;base/&lt;/code&gt; to go hunting for uncovered lines.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;basecov.png&#34; alt=&#34;Base coverage&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Here we see each file, with its total lines, covered lines, uncovered lines, and coverage percentage. If we want to increase coverage, we want to pick a file with less than 100% of its lines covered. Keep in mind that these numbers may be less than the true coverage, because right now the coverage-enabled runs of the tests are all done on Unix and some code in Julia is Windows or BSD specific. Tests for such code aren&amp;rsquo;t run by the coverage measurement script.&lt;/p&gt;
+
+&lt;p&gt;I happened to scroll down until I came across &lt;code&gt;base/secretbuffer.jl&lt;/code&gt;. This file had a lot of uncovered lines, so I thought I had a decent chance of finding some code I could write tests to cover:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;findingsecretbuffer.png&#34; alt=&#34;Secretbuffer&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Clicking on the Codecov link opens up an annotated version of the source file, with green coloring representing lines which are covered by tests, and red coloring representing lines which are not. Scrolling down the file, I came across the &lt;code&gt;write&lt;/code&gt; method, which writes some data packed into a &lt;code&gt;UInt8&lt;/code&gt; into the secret buffer&amp;rsquo;s data:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;sbwritemissing.png&#34; alt=&#34;Red lines&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In order to test this, it would probably be good to have some sense of what it does. Having been using Julia since 2015, I probably have a bad heuristic for how easy this is to understand &amp;ndash; if you are looking at it and can&amp;rsquo;t figure it out in about 5 minutes, there&amp;rsquo;s absolutely no shame in logging onto the &lt;a href=&#34;https://julialang.slack.com/&#34; target=&#34;_blank&#34;&gt;Julia Slack&lt;/a&gt; and asking! We have &lt;code&gt;#my-first-pr&lt;/code&gt; and &lt;code&gt;#helpdesk&lt;/code&gt; channels exactly for this. The type itself is defined earlier in the file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;mutable struct SecretBuffer &amp;lt;: IO
+    data::Vector{UInt8}
+    size::Int
+    ptr::Int
+
+    function SecretBuffer(; sizehint=128)
+        s = new(Vector{UInt8}(undef, sizehint), 0, 1)
+        finalizer(final_shred!, s)
+        return s
+    end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;My attempt at an explanation&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;SecretBuffer&lt;/code&gt;, like the name implies, is a type which contains some &lt;code&gt;data&lt;/code&gt; which you&amp;rsquo;d like to keep secret from prying eyes&lt;/li&gt;
+&lt;li&gt;It contains information about the total amount of information stored, in the &lt;code&gt;size&lt;/code&gt; field&lt;/li&gt;
+&lt;li&gt;It contains information about where in the &lt;code&gt;data&lt;/code&gt; we are currently reading or writing - the &lt;code&gt;pointer&lt;/code&gt; field&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This analogy is a little fuzzy, but if you&amp;rsquo;re confused, imagine the buffer is a piece of paper on which we&amp;rsquo;ve written a message in code. The &lt;code&gt;size&lt;/code&gt; is the total number of letters in the message, and the &lt;code&gt;pointer&lt;/code&gt; is the letter we are trying to encode or decode at the moment. Then the &lt;code&gt;write&lt;/code&gt; function attempts to insert an unsigned 8 bit integer &lt;code&gt;b&lt;/code&gt; at the &lt;code&gt;ptr&lt;/code&gt; of the input &lt;code&gt;SecretBuffer&lt;/code&gt;. The uncovered lines are there to deal with the case where the &lt;code&gt;SecretBuffer&lt;/code&gt;&amp;rsquo;s data array is totally full (the &lt;code&gt;ptr&lt;/code&gt; is past its &lt;code&gt;length&lt;/code&gt;). In the paper analogy, this would mean that we wrote all the way to the bottom right corner and need to turn over to a fresh page.&lt;/p&gt;
+
+&lt;h1 id=&#34;writing-the-test&#34;&gt;Writing the test&lt;/h1&gt;
+
+&lt;p&gt;To test this case, what I chose to do was:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Create a small &lt;code&gt;SecretBuffer&lt;/code&gt; and write up to its data size&lt;/li&gt;
+&lt;li&gt;Write a little more data, so that it will have to call this untested code and extend &lt;code&gt;data&lt;/code&gt; in-place&lt;/li&gt;
+&lt;li&gt;Make sure all the data I wrote survived the process&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Julia&amp;rsquo;s tests live in the &lt;code&gt;test/&lt;/code&gt; directory, which is in the top-level with &lt;code&gt;base/&lt;/code&gt; and &lt;code&gt;stdlib/&lt;/code&gt;. From my julia clone, I can see what it contains:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls ~/projects/julia/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you do this, you&amp;rsquo;ll see there is a file called &lt;code&gt;test/secretbuffer.jl&lt;/code&gt;. That looks promising, and indeed, it&amp;rsquo;s where tests for &lt;code&gt;SecretBuffer&lt;/code&gt; are (as opposed to tests for another kind of buffer, put there as a prank). Now you can open your favorite text editor and modify the file. I like to see if there is an obvious place to add the tests in the file &amp;ndash; for example, if I&amp;rsquo;m testing a function for subtracting complex numbers, and there are already a bunch of tests for adding them, that would be a natural location to add my test.&lt;/p&gt;
+
+&lt;p&gt;Julia test files tend to be organized into &lt;code&gt;testset&lt;/code&gt;s, which group similar tests and make it easier to pinpoint where the problem is when one fails. Since we&amp;rsquo;re testing something specific, it makes sense to add our own little testset nested inside the main &lt;code&gt;SecretBuffers&lt;/code&gt; testset (as the others are):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;    @testset &amp;quot;write! past data size&amp;quot; begin
+        # ready to test some stuff in here!
+    end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Testsets get a name, so that if they fail we can see what&amp;rsquo;s broken. It&amp;rsquo;s best to write something descriptive for this rather than &amp;ldquo;aaaaa&amp;rdquo;,  &amp;ldquo;aaaab&amp;rdquo;,  etc. Following what I wrote above, I need to create a small &lt;code&gt;SecretBuffer&lt;/code&gt;&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;    @testset &amp;quot;write! past data size&amp;quot; begin
+        sb = SecretBuffer(sizehint=2)
+    end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Where &lt;code&gt;sizehint&lt;/code&gt; tells Julia how big to make the initial internal &lt;code&gt;data&lt;/code&gt; array (you can see this in the type definition I copied above). Now I need to write some data to the buffer to read the end of the data array, which has two slots currently. I picked the biggest integer &lt;code&gt;UInt8&lt;/code&gt; can represent, because its bits will all be non-zero (here I am anticipating what I&amp;rsquo;m going to test at the end).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;    @testset &amp;quot;write! past data size&amp;quot; begin
+        sb = SecretBuffer(sizehint=2)
+        # data vector will not grow
+        bits = typemax(UInt8)
+        write(sb, bits)
+        write(sb, bits)
+    end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now the data vector is fully saturated, and we will test the growing part of it by trying to write one more time:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;    @testset &amp;quot;write! past data size&amp;quot; begin
+        sb = SecretBuffer(sizehint=2)
+        # data vector will not grow
+        bits = typemax(UInt8)
+        write(sb, bits)
+        write(sb, bits)
+        # data vector must grow
+        write(sb, bits)
+    end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, it would be good to make sure this write didn&amp;rsquo;t silently fail somehow or corrupt the previously written data, so we are going to read back the buffer and make sure its contents are what we expect, which is a &lt;code&gt;String&lt;/code&gt; with three identical elements:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;    @testset &amp;quot;write! past data size and unsafe_convert&amp;quot; begin
+        sb = SecretBuffer(sizehint=2)
+        # data vector will not grow
+        bits = typemax(UInt8)
+        write(sb, bits)
+        write(sb, bits)
+        # data vector must grow
+        write(sb, bits)
+        seek(sb, 0)
+        @test read(sb, String) == &amp;quot;\xff\xff\xff&amp;quot;
+        shred!(sb)
+    end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We &lt;code&gt;seek&lt;/code&gt; back to the start of the data to make sure we capture all three elements. We read the buffer as a &lt;code&gt;String&lt;/code&gt; and compare with what the result should be. How did I know it would be three &lt;code&gt;\xff&lt;/code&gt;?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;julia&amp;gt; String([typemax(UInt8)])
+&amp;quot;\xff&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can make sure the test works by running it. I nearly always use the Makefile to do this, because it will catch whitespace errors, which I make prodiguously.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd ~/projects/julia
+make test-secretbuffer
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can run any test in &lt;code&gt;test/&lt;/code&gt; this way, for example &lt;code&gt;make test-arrayops&lt;/code&gt; works too. Assuming the tests pass, we are ready to commit and move on. If they don&amp;rsquo;t pass, you&amp;rsquo;ll need to look at the error message and try to figure out how to fix the test and/or the code it&amp;rsquo;s supposed to be testing.&lt;/p&gt;
+
+&lt;h1 id=&#34;commiting-and-pushing&#34;&gt;Commiting and pushing&lt;/h1&gt;
+
+&lt;p&gt;We need to commit our changes and push them to a remote so that we can open a pull request, which will let someone review the proposed changes and (hopefully) merge them. Although it&amp;rsquo;s possible to do this from your &lt;code&gt;master&lt;/code&gt; branch, this can very quickly lead to tears. It&amp;rsquo;s better to:
+  1. Make a new &lt;code&gt;git&lt;/code&gt; branch
+  2. Commit the changes there
+  3. Push that branch to your fork
+  4. Open a pull request from the branch on your fork
+We can use &lt;a href=&#34;https://www.git-scm.com/docs/git-checkout&#34; target=&#34;_blank&#34;&gt;&lt;code&gt;git checkout -b&lt;/code&gt;&lt;/a&gt; to both create a new branch and move over onto it, which will drag all our changes along with. &lt;code&gt;git checkout -b&lt;/code&gt; is a shorter way of saying &lt;code&gt;git branch $BRANCH_NAME &amp;amp;&amp;amp; git checkout $BRANCH_NAME&lt;/code&gt;. You can choose whatever you like for the branch name, but I tend to prepend with my initials and then use a short description of what the changes were. As an example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git checkout -b ksh/sbtest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we&amp;rsquo;re ready to &lt;a href=&#34;https://www.git-scm.com/docs/git-commit&#34; target=&#34;_blank&#34;&gt;commit&lt;/a&gt;. Since the change was just to one file, and pretty small, we can do a command-line commit and bypass the editor. We&amp;rsquo;ll commit and pass the &lt;code&gt;-m&lt;/code&gt; flag with an accompanying &lt;em&gt;commit message&lt;/em&gt;, which will tell everyone what the changes do.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git commit test/secretbuffer.jl -m &amp;quot;Added test for write-ing past the pre-existing data length&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I told &lt;code&gt;git&lt;/code&gt; which file(s) to use in the commit and the message to attach to them. The commit will be made to the &lt;code&gt;ksh/sbtest&lt;/code&gt; branch. Now I&amp;rsquo;m ready to push. Because, for the purposes of this example, I don&amp;rsquo;t have write access to &lt;code&gt;JuliaLang/julia&lt;/code&gt;, I will push to my fork at &lt;code&gt;kshyatt/julia&lt;/code&gt; and open the pull request from there. All I have to do is tell &lt;code&gt;git&lt;/code&gt; to push to the &lt;code&gt;kshyatt&lt;/code&gt; remote I created at the start of this post.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~/projects/julia $ git push kshyatt ksh/sbtest
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 613 bytes | 306.00 KiB/s, done.
+Total 4 (delta 3), reused 0 (delta 0)
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+remote: 
+remote: Create a pull request for &#39;ksh/sbtest&#39; on GitHub by visiting:
+remote:      https://github.com/kshyatt/julia/pull/new/ksh/sbtest
+remote: 
+To github.com:kshyatt/julia.git
+ * [new branch]            ksh/sbtest -&amp;gt; ksh/sbtest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hooray! The push to my remote succeeded. The changes have been propagated &amp;ldquo;upstream&amp;rdquo; and can be used to open the pull request.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Important Note&lt;/em&gt;: Make sure to open the pull request from &lt;code&gt;JuliaLang/julia&lt;/code&gt;, and &lt;em&gt;not&lt;/em&gt; from your fork!&lt;/p&gt;
+
+&lt;p&gt;To open the PR, I open up the &lt;a href=&#34;https://github.com/JuliaLang/julia&#34; target=&#34;_blank&#34;&gt;main Julia repo&lt;/a&gt; and lo and behold, GitHub has a suggestion for me! I sure do want to make this pull request, so I hit the green button that says &amp;ldquo;Compare and Pull Request&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;forkbutton.png&#34; alt=&#34;Comparing with Julia&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;That leads to the comparison screen, where I can see my proposed changes and write some comments describing what they do.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;openpr.png&#34; alt=&#34;PR editing&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;GitHub has also helpfully used my commit message to title the pull request, and I think it&amp;rsquo;s quite a nice title so I will leave it be. This PR is pretty self-explanatory so I won&amp;rsquo;t write a description in the big text box provided, but it doesn&amp;rsquo;t hurt to do this if you think it might not be obvious what your code does. Don&amp;rsquo;t worry about requesting a reviewer or adding labels if this is your first PR - a maintainer can handle that for you. If everything looks ok, press the &amp;ldquo;Create pull request&amp;rdquo; button. At this point, you can wait for some reviews and maintainers can give you detailed help if your PR needs some changes. It&amp;rsquo;s very common for a PR to need some tweaks &amp;ndash; it happens to me all the time! Although it can feel a little discouraging to have to keep making changes, maintainers are devoting the time to re-reviewing your PR because they think it&amp;rsquo;s good and want it to be the best it can be (just like Julia as a whole). If you want to see the real-life PR that I created in making this post, it&amp;rsquo;s right &lt;a href=&#34;https://github.com/JuliaLang/julia/pull/30921&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Less than half a minute after I opened the pull request, super speedy reviewer Matt Baumann thought it was alright to merge it.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;review.png&#34; alt=&#34;Matt attack&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now we just had to wait for the continuous integration (CI) servers to run the tests. There are CI servers for Windows, Linux, macOS, ARM, and freeBSD. If &amp;ldquo;the lights turn green&amp;rdquo; (all tests passed), and someone has approved the PR, it should be merged very soon. If 24 hours have passed and it hasn&amp;rsquo;t been merged, feel free to ping the person who approved the PR and ask them if they can merge it for you. Sometimes these things fall by the wayside. Even if CI fails, it may be an incidental failure unrelated to your changes. If it is related, someone will be happy to help you figure out what the problem is, or you can dig through the logs yourself to try to figure it out. If no one reviews your PR after a day or two, you can post a comment on the PR asking for review, or come onto Slack and bug us about it.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>From One To Many</title>
+      <link>https://kshyatt.github.io/talk/juliacon2017/</link>
+      <pubDate>Thu, 31 Jan 2019 13:25:50 -0500</pubDate>
+      
+      <guid>https://kshyatt.github.io/talk/juliacon2017/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Running Cluster Jobs Remotely </title>
       <link>https://kshyatt.github.io/post/sshcluster/</link>
       <pubDate>Thu, 31 Jan 2019 11:27:44 -0500</pubDate>
@@ -124,133 +391,6 @@ julia&amp;gt; wait(rr)
       
       <guid>https://kshyatt.github.io/publication/bilayer/</guid>
       <description></description>
-    </item>
-    
-    <item>
-      <title>Your First Julia Pull Request</title>
-      <link>https://kshyatt.github.io/post/2016-01-28-firstpr/</link>
-      <pubDate>Thu, 28 Jan 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://kshyatt.github.io/post/2016-01-28-firstpr/</guid>
-      <description>
-
-&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
-
-&lt;p&gt;I get a lot of people who say they want to start contributing to Julia. I link to our spot on &lt;a href=&#34;http://up-for-grabs.net/#/tags/julia&#34; target=&#34;_blank&#34;&gt;Up For Grabs&lt;/a&gt; and Iain Dunning&amp;rsquo;s great &lt;a href=&#34;https://github.com/IainNZ/ContributeToJulia&#34; target=&#34;_blank&#34;&gt;Contribute To Julia&lt;/a&gt; repo. But we don&amp;rsquo;t see a lot of new people opening PRs. I started out a year ago, opening &lt;a href=&#34;https://github.com/JuliaLang/julia/pull/9558&#34; target=&#34;_blank&#34;&gt;my first PR&lt;/a&gt;, and I was &lt;em&gt;so scared&lt;/em&gt;. I had no idea what I was doing! Now, I have more than 200 commits to Julia master. I decided to make a detailed pictures-and-text guide of how I:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Find something to work on in Julia&lt;/li&gt;
-&lt;li&gt;Fix the thing&lt;/li&gt;
-&lt;li&gt;Test my fix&lt;/li&gt;
-&lt;li&gt;Get my local git repo in order&lt;/li&gt;
-&lt;li&gt;Submit a PR&lt;/li&gt;
-&lt;li&gt;Revise and respond to feedback&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I use OSX day to day, and all of this should work on Linux too. The steps to get going on Windows are a little more involved but once you have a working Julia build, you are good to go.&lt;/p&gt;
-
-&lt;h1 id=&#34;getting-started-cloning-and-building-julia&#34;&gt;Getting Started - Cloning and Building Julia&lt;/h1&gt;
-
-&lt;p&gt;The first thing you will need is a local clone of the Julia repo. The Julia repo is hosted on &lt;a href=&#34;https://github.com/JuliaLang/julia&#34; target=&#34;_blank&#34;&gt;Github&lt;/a&gt;, and &lt;a href=&#34;https://github.com/JuliaLang/julia/blob/master/README.md&#34; target=&#34;_blank&#34;&gt;README.md&lt;/a&gt; has instructions on how to get started. You can follow along there, or, in most cases (I call my &amp;ldquo;work&amp;rdquo; directory &lt;code&gt;Projects&lt;/code&gt;),&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd ~/Projects
-git clone https://github.com/JuliaLang/julia.git
-cd julia
-make -j 8
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I use &lt;code&gt;https&lt;/code&gt; because I have 2FA on and I use personal access tokens. SSH is fine too. Since I&amp;rsquo;m on a fancypants iMac, I make with 8 threads (&lt;code&gt;-j 8&lt;/code&gt; tells &lt;code&gt;make&lt;/code&gt; how many cores it can use for the build). If this is your first time building &lt;code&gt;julia&lt;/code&gt;, now would be a great time to get a coffee. The initial build takes a while.&lt;/p&gt;
-
-&lt;p&gt;If you&amp;rsquo;re reading this, you probably don&amp;rsquo;t have commit access to Julia. That&amp;rsquo;s fine - we can follow &lt;a href=&#34;https://help.github.com/articles/fork-a-repo/&#34; target=&#34;_blank&#34;&gt;the Github help article on forking&lt;/a&gt;. Make sure to add &lt;em&gt;your&lt;/em&gt; fork as a remote for your git repo. What I did:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;git remote add kshyatt https://github.com/kshyatt/julia.git&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;I call my own personal forks of things &lt;code&gt;kshyatt&lt;/code&gt; and the organizational copy &lt;code&gt;origin&lt;/code&gt;, but any name you can remember works.&lt;/p&gt;
-
-&lt;h1 id=&#34;make-sure-we-re-up-to-date&#34;&gt;Make Sure We&amp;rsquo;re Up To Date&lt;/h1&gt;
-
-&lt;p&gt;During the interim between cloning and building, new commits might have made it into Julia master. We need to make sure we&amp;rsquo;re up to date. I do this using:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git checkout master
-git fetch
-git status
-git pull origin master
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This gets our &lt;code&gt;master&lt;/code&gt; branch up to date with the remote one from &lt;code&gt;origin&lt;/code&gt; (in my case from the JuliaLang repo).&lt;/p&gt;
-
-&lt;h1 id=&#34;find-something-to-work-on&#34;&gt;Find Something To Work On&lt;/h1&gt;
-
-&lt;p&gt;Let&amp;rsquo;s head on over to Julia&amp;rsquo;s &lt;a href=&#34;https://github.com/JuliaLang/julia/issues&#34; target=&#34;_blank&#34;&gt;issues page&lt;/a&gt;, which has many issues that take a lot of expert attention. Not all do, though.
-Usually, problems/feature requests/bugs that are appropriate for new contributors to tackle are filed under the &lt;a href=&#34;https://github.com/JuliaLang/julia/issues?q=is%3Aopen+is%3Aissue+label%3A%22intro+issue%22&#34; target=&#34;_blank&#34;&gt;intro-issue&lt;/a&gt; label. You can get to it by clicking on the labels header like so:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/labels.png&#34; alt=&#34;labels&#34; /&gt;
-&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/introissue.png&#34; alt=&#34;introissue&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;ll pick &lt;a href=&#34;https://github.com/JuliaLang/julia/issues/13096&#34; target=&#34;_blank&#34;&gt;my own issue&lt;/a&gt;, which is about missing features in our linear algebra library. Here&amp;rsquo;s a screencap of it:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/myissue.png&#34; alt=&#34;myissue&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I picked the first item to work on - &lt;code&gt;full&lt;/code&gt; doesn&amp;rsquo;t work for &lt;code&gt;Symmetric{SparseMatrixCSC}&lt;/code&gt; types! The first thing to do is to make sure this is still a problem, since the issue is kind of old.&lt;/p&gt;
-
-&lt;h1 id=&#34;reproducing-the-failure&#34;&gt;Reproducing The Failure&lt;/h1&gt;
-
-&lt;p&gt;Going back to the terminal, I make a test symmetric sparse matrix and attempt to call &lt;code&gt;full&lt;/code&gt; on it.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-julia&#34;&gt;a = sprand(5,5,0.2) #make a 5x5 sparse matrix with random elements
-a = Symmetric(a + a.&#39;) #make it symmetric
-full(a)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and what did I see, but:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/reproduce.png&#34; alt=&#34;reproduce&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;So I&amp;rsquo;ve reproduced the failure.&lt;/p&gt;
-
-&lt;h1 id=&#34;finding-the-problem&#34;&gt;Finding The Problem&lt;/h1&gt;
-
-&lt;p&gt;The error I got suggests that the problem is with something called &lt;code&gt;copytri!&lt;/code&gt;.
-&lt;code&gt;Symmetric&lt;/code&gt; is a tag we put around another matrix type. It&amp;rsquo;s defined in &lt;code&gt;base/linalg/symmetric.jl&lt;/code&gt;. Below, I&amp;rsquo;ve opened the file up in vim (or you can go look at the &lt;a href=&#34;https://github.com/JuliaLang/julia/blob/5e9dbd867edffcf41811cc94a8659d9888264a6c/base/linalg/symmetric.jl#L30&#34; target=&#34;_blank&#34;&gt;old blob&lt;/a&gt; on GitHub):&lt;/p&gt;
-
-&lt;p&gt;What the error above tells us is that Julia has no &lt;code&gt;copytri!&lt;/code&gt; method that takes a &lt;code&gt;SparseMatrixCSC&lt;/code&gt; as an argument. We can see all &lt;code&gt;copytri!&lt;/code&gt; methods using the aptly-named &lt;code&gt;methods&lt;/code&gt; function:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/methods.png&#34; alt=&#34;methods&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;copytri!&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt; exported from the &lt;code&gt;Base.LinAlg&lt;/code&gt; module. There are two methods, and just like the error says, neither method takes &lt;code&gt;SparseMatrixCSC&lt;/code&gt;. So we need to:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Add a &lt;code&gt;copytri!&lt;/code&gt; method for sparse matrices&lt;/li&gt;
-&lt;li&gt;Add tests for the method&lt;/li&gt;
-&lt;li&gt;Make sure the method works, fix it if it doesn&amp;rsquo;t&lt;/li&gt;
-&lt;li&gt;Submit a PR&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;adding-the-method&#34;&gt;Adding the method&lt;/h1&gt;
-
-&lt;p&gt;It looks like the current &lt;code&gt;copytri!&lt;/code&gt; methods all live in &lt;code&gt;base/linalg/matmul.jl&lt;/code&gt;. The matrix multiplication methods for sparse matrices all live in &lt;code&gt;base/sparse/linalg.jl&lt;/code&gt;, so let&amp;rsquo;s put our function there.&lt;/p&gt;
-
-&lt;p&gt;I opened the sparse file as a pane next to the dense one since we can probably build our new method with some slight modifications to the dense one. This might not have optimal performance, but it&amp;rsquo;s enough to get started.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/copycopytri.png&#34; alt=&#34;copy&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;First, we need to modify the argument list. Our &lt;code&gt;copytri!&lt;/code&gt; will take &lt;code&gt;SparseMatrixCSC&lt;/code&gt;s as its first argument. We can leave the others untouched for now.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/fixargs.png&#34; alt=&#34;fixargs&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;copytri!&lt;/code&gt; is supposed to copy one triangle of &lt;code&gt;A&lt;/code&gt; into the other (since the lower/upper triangles of a symmetric/Hermitian matrix are {c}transposes of each other).
-The most naive thing we can do is just add the matrix &lt;code&gt;A&lt;/code&gt; and its transpose.&lt;/p&gt;
-
-&lt;h1 id=&#34;writing-a-test&#34;&gt;Writing a test&lt;/h1&gt;
-
-&lt;p&gt;The tests for this file are in &lt;code&gt;test/sparsedir/sparse.jl&lt;/code&gt;. The top of the file is a pretty reasonable place to put this test. Let&amp;rsquo;s start off with:&lt;/p&gt;
-
-&lt;p&gt;And running it shows:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://kshyatt.github.io/assets/firstpr/firsttest.png&#34; alt=&#34;firsttest&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Welp. Something went wrong here!&lt;/p&gt;
-</description>
     </item>
     
   </channel>
