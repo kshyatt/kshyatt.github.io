@@ -18,7 +18,7 @@
       <guid>https://kshyatt.github.io/post/firstjuliapr/</guid>
       <description>
 
-&lt;p&gt;In this post I&amp;rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&amp;rsquo;ll be working off commit &lt;code&gt;0b0a394b3e7741d38f00dbb29895b6ba6a7d0767&lt;/code&gt; if you want to follow along. I do almost all my development on macOS and Linux, so some of the shell commands will be a little different if you&amp;rsquo;re on Windows.&lt;/p&gt;
+&lt;p&gt;In this post I&amp;rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&amp;rsquo;ll be working off commit &lt;code&gt;0b0a394b3e7741d38f00dbb29895b6ba6a7d0767&lt;/code&gt; if you want to follow along. (To do so, you can &lt;code&gt;git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767&lt;/code&gt;. Keep in mind this will put you in the dreaded detached &lt;code&gt;HEAD&lt;/code&gt; state.) I do almost all my development on macOS and Linux, so some of the shell commands will be a little different if you&amp;rsquo;re on Windows.&lt;/p&gt;
 
 &lt;h1 id=&#34;prereqs&#34;&gt;Prereqs&lt;/h1&gt;
 
@@ -56,6 +56,14 @@ origin	git@github.com:JuliaLang/julia.git (fetch)
 origin	git@github.com:JuliaLang/julia.git (push)
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;If you were using HTTPS, this would look like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~/projects $ cd julia # move down into the julia directory post clone
+~/projects/julia $ git remote -v # list remotes and their URLs
+origin	https://github.com/JuliaLang/julia.git (fetch)
+origin	https://github.com/JuliaLang/julia.git (push)
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;p&gt;So our repository knows about its &amp;ldquo;parent&amp;rdquo;. But we probably don&amp;rsquo;t have the ability to write directly to the main Julia repositiory (yet &amp;ndash; who knows what the future holds?), which means we won&amp;rsquo;t be able to create our own branches there. Instead, we will need to use a repository copy we do have the ability to write to &amp;ndash; our fork &amp;ndash; to make our coming changes visible to the wide world. If we cloned from the JuliaLang repo, we need to add another remote for our fork. Usually this will have a URL like: &lt;code&gt;https://github.com/$USERNAME/julia.git&lt;/code&gt; or &lt;code&gt;git@github.com:$USERNAME/julia.git&lt;/code&gt; where &lt;code&gt;$USERNAME&lt;/code&gt; is your GitHub username. To let &lt;code&gt;git&lt;/code&gt; know about the second remote, we use &lt;a href=&#34;https://git-scm.com/docs/git-remote&#34; target=&#34;_blank&#34;&gt;&lt;code&gt;git remote add&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git remote add $REMOTE_NAME git@github.com:$USERNAME/julia.git
@@ -73,6 +81,15 @@ kshyatt	git@github.com:kshyatt/julia.git (fetch)
 kshyatt	git@github.com:kshyatt/julia.git (push)
 origin	git@github.com:JuliaLang/julia.git (fetch)
 origin	git@github.com:JuliaLang/julia.git (push)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And again, with HTTPS this would be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;~/projects/julia $ git remote -v # list remotes and their URLs
+kshyatt	https://github.com/kshyatt/julia.git (fetch)
+kshyatt	https://github.com/kshyatt/julia.git (push)
+origin	https://github.com/JuliaLang/julia.git (fetch)
+origin	https://github.com/JuliaLang/julia.git (push)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;With a fork and local knowledge of it, we&amp;rsquo;re ready to find some changes to make.&lt;/p&gt;

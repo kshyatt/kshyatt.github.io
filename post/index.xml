@@ -18,7 +18,7 @@
       <pubDate>Thu, 31 Jan 2019 13:39:26 -0500</pubDate>
       
       <guid>https://kshyatt.github.io/post/firstjuliapr/</guid>
-      <description>In this post I&amp;rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&amp;rsquo;ll be working off commit 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767 if you want to follow along. I do almost all my development on macOS and Linux, so some of the shell commands will be a little different if you&amp;rsquo;re on Windows.</description>
+      <description>In this post I&amp;rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&amp;rsquo;ll be working off commit 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767 if you want to follow along. (To do so, you can git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767.</description>
     </item>
     
     <item>
