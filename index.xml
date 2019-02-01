@@ -11,6 +11,27 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Getting Started With Julia</title>
+      <link>https://kshyatt.github.io/post/startingjulia/</link>
+      <pubDate>Fri, 01 Feb 2019 10:45:08 -0500</pubDate>
+      
+      <guid>https://kshyatt.github.io/post/startingjulia/</guid>
+      <description>&lt;p&gt;Getting into a new programming language is always a bit overwhelming, because there are so many places to start! Here is a short list of things I like to send to people new to Julia, aimed at varying skill levels:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://learnxinyminutes.com/docs/julia/&#34; target=&#34;_blank&#34;&gt;Learn X in Y Minutes - Julia edition&lt;/a&gt;, a good quick tour if you already know other languages like python pretty well&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=puMIBYthsjQ&#34; target=&#34;_blank&#34;&gt;Towards Julia 1.0&lt;/a&gt;, by &lt;a href=&#34;https://github.com/dpsanders&#34; target=&#34;_blank&#34;&gt;David Sanders&lt;/a&gt;, is a great tutorial for the latest versions of Julia. Because the language went through so many changes before 1.0, not all older tutorials will still be usable!&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://julialang.org/blog/2018/09/Pkgtutorial&#34; target=&#34;_blank&#34;&gt;Getting Started with 1.0&amp;rsquo;s Package Manager&lt;/a&gt;, for those you (probably everyone) who will want to start using libraries in the &amp;ldquo;package ecosystem&amp;rdquo; and maybe write your own!&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://julialang.org/blog/2018/07/iterators-in-julia-0.7&#34; target=&#34;_blank&#34;&gt;How to use the new iteration interface&lt;/a&gt;, since many people need to write &lt;code&gt;for&lt;/code&gt;-loops!&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jeff-regier/Celeste.jl&#34; target=&#34;_blank&#34;&gt;Celeste.jl&lt;/a&gt; &amp;ndash; amazing example of what mixed (shared and distributed memory) parallelism is capable of in Julia&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/JuliaArrays/StaticArrays.jl&#34; target=&#34;_blank&#34;&gt;StaticArrays.jl&lt;/a&gt;, high performance small arrays which show off some of the features of julia&amp;rsquo;s type parameterization&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/juliagpu&#34; target=&#34;_blank&#34;&gt;JuliaGPU&lt;/a&gt;, which has a collection of packages for writing native Julia code for GPUs and using existing GPU libraries from Julia&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://julialang.org/learning/&#34; target=&#34;_blank&#34;&gt;The JuliaLang learning page&lt;/a&gt;, which has lots of good links for learning the language and some best practices&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Making a first Julia pull request</title>
       <link>https://kshyatt.github.io/post/firstjuliapr/</link>
       <pubDate>Thu, 31 Jan 2019 13:39:26 -0500</pubDate>
@@ -395,18 +416,9 @@ julia&amp;gt; wait(rr)
     </item>
     
     <item>
-      <title>Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</title>
-      <link>https://kshyatt.github.io/publication/nlce/</link>
-      <pubDate>Thu, 31 Jan 2019 11:01:17 -0500</pubDate>
-      
-      <guid>https://kshyatt.github.io/publication/nlce/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Extracting Entanglement Geometry from Quantum States</title>
       <link>https://kshyatt.github.io/publication/disentangling/</link>
-      <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
+      <pubDate>Tue, 31 Jan 2017 11:01:12 -0500</pubDate>
       
       <guid>https://kshyatt.github.io/publication/disentangling/</guid>
       <description></description>
@@ -415,9 +427,18 @@ julia&amp;gt; wait(rr)
     <item>
       <title>Many-body localization in the presence of a small bath</title>
       <link>https://kshyatt.github.io/publication/bilayer/</link>
-      <pubDate>Thu, 31 Jan 2019 11:01:12 -0500</pubDate>
+      <pubDate>Sun, 31 Jan 2016 11:01:12 -0500</pubDate>
       
       <guid>https://kshyatt.github.io/publication/bilayer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</title>
+      <link>https://kshyatt.github.io/publication/nlce/</link>
+      <pubDate>Tue, 31 Jan 2012 11:01:17 -0500</pubDate>
+      
+      <guid>https://kshyatt.github.io/publication/nlce/</guid>
       <description></description>
     </item>
     

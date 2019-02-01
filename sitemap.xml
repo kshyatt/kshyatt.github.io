@@ -4,6 +4,14 @@
     
     <url>
     
+      <loc>https://kshyatt.github.io/post/startingjulia/</loc>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>https://kshyatt.github.io/post/firstjuliapr/</loc>
       <lastmod>2019-02-01T09:38:10-05:00</lastmod>
     </url>
@@ -36,24 +44,8 @@
     
     <url>
     
-      <loc>https://kshyatt.github.io/publication/nlce/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
-    </url>
-    
-  
-    
-    <url>
-    
       <loc>https://kshyatt.github.io/publication/disentangling/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/publication/bilayer/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
     </url>
     
   
@@ -84,6 +76,22 @@
     
     <url>
     
+      <loc>https://kshyatt.github.io/publication/bilayer/</loc>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://kshyatt.github.io/publication/nlce/</loc>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>https://kshyatt.github.io/author/admin/</loc>
       <lastmod>2019-01-31T11:09:57-05:00</lastmod>
     </url>
@@ -93,7 +101,7 @@
     <url>
     
       <loc>https://kshyatt.github.io/publication_types/2/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -102,7 +110,7 @@
     <url>
     
       <loc>https://kshyatt.github.io/authors/ann-b.-kallin-katharine-hyatt-rajiv-r.-p.-singh-roger-g.-melko/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -119,7 +127,7 @@
     <url>
     
       <loc>https://kshyatt.github.io/authors/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -145,7 +153,7 @@
     <url>
     
       <loc>https://kshyatt.github.io/authors/katharine-hyatt/</loc>
-      <lastmod>2019-02-01T09:38:10-05:00</lastmod>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -154,7 +162,7 @@
     <url>
     
       <loc>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -163,7 +171,7 @@
     <url>
     
       <loc>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-bela-bauer/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -172,7 +180,7 @@
     <url>
     
       <loc>https://kshyatt.github.io/publication_types/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -181,6 +189,15 @@
     <url>
     
       <loc>https://kshyatt.github.io/tags/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://kshyatt.github.io/tags/julia/</loc>
+      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
       <priority>0</priority>
     </url>
     

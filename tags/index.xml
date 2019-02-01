@@ -11,5 +11,14 @@
 	<atom:link href="https://kshyatt.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
+    <item>
+      <title>julia</title>
+      <link>https://kshyatt.github.io/tags/julia/</link>
+      <pubDate>Fri, 01 Feb 2019 10:45:08 -0500</pubDate>
+      
+      <guid>https://kshyatt.github.io/tags/julia/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

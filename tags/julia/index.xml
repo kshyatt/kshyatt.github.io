@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>julia on Katharine Hyatt</title>
+    <link>https://kshyatt.github.io/tags/julia/</link>
+    <description>Recent content in julia on Katharine Hyatt</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2019</copyright>
+    <lastBuildDate>Fri, 01 Feb 2019 10:45:08 -0500</lastBuildDate>
+    
+	<atom:link href="https://kshyatt.github.io/tags/julia/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Getting Started With Julia</title>
+      <link>https://kshyatt.github.io/post/startingjulia/</link>
+      <pubDate>Fri, 01 Feb 2019 10:45:08 -0500</pubDate>
+      
+      <guid>https://kshyatt.github.io/post/startingjulia/</guid>
+      <description>Getting into a new programming language is always a bit overwhelming, because there are so many places to start! Here is a short list of things I like to send to people new to Julia, aimed at varying skill levels:
+ Learn X in Y Minutes - Julia edition, a good quick tour if you already know other languages like python pretty well Towards Julia 1.0, by David Sanders, is a great tutorial for the latest versions of Julia.</description>
+    </item>
+    
+  </channel>
+</rss>

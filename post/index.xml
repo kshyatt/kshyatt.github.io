@@ -13,6 +13,16 @@
     
     
     <item>
+      <title>Getting Started With Julia</title>
+      <link>https://kshyatt.github.io/post/startingjulia/</link>
+      <pubDate>Fri, 01 Feb 2019 10:45:08 -0500</pubDate>
+      
+      <guid>https://kshyatt.github.io/post/startingjulia/</guid>
+      <description>Getting into a new programming language is always a bit overwhelming, because there are so many places to start! Here is a short list of things I like to send to people new to Julia, aimed at varying skill levels:
+ Learn X in Y Minutes - Julia edition, a good quick tour if you already know other languages like python pretty well Towards Julia 1.0, by David Sanders, is a great tutorial for the latest versions of Julia.</description>
+    </item>
+    
+    <item>
       <title>Making a first Julia pull request</title>
       <link>https://kshyatt.github.io/post/firstjuliapr/</link>
       <pubDate>Thu, 31 Jan 2019 13:39:26 -0500</pubDate>
