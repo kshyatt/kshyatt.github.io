@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bela Bauer | Katharine Hyatt</title>
+    <link>https://kshyatt.github.io/authors/bela-bauer/</link>
+      <atom:link href="https://kshyatt.github.io/authors/bela-bauer/index.xml" rel="self" type="application/rss+xml" />
+    <description>Bela Bauer</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2019</copyright><lastBuildDate>Tue, 31 Jan 2017 11:01:12 -0500</lastBuildDate>
+    <image>
+      <url>https://kshyatt.github.io/img/icon-192.png</url>
+      <title>Bela Bauer</title>
+      <link>https://kshyatt.github.io/authors/bela-bauer/</link>
+    </image>
+    
+    <item>
+      <title>Extracting Entanglement Geometry from Quantum States</title>
+      <link>https://kshyatt.github.io/publication/disentangling/</link>
+      <pubDate>Tue, 31 Jan 2017 11:01:12 -0500</pubDate>
+      <guid>https://kshyatt.github.io/publication/disentangling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Many-body localization in the presence of a small bath</title>
+      <link>https://kshyatt.github.io/publication/bilayer/</link>
+      <pubDate>Sun, 31 Jan 2016 11:01:12 -0500</pubDate>
+      <guid>https://kshyatt.github.io/publication/bilayer/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

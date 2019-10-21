@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Matthew Fishman | Katharine Hyatt</title>
+    <link>https://kshyatt.github.io/authors/matthew-fishman/</link>
+      <atom:link href="https://kshyatt.github.io/authors/matthew-fishman/index.xml" rel="self" type="application/rss+xml" />
+    <description>Matthew Fishman</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2019</copyright><lastBuildDate>Tue, 23 Jul 2019 12:00:08 -0400</lastBuildDate>
+    <image>
+      <url>https://kshyatt.github.io/img/icon-192.png</url>
+      <title>Matthew Fishman</title>
+      <link>https://kshyatt.github.io/authors/matthew-fishman/</link>
+    </image>
+    
+    <item>
+      <title>Intelligent Tensors in Julia</title>
+      <link>https://kshyatt.github.io/talk/juliacon2019/</link>
+      <pubDate>Tue, 23 Jul 2019 12:00:08 -0400</pubDate>
+      <guid>https://kshyatt.github.io/talk/juliacon2019/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

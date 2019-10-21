@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Publications on Katharine Hyatt</title>
+    <title>Publications | Katharine Hyatt</title>
     <link>https://kshyatt.github.io/publication/</link>
-    <description>Recent content in Publications on Katharine Hyatt</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>&amp;copy; 2019</copyright>
-    <lastBuildDate>Sun, 01 Jan 2017 00:00:00 -0500</lastBuildDate>
+      <atom:link href="https://kshyatt.github.io/publication/index.xml" rel="self" type="application/rss+xml" />
+    <description>Publications</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2019</copyright>
+    <image>
+      <url>https://kshyatt.github.io/img/icon-192.png</url>
+      <title>Publications</title>
+      <link>https://kshyatt.github.io/publication/</link>
+    </image>
     
-	<atom:link href="https://kshyatt.github.io/publication/index.xml" rel="self" type="application/rss+xml" />
-    
+    <item>
+      <title>DMRG Approach to Optimizing Two-Dimensional Tensor Networks</title>
+      <link>https://kshyatt.github.io/publication/peps/</link>
+      <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>https://kshyatt.github.io/publication/peps/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Extracting Entanglement Geometry from Quantum States</title>
       <link>https://kshyatt.github.io/publication/disentangling/</link>
       <pubDate>Tue, 31 Jan 2017 11:01:12 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/publication/disentangling/</guid>
       <description></description>
     </item>
@@ -25,7 +32,6 @@
       <title>Many-body localization in the presence of a small bath</title>
       <link>https://kshyatt.github.io/publication/bilayer/</link>
       <pubDate>Sun, 31 Jan 2016 11:01:12 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/publication/bilayer/</guid>
       <description></description>
     </item>
@@ -34,7 +40,6 @@
       <title>Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</title>
       <link>https://kshyatt.github.io/publication/nlce/</link>
       <pubDate>Tue, 31 Jan 2012 11:01:17 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/publication/nlce/</guid>
       <description></description>
     </item>

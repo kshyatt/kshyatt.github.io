@@ -1,50 +1,87 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Authors on Katharine Hyatt</title>
+    <title>Authors | Katharine Hyatt</title>
     <link>https://kshyatt.github.io/authors/</link>
-    <description>Recent content in Authors on Katharine Hyatt</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>&amp;copy; 2019</copyright>
-    <lastBuildDate>Tue, 31 Jan 2012 11:01:17 -0500</lastBuildDate>
-    
-	<atom:link href="https://kshyatt.github.io/authors/index.xml" rel="self" type="application/rss+xml" />
-    
+      <atom:link href="https://kshyatt.github.io/authors/index.xml" rel="self" type="application/rss+xml" />
+    <description>Authors</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2019</copyright><lastBuildDate>Mon, 02 Mar 2020 00:00:31 -0400</lastBuildDate>
+    <image>
+      <url>https://kshyatt.github.io/img/icon-192.png</url>
+      <title>Authors</title>
+      <link>https://kshyatt.github.io/authors/</link>
+    </image>
     
     <item>
-      <title>Ann B. Kallin, Katharine Hyatt, Rajiv R. P. Singh, Roger G. Melko</title>
-      <link>https://kshyatt.github.io/authors/ann-b.-kallin-katharine-hyatt-rajiv-r.-p.-singh-roger-g.-melko/</link>
-      <pubDate>Tue, 31 Jan 2012 11:01:17 -0500</pubDate>
-      
-      <guid>https://kshyatt.github.io/authors/ann-b.-kallin-katharine-hyatt-rajiv-r.-p.-singh-roger-g.-melko/</guid>
+      <title></title>
+      <link>https://kshyatt.github.io/authors/admin/</link>
+      <pubDate>Mon, 02 Mar 2020 00:00:31 -0400</pubDate>
+      <guid>https://kshyatt.github.io/authors/admin/</guid>
+      <description>&lt;p&gt;Katharine Hyatt is a postdoc, working in the Center for &lt;a href=&#34;https://www.simonsfoundation.org/flatiron/center-for-computational-quantum-physics/&#34; target=&#34;_blank&#34;&gt;Computational Quantum Physics&lt;/a&gt; at the &lt;a href=&#34;https://www.simonsfoundation.org/flatiron&#34; target=&#34;_blank&#34;&gt;Flatiron Institute&lt;/a&gt;, a division of the &lt;a href=&#34;https://www.simonsfoundation.org&#34; target=&#34;_blank&#34;&gt;Simons Foundation&lt;/a&gt;. Her research focuses on developing new numerical methods to understand 2D correlated electronic systems, and finding interesting applications in condensed matter physics for these methods. &lt;a href=&#34;http://tensornetwork.org&#34; target=&#34;_blank&#34;&gt;Tensor networks&lt;/a&gt; play an important role in this research, along with methods like exact diagonalization and quantum Monte Carlo. She was previously a graduate student at the University of California, Santa Barbara, where she received her PhD in physics in June 2018. Her undergraduate study was completed at the University of Waterloo, from which she holds an Honours BSc in Mathematical Physics. She also moonlights as a sometime &lt;a href=&#34;https://julialang.org&#34; target=&#34;_blank&#34;&gt;Julia language&lt;/a&gt; and package developer.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>E. Miles Stoudenmire</title>
+      <link>https://kshyatt.github.io/authors/e.-miles-stoudenmire/</link>
+      <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>https://kshyatt.github.io/authors/e.-miles-stoudenmire/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Katharine Hyatt</title>
-      <link>https://kshyatt.github.io/authors/katharine-hyatt/</link>
-      <pubDate>Fri, 01 Feb 2019 10:45:08 -0500</pubDate>
-      
-      <guid>https://kshyatt.github.io/authors/katharine-hyatt/</guid>
+      <title>Matthew Fishman</title>
+      <link>https://kshyatt.github.io/authors/matthew-fishman/</link>
+      <pubDate>Tue, 23 Jul 2019 12:00:08 -0400</pubDate>
+      <guid>https://kshyatt.github.io/authors/matthew-fishman/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Katharine Hyatt, James R. Garrison, Andrew C. Potter, Bela Bauer</title>
-      <link>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</link>
-      <pubDate>Sun, 31 Jan 2016 11:01:12 -0500</pubDate>
-      
-      <guid>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Katharine Hyatt, James R. Garrison, Bela Bauer</title>
-      <link>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-bela-bauer/</link>
+      <title>Bela Bauer</title>
+      <link>https://kshyatt.github.io/authors/bela-bauer/</link>
       <pubDate>Tue, 31 Jan 2017 11:01:12 -0500</pubDate>
-      
-      <guid>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-bela-bauer/</guid>
+      <guid>https://kshyatt.github.io/authors/bela-bauer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>James R. Garrison</title>
+      <link>https://kshyatt.github.io/authors/james-r.-garrison/</link>
+      <pubDate>Tue, 31 Jan 2017 11:01:12 -0500</pubDate>
+      <guid>https://kshyatt.github.io/authors/james-r.-garrison/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Andrew C. Potter</title>
+      <link>https://kshyatt.github.io/authors/andrew-c.-potter/</link>
+      <pubDate>Sun, 31 Jan 2016 11:01:12 -0500</pubDate>
+      <guid>https://kshyatt.github.io/authors/andrew-c.-potter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Ann B. Kallin</title>
+      <link>https://kshyatt.github.io/authors/ann-b.-kallin/</link>
+      <pubDate>Tue, 31 Jan 2012 11:01:17 -0500</pubDate>
+      <guid>https://kshyatt.github.io/authors/ann-b.-kallin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rajiv R. P. Singh</title>
+      <link>https://kshyatt.github.io/authors/rajiv-r.-p.-singh/</link>
+      <pubDate>Tue, 31 Jan 2012 11:01:17 -0500</pubDate>
+      <guid>https://kshyatt.github.io/authors/rajiv-r.-p.-singh/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Roger G. Melko</title>
+      <link>https://kshyatt.github.io/authors/roger-g.-melko/</link>
+      <pubDate>Tue, 31 Jan 2012 11:01:17 -0500</pubDate>
+      <guid>https://kshyatt.github.io/authors/roger-g.-melko/</guid>
       <description></description>
     </item>
     

@@ -1,20 +1,61 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Katharine Hyatt on Katharine Hyatt</title>
+    <title>Katharine Hyatt</title>
     <link>https://kshyatt.github.io/</link>
-    <description>Recent content in Katharine Hyatt on Katharine Hyatt</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>&amp;copy; 2019</copyright>
-    <lastBuildDate>Sun, 15 Oct 2017 00:00:00 -0400</lastBuildDate>
-    <atom:link href="/" rel="self" type="application/rss+xml" />
+      <atom:link href="https://kshyatt.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <description>Katharine Hyatt</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2019</copyright><lastBuildDate>Mon, 02 Mar 2020 00:00:31 -0400</lastBuildDate>
+    <image>
+      <url>https://kshyatt.github.io/img/icon-192.png</url>
+      <title>Katharine Hyatt</title>
+      <link>https://kshyatt.github.io/</link>
+    </image>
+    
+    <item>
+      <title>March Meeting 2020</title>
+      <link>https://kshyatt.github.io/talk/aps2020/</link>
+      <pubDate>Mon, 02 Mar 2020 00:00:31 -0400</pubDate>
+      <guid>https://kshyatt.github.io/talk/aps2020/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TNSAA 2019-2020</title>
+      <link>https://kshyatt.github.io/talk/tnsaa/</link>
+      <pubDate>Wed, 04 Dec 2019 00:56:33 -0400</pubDate>
+      <guid>https://kshyatt.github.io/talk/tnsaa/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DMRG Approach to Optimizing Two-Dimensional Tensor Networks</title>
+      <link>https://kshyatt.github.io/publication/peps/</link>
+      <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>https://kshyatt.github.io/publication/peps/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Intelligent Tensors in Julia</title>
+      <link>https://kshyatt.github.io/talk/juliacon2019/</link>
+      <pubDate>Tue, 23 Jul 2019 12:00:08 -0400</pubDate>
+      <guid>https://kshyatt.github.io/talk/juliacon2019/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DMRG Approach to Optimizing Two-Dimensional Tensor Networks</title>
+      <link>https://kshyatt.github.io/talk/uiuc2019/</link>
+      <pubDate>Fri, 19 Jul 2019 18:03:50 -0400</pubDate>
+      <guid>https://kshyatt.github.io/talk/uiuc2019/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Getting Started With Julia</title>
       <link>https://kshyatt.github.io/post/startingjulia/</link>
       <pubDate>Fri, 01 Feb 2019 10:45:08 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/post/startingjulia/</guid>
       <description>&lt;p&gt;Getting into a new programming language is always a bit overwhelming, because there are so many places to start! Here is a short list of things I like to send to people new to Julia, aimed at varying skill levels:&lt;/p&gt;
 
@@ -35,7 +76,6 @@
       <title>Making a first Julia pull request</title>
       <link>https://kshyatt.github.io/post/firstjuliapr/</link>
       <pubDate>Thu, 31 Jan 2019 13:39:26 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/post/firstjuliapr/</guid>
       <description>
 
@@ -321,7 +361,6 @@ To github.com:kshyatt/julia.git
       <title>From One To Many</title>
       <link>https://kshyatt.github.io/talk/juliacon2017/</link>
       <pubDate>Thu, 31 Jan 2019 13:25:50 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/talk/juliacon2017/</guid>
       <description></description>
     </item>
@@ -330,7 +369,6 @@ To github.com:kshyatt/julia.git
       <title>Running Cluster Jobs Remotely </title>
       <link>https://kshyatt.github.io/post/sshcluster/</link>
       <pubDate>Thu, 31 Jan 2019 11:27:44 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/post/sshcluster/</guid>
       <description>
 
@@ -407,11 +445,18 @@ julia&amp;gt; wait(rr)
     </item>
     
     <item>
-      <title>Juliacon 2015</title>
+      <title>Quantum Statistical Simulations with Julia</title>
       <link>https://kshyatt.github.io/talk/juliacon2015/</link>
       <pubDate>Thu, 31 Jan 2019 11:22:28 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/talk/juliacon2015/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Writing an entanglement geometry dictionary: tensor networks, geodesy, and quenching</title>
+      <link>https://kshyatt.github.io/talk/boston2018/</link>
+      <pubDate>Tue, 13 Mar 2018 18:14:19 -0400</pubDate>
+      <guid>https://kshyatt.github.io/talk/boston2018/</guid>
       <description></description>
     </item>
     
@@ -419,7 +464,6 @@ julia&amp;gt; wait(rr)
       <title>Extracting Entanglement Geometry from Quantum States</title>
       <link>https://kshyatt.github.io/publication/disentangling/</link>
       <pubDate>Tue, 31 Jan 2017 11:01:12 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/publication/disentangling/</guid>
       <description></description>
     </item>
@@ -428,7 +472,6 @@ julia&amp;gt; wait(rr)
       <title>Many-body localization in the presence of a small bath</title>
       <link>https://kshyatt.github.io/publication/bilayer/</link>
       <pubDate>Sun, 31 Jan 2016 11:01:12 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/publication/bilayer/</guid>
       <description></description>
     </item>
@@ -437,7 +480,6 @@ julia&amp;gt; wait(rr)
       <title>Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</title>
       <link>https://kshyatt.github.io/publication/nlce/</link>
       <pubDate>Tue, 31 Jan 2012 11:01:17 -0500</pubDate>
-      
       <guid>https://kshyatt.github.io/publication/nlce/</guid>
       <description></description>
     </item>

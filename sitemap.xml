@@ -1,205 +1,168 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/post/startingjulia/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/authors/admin/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/post/firstjuliapr/</loc>
-      <lastmod>2019-02-01T09:38:10-05:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/authors/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/talk/juliacon2017/</loc>
-      <lastmod>2019-01-31T16:00:16-05:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/post/sshcluster/</loc>
-      <lastmod>2019-01-31T11:29:54-05:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/talk/aps2020/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/talk/juliacon2015/</loc>
-      <lastmod>2019-01-31T11:24:50-05:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/talk/tnsaa/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/publication/disentangling/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/publication_types/3/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/post/</loc>
-      <lastmod>2018-10-14T02:15:45+01:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/publication/peps/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/publication/</loc>
-      <lastmod>2018-10-14T02:15:45+01:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/authors/e.-miles-stoudenmire/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/talk/</loc>
-      <lastmod>2018-10-14T02:15:45+01:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/publication_types/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/publication/bilayer/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/talk/juliacon2019/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/publication/nlce/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/authors/matthew-fishman/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/author/admin/</loc>
-      <lastmod>2019-01-31T11:09:57-05:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/talk/uiuc2019/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/publication_types/2/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/post/startingjulia/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/authors/ann-b.-kallin-katharine-hyatt-rajiv-r.-p.-singh-roger-g.-melko/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/post/firstjuliapr/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/author/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/talk/juliacon2017/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/authors/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/post/sshcluster/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/categories/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/talk/juliacon2015/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/</loc>
-      <lastmod>2018-10-01T00:16:12+01:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/talk/boston2018/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/authors/katharine-hyatt/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/publication_types/2/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-andrew-c.-potter-bela-bauer/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/authors/bela-bauer/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/authors/katharine-hyatt-james-r.-garrison-bela-bauer/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/publication/disentangling/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/publication_types/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/authors/james-r.-garrison/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/tags/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/authors/andrew-c.-potter/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://kshyatt.github.io/tags/julia/</loc>
-      <lastmod>2019-02-01T11:07:57-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://kshyatt.github.io/publication/bilayer/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kshyatt.github.io/authors/ann-b.-kallin/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kshyatt.github.io/publication/nlce/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kshyatt.github.io/authors/rajiv-r.-p.-singh/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kshyatt.github.io/authors/roger-g.-melko/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kshyatt.github.io/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>https://kshyatt.github.io/post/</loc>
+    <lastmod>2019-05-06T17:54:11+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kshyatt.github.io/publication/</loc>
+    <lastmod>2019-10-21T12:20:33-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kshyatt.github.io/talk/</loc>
+    <lastmod>2019-05-06T17:54:11+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kshyatt.github.io/tags/</loc>
+  </url>
   
 </urlset>

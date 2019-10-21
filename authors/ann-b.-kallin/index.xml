@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ann B. Kallin | Katharine Hyatt</title>
+    <link>https://kshyatt.github.io/authors/ann-b.-kallin/</link>
+      <atom:link href="https://kshyatt.github.io/authors/ann-b.-kallin/index.xml" rel="self" type="application/rss+xml" />
+    <description>Ann B. Kallin</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2019</copyright><lastBuildDate>Tue, 31 Jan 2012 11:01:17 -0500</lastBuildDate>
+    <image>
+      <url>https://kshyatt.github.io/img/icon-192.png</url>
+      <title>Ann B. Kallin</title>
+      <link>https://kshyatt.github.io/authors/ann-b.-kallin/</link>
+    </image>
+    
+    <item>
+      <title>Entanglement at a Two-Dimensional Quantum Critical Point: a Numerical Linked Cluster Expansion Study</title>
+      <link>https://kshyatt.github.io/publication/nlce/</link>
+      <pubDate>Tue, 31 Jan 2012 11:01:17 -0500</pubDate>
+      <guid>https://kshyatt.github.io/publication/nlce/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
