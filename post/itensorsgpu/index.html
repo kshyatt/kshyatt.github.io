@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.5.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Katharine Hyatt">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Last year at JuliaCon, Matt Fishman and I gave a talk about our ongoing effort to port the ITensor code from C&#43;&#43; to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based contraction backend and were looking forward to some significant speedups.
+What is ITensor To understand why we thought this would be fruitful, and some performance traps we could already anticipate before writing a single line of GPU code, you have to understand a bit about the problem we&#39;re trying to solve.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://kshyatt.github.io/post/itensorsgpu/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.7e979ed716defd683dbcd19db381e87f.css">
+
+  
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://kshyatt.github.io/post/itensorsgpu/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Katharine Hyatt">
+  <meta property="og:url" content="https://kshyatt.github.io/post/itensorsgpu/">
+  <meta property="og:title" content="Itensorsgpu | Katharine Hyatt">
+  <meta property="og:description" content="Last year at JuliaCon, Matt Fishman and I gave a talk about our ongoing effort to port the ITensor code from C&#43;&#43; to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based contraction backend and were looking forward to some significant speedups.
+What is ITensor To understand why we thought this would be fruitful, and some performance traps we could already anticipate before writing a single line of GPU code, you have to understand a bit about the problem we&#39;re trying to solve."><meta property="og:image" content="https://kshyatt.github.io/img/icon-192.png">
+  <meta property="twitter:image" content="https://kshyatt.github.io/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2019-12-30T13:45:19-05:00">
+    
+    <meta property="article:modified_time" content="2019-12-30T13:45:19-05:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://kshyatt.github.io/post/itensorsgpu/"
+  },
+  "headline": "Itensorsgpu",
+  
+  "datePublished": "2019-12-30T13:45:19-05:00",
+  "dateModified": "2019-12-30T13:45:19-05:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Katharine Hyatt"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Katharine Hyatt",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://kshyatt.github.io/img/icon-512.png"
+    }
+  },
+  "description": "Last year at JuliaCon, Matt Fishman and I gave a talk about our ongoing effort to port the ITensor code from C++ to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based contraction backend and were looking forward to some significant speedups.\nWhat is ITensor To understand why we thought this would be fruitful, and some performance traps we could already anticipate before writing a single line of GPU code, you have to understand a bit about the problem we're trying to solve."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Itensorsgpu | Katharine Hyatt</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Katharine Hyatt</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Itensorsgpu</h1>
+
+  
+
+  
+    
+
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+
+
+  
+  <span><a href="/authors/admin/">Katharine Hyatt</a></span>
+
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Dec 30, 2019
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    17 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=https://kshyatt.github.io/post/itensorsgpu/&amp;text=Itensorsgpu" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=https://kshyatt.github.io/post/itensorsgpu/&amp;t=Itensorsgpu" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Itensorsgpu&amp;body=https://kshyatt.github.io/post/itensorsgpu/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=https://kshyatt.github.io/post/itensorsgpu/&amp;title=Itensorsgpu" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Itensorsgpu%20https://kshyatt.github.io/post/itensorsgpu/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=https://kshyatt.github.io/post/itensorsgpu/&amp;title=Itensorsgpu" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <p>Last year at JuliaCon, Matt Fishman and I gave a <a href="https://www.youtube.com/watch?v=A2ypJkA26co">talk</a> about our ongoing effort to port the <a href="http://itensor.org">ITensor</a> code from C++ to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based contraction backend and were looking forward to some significant speedups.</p>
+<h1 id="what-is-itensor">What is ITensor</h1>
+<p>To understand why we thought this would be fruitful, and some performance traps we could already anticipate before writing a single line of GPU code, you have to understand a bit about the problem we're trying to solve.
+Tensor network algorithms are a very active area of research at the intersection of condensed matter physics, high energy physics, quantum information, and computer science. DMRG, which is the most successful numerical method for condensed matter systems in 1D, wasn't originally formulated as a tensor network algorithm, but &ldquo;tensor network speak&rdquo; turns out to be a natural language with which to discuss DMRG and its descendants. (If you're not sure what it's meant to solve, imagine a long chain of quantum objects, each with a fretful relationship with their neibhours. Will they overcome their differences and work together to form a magnet, or continue arguing with each other and fail to come to a consensus? DMRG is an efficient way to answer this question.) All this is to say that there's this class of algorithms physicists (and increasingly computer scientists) are interested in and they work well.</p>
+<p>The driving idea of a tensor network algorithm is to take some high-dimensional optimization problem (solving for groundstates of quantum many body systems is an example of this, since the full dimension of the system grows exponentially in the number of constituent particles) and compress it down to a much lower dimensional problem while retaining most of the important features. We do this by taking a <code>d^N</code> length vector, where <code>d</code> is the number of degrees of freedom of each constituent, and <code>N</code> is the number of constituents, and breaking it down into a set of multidimensionsal tensors, the number of which hopefully scales like <code>N</code> or at least much less than exponentially.</p>
+<p>If you've studied linear algebra before, you've seen some simple examples of tensors: scalars, vectors, and matrices. We say a scalar is a 0-rank tensor, a vector a 1-rank tensor (since it has one index), a matrix a 2-rank tensor (since it has two indices), and then there are higher rank tensors, with three or more indices. When we multiply two matrices <code>A_ij</code> and <code>B_jk</code> together to get <code>C_ik</code>, we're performing a &ldquo;tensor contratction&rdquo;. Similarly, if we had high-rank tensors <code>A_ijkl</code> and <code>B_lmin</code>, we could contract them to get <code>C_jkmn</code>.</p>
+<p>Most tensor network algorithms are based on performing this decomposition and then iteratively improving it towards a target vector. Usually in physics that target is a physical state, but tensor networks have also been used for machine learning tasks and can represent quantum error correcting codes as well.</p>
+<p>ITensor is a C++ package dedicated to providing both high level algorithms using tensor networks, like DMRG, and the low-level building blocks to create your own. ITensor makes it easy to create tensors out of indices, perform linear algebra factorizations (such as QR or SVD) on them, without forcing the user to worry about index ordering. You can read the ITensor tutorials for more information or watch our talk.</p>
+<h1 id="why-use-the-gpu">Why use the GPU</h1>
+<p>It seems pretty reasonable that you could expect a speedup for many tensor network algorithms by using a GPU. By permuting indices, it's possible to reduce all contraction operations to matrix-matrix or matrix-vector multiplications, at which the GPU excels. Most tensor network algorithms have runtimes dominated by such contractions or by SVD. However, there are some performance gotchas we always need to consider when using the GPU:</p>
+<ul>
+<li>The device has comparatiely low memory. The most expensive cards have 32GB of onboard RAM, which is a lot, but many state-of-the-art DMRG calculations require over a terabyte of RAM or checkpointing by writing intermediate information to disk.</li>
+<li>There's high latency and low bandwidth for memory transfers. If we absolutely <em>have to</em> copy memory from the host CPU to the device, we should try to do it all in one big blob, and not in many small chunks. Although the GPU can overlap computations and memory transfers writing code to handle this can be a bit complex.</li>
+<li>The performance for single precision floats is much better than for double precision. Although we'll probably see a perfomance boost for doubles, it won't be as dramatic as for single precision <code>Float32</code>.</li>
+</ul>
+<p>In addition, there is a danger in the most naive approach to handling tensor contractions, which is to just permute all involved tensors into the index layout necessary to write the operation as a matrix-matrix multiplication, and then sit back and call <code>GEMM</code>. Although in many cases this will work quite well, especially if the permutation doesn't involve many indices, there are plenty of bad cases where a great deal of time could be spent alllocating destination arrays and permuting source arrays into them. The risk of this increases with the average number of indices on each tensor (since there are more &ldquo;bad&rdquo; permutations available).</p>
+<p>For these reasons, we weren't sure if the GPU would be a good choice for my current reseach project. You can read the physics details <a href="https://arxiv.org/abs/1908.08833">here</a>. We have a C++ implementation of this code which is CPU only and runs about 5000 lines. One of my goals with the project was to eventually open source the code in the hope that others might find it useful or improve it. However, C++, despite being a great langauge, can be intimidating to many people. I have some experience writing C code that uses CUDA which, despite the powerful API and really granular control over the device the programmer is provided, can also be intimidating and require you to keep a lot of balls in the air while you're writing the code. But the C++ solution, stuck on a single node as it was, with all parallelism coming from CPU BLAS spread over 28 cores, was taking up to a week to run to get a decent picture of the converged result. This was pretty frustrating from a development perspective because it meant the debug cycle of &ldquo;something's wrong&rdquo; - &ldquo;OK, think I found it&rdquo; - &ldquo;is this a fix?&rdquo; - &ldquo;nope, something's still wrong&rdquo; had to take place over multiple days.</p>
+<p>Since Miles (the original author of ITensor) and Matt were already thinking of rewriting ITensor in Julia (see our talk for the motivations for this decision), I decided I would try to help and maybe try to add some GPU support to the new package. Many tensor network algorithms, not only this one, are dominated by tensor-tensor contractions as mentioned above. And since I had already had some experience working with Julia's GPU programming/wrapping infrastructre in <a href="https://github.com/JuliaGPU/CuArrays.jl"><code>CuArrays.jl</code></a>, I thought it wouldn't be so hard to integrate a GPU based tensor operations backend to <code>ITensors.jl</code>. (In fact, we sometimes want to add or subtract tensors, not just contract them.)</p>
+<p>Our first approach, and one I don't have benchmarks for, was the naive method described above - just permute everything and call <code>CUBLAS</code>'s general matrix-matrix multiplication routine. In general, handling GPU memory with <code>CuArrays.jl</code> was very easy. An <code>ITensor</code> is essentially an opaque <code>Vector</code> with some indices along for the ride, which tell you in what order to index elements of the <code>Vector</code>. It's analogous to <code>CartesianArray</code> for those who have used Julia's multidimensional array support. Since our algorithms usually require us to somehow achieve a contraction, QR decomposition, and addition, we thought treating the <code>ITensor</code> storage as essentially a blob you can permute and give to multiplication API calls would be enough. Usually in these algorithms you're not often accessing or manipulating single elements or slices of the <code>ITensor</code> (although this is possible to do and easy in both the C++ and Julia versions), just the tensors themselves.</p>
+<p>Here's the sum total of the code I needed to get a barebones <code>cuITensor</code> that you could move on and off the GPU:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#66d9ef">function</span> cuITensor<span style="color:#f92672"></span>(<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Type</span>{T<span style="color:#f92672"></span>},inds<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>IndexSet<span style="color:#f92672"></span>) where<span style="color:#f92672"></span> {T<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>}
+    <span style="color:#66d9ef">return</span> ITensor<span style="color:#f92672"></span>(Dense<span style="color:#f92672"></span>{float<span style="color:#f92672"></span>(T<span style="color:#f92672"></span>)}(CuArrays<span style="color:#f92672"></span><span style="color:#f92672">.</span>zeros<span style="color:#f92672"></span>(float<span style="color:#f92672"></span>(T<span style="color:#f92672"></span>),dim<span style="color:#f92672"></span>(inds<span style="color:#f92672"></span>))), inds<span style="color:#f92672"></span>)
+<span style="color:#66d9ef">end</span>
+cuITensor<span style="color:#f92672"></span>(<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Type</span>{T<span style="color:#f92672"></span>},inds<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Index<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>) where<span style="color:#f92672"></span> {T<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>} <span style="color:#f92672">=</span> ITensor<span style="color:#f92672"></span>(T<span style="color:#f92672"></span>,IndexSet<span style="color:#f92672"></span>(inds<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>))
+
+cuITensor<span style="color:#f92672"></span>(is<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>IndexSet<span style="color:#f92672"></span>)   <span style="color:#f92672">=</span> cuITensor<span style="color:#f92672"></span>(<span style="color:#66d9ef">Float64</span>,is<span style="color:#f92672"></span>)
+cuITensor<span style="color:#f92672"></span>(inds<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Index<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>) <span style="color:#f92672">=</span> cuITensor<span style="color:#f92672"></span>(IndexSet<span style="color:#f92672"></span>(inds<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>))
+
+cuITensor<span style="color:#f92672"></span>() <span style="color:#f92672">=</span> ITensor<span style="color:#f92672"></span>()
+<span style="color:#66d9ef">function</span> cuITensor<span style="color:#f92672"></span>(x<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>S<span style="color:#f92672"></span>, inds<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>IndexSet<span style="color:#f92672"></span>{N<span style="color:#f92672"></span>}) where<span style="color:#f92672"></span> {S<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>, N<span style="color:#f92672"></span>}
+    dat<span style="color:#f92672"></span> <span style="color:#f92672">=</span> CuVector<span style="color:#f92672"></span>{float<span style="color:#f92672"></span>(S<span style="color:#f92672"></span>)}(undef<span style="color:#f92672"></span>, dim<span style="color:#f92672"></span>(inds<span style="color:#f92672"></span>))
+    fill!<span style="color:#f92672"></span>(dat<span style="color:#f92672"></span>, float<span style="color:#f92672"></span>(x<span style="color:#f92672"></span>))
+    ITensor<span style="color:#f92672"></span>(Dense<span style="color:#f92672"></span>{S<span style="color:#f92672"></span>}(dat<span style="color:#f92672"></span>), inds<span style="color:#f92672"></span>)
+<span style="color:#66d9ef">end</span>
+cuITensor<span style="color:#f92672"></span>(x<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>S<span style="color:#f92672"></span>, inds<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Index<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>) where<span style="color:#f92672"></span> {S<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>} <span style="color:#f92672">=</span> cuITensor<span style="color:#f92672"></span>(x<span style="color:#f92672"></span>,IndexSet<span style="color:#f92672"></span>(inds<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>))
+
+<span style="color:#66d9ef">function</span> cuITensor<span style="color:#f92672"></span>(A<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Array</span>{S<span style="color:#f92672"></span>},inds<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>IndexSet<span style="color:#f92672"></span>) where<span style="color:#f92672"></span> {S<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>}
+    <span style="color:#66d9ef">return</span> ITensor<span style="color:#f92672"></span>(Dense<span style="color:#f92672"></span>(CuArray<span style="color:#f92672"></span>{S<span style="color:#f92672"></span>}(A<span style="color:#f92672"></span>)), inds<span style="color:#f92672"></span>)
+<span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">function</span> cuITensor<span style="color:#f92672"></span>(A<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuArray<span style="color:#f92672"></span>{S<span style="color:#f92672"></span>},inds<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>IndexSet<span style="color:#f92672"></span>) where<span style="color:#f92672"></span> {S<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>}
+    <span style="color:#66d9ef">return</span> ITensor<span style="color:#f92672"></span>(Dense<span style="color:#f92672"></span>(A<span style="color:#f92672"></span>), inds<span style="color:#f92672"></span>)
+<span style="color:#66d9ef">end</span>
+cuITensor<span style="color:#f92672"></span>(A<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Array</span>{S<span style="color:#f92672"></span>},   inds<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Index<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>) where<span style="color:#f92672"></span> {S<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>} <span style="color:#f92672">=</span> cuITensor<span style="color:#f92672"></span>(A<span style="color:#f92672"></span>,IndexSet<span style="color:#f92672"></span>(inds<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>))
+cuITensor<span style="color:#f92672"></span>(A<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuArray<span style="color:#f92672"></span>{S<span style="color:#f92672"></span>}, inds<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Index<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>) where<span style="color:#f92672"></span> {S<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>} <span style="color:#f92672">=</span> cuITensor<span style="color:#f92672"></span>(A<span style="color:#f92672"></span>,IndexSet<span style="color:#f92672"></span>(inds<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>))
+cuITensor<span style="color:#f92672"></span>(A<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>ITensor<span style="color:#f92672"></span>) <span style="color:#f92672">=</span> cuITensor<span style="color:#f92672"></span>(A<span style="color:#f92672"></span><span style="color:#f92672">.</span>store<span style="color:#f92672"></span><span style="color:#f92672">.</span>data<span style="color:#f92672"></span>,A<span style="color:#f92672"></span><span style="color:#f92672">.</span>inds<span style="color:#f92672"></span>)
+
+<span style="color:#66d9ef">function</span> Base<span style="color:#f92672"></span><span style="color:#f92672">.</span>collect<span style="color:#f92672"></span>(A<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>ITensor<span style="color:#f92672"></span>)
+    typeof<span style="color:#f92672"></span>(A<span style="color:#f92672"></span><span style="color:#f92672">.</span>store<span style="color:#f92672"></span><span style="color:#f92672">.</span>data<span style="color:#f92672"></span>) <span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span> CuArray<span style="color:#f92672"></span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#66d9ef">return</span> ITensor<span style="color:#f92672"></span>(collect<span style="color:#f92672"></span>(A<span style="color:#f92672"></span><span style="color:#f92672">.</span>store<span style="color:#f92672"></span>), A<span style="color:#f92672"></span><span style="color:#f92672">.</span>inds<span style="color:#f92672"></span>)    
+    <span style="color:#66d9ef">return</span> A<span style="color:#f92672"></span>
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>Mostly, this handles different ways of providing the indices, and a few options for the input data type. I assumed that if you called the <code>cuITensor</code> constructor but gave it an input CPU array, you probably wanted that array transferred to the GPU.
+That's the easy part. Adding support for some other operations, like QR decomposition or eigensolving, wasn't much harder:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#66d9ef">function</span> eigenHermitian<span style="color:#f92672"></span>(T<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuDenseTensor<span style="color:#f92672"></span>{ElT<span style="color:#f92672"></span>,<span style="color:#ae81ff">2</span>,IndsT<span style="color:#f92672"></span>};
+                        kwargs<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>) where<span style="color:#f92672"></span> {ElT<span style="color:#f92672"></span>,IndsT<span style="color:#f92672"></span>}
+  maxdim<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Int</span>          <span style="color:#f92672">=</span> get<span style="color:#f92672"></span>(kwargs<span style="color:#f92672"></span>,<span style="color:#f92672">:</span>maxdim<span style="color:#f92672"></span>,minimum<span style="color:#f92672"></span>(dims<span style="color:#f92672"></span>(T<span style="color:#f92672"></span>)))
+  mindim<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Int</span>          <span style="color:#f92672">=</span> get<span style="color:#f92672"></span>(kwargs<span style="color:#f92672"></span>,<span style="color:#f92672">:</span>mindim<span style="color:#f92672"></span>,<span style="color:#ae81ff">1</span>)
+  cutoff<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Float64</span>      <span style="color:#f92672">=</span> get<span style="color:#f92672"></span>(kwargs<span style="color:#f92672"></span>,<span style="color:#f92672">:</span>cutoff<span style="color:#f92672"></span>,<span style="color:#ae81ff">0.0</span>)
+  absoluteCutoff<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Bool</span> <span style="color:#f92672">=</span> get<span style="color:#f92672"></span>(kwargs<span style="color:#f92672"></span>,<span style="color:#f92672">:</span>absoluteCutoff<span style="color:#f92672"></span>,<span style="color:#66d9ef">false</span>)
+  doRelCutoff<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Bool</span>    <span style="color:#f92672">=</span> get<span style="color:#f92672"></span>(kwargs<span style="color:#f92672"></span>,<span style="color:#f92672">:</span>doRelCutoff<span style="color:#f92672"></span>,<span style="color:#66d9ef">true</span>)
+  <span style="color:#66d9ef">local</span> DM<span style="color:#f92672"></span>, UM<span style="color:#f92672"></span> 
+  <span style="color:#66d9ef">if</span> ElT<span style="color:#f92672"></span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">Complex</span>
+    DM<span style="color:#f92672"></span>, UM<span style="color:#f92672"></span> <span style="color:#f92672">=</span> CUSOLVER<span style="color:#f92672"></span><span style="color:#f92672">.</span>heevd!<span style="color:#f92672"></span>(<span style="color:#e6db74">&#39;V&#39;</span>, <span style="color:#e6db74">&#39;U&#39;</span>, matrix<span style="color:#f92672"></span>(T<span style="color:#f92672"></span>))
+  <span style="color:#66d9ef">else</span>
+    DM<span style="color:#f92672"></span>, UM<span style="color:#f92672"></span> <span style="color:#f92672">=</span> CUSOLVER<span style="color:#f92672"></span><span style="color:#f92672">.</span>syevd!<span style="color:#f92672"></span>(<span style="color:#e6db74">&#39;V&#39;</span>, <span style="color:#e6db74">&#39;U&#39;</span>, matrix<span style="color:#f92672"></span>(T<span style="color:#f92672"></span>))
+  <span style="color:#66d9ef">end</span>
+  DM_<span style="color:#f92672"></span> <span style="color:#f92672">=</span> reverse<span style="color:#f92672"></span>(DM<span style="color:#f92672"></span>)
+  truncerr<span style="color:#f92672"></span>, docut<span style="color:#f92672"></span>, DM<span style="color:#f92672"></span> <span style="color:#f92672">=</span> truncate!<span style="color:#f92672"></span>(DM_<span style="color:#f92672"></span>;maxdim<span style="color:#f92672"></span><span style="color:#f92672">=</span>maxdim<span style="color:#f92672"></span>, cutoff<span style="color:#f92672"></span><span style="color:#f92672">=</span>cutoff<span style="color:#f92672"></span>, absoluteCutoff<span style="color:#f92672"></span><span style="color:#f92672">=</span>absoluteCutoff<span style="color:#f92672"></span>, doRelCutoff<span style="color:#f92672"></span><span style="color:#f92672">=</span>doRelCutoff<span style="color:#f92672"></span>)
+  dD<span style="color:#f92672"></span> <span style="color:#f92672">=</span> length<span style="color:#f92672"></span>(DM<span style="color:#f92672"></span>)
+  dV<span style="color:#f92672"></span> <span style="color:#f92672">=</span> reverse<span style="color:#f92672"></span>(UM<span style="color:#f92672"></span>, dims<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+  <span style="color:#66d9ef">if</span> dD<span style="color:#f92672"></span> <span style="color:#f92672">&lt;</span> size<span style="color:#f92672"></span>(dV<span style="color:#f92672"></span>,<span style="color:#ae81ff">2</span>)
+      dV<span style="color:#f92672"></span> <span style="color:#f92672">=</span> CuMatrix<span style="color:#f92672"></span>(dV<span style="color:#f92672"></span>[<span style="color:#f92672">:</span>,<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>dD<span style="color:#f92672"></span>])
+  <span style="color:#66d9ef">end</span>
+  <span style="color:#75715e"># Make the new indices to go onto U and V</span>
+  u<span style="color:#f92672"></span>     <span style="color:#f92672">=</span> eltype<span style="color:#f92672"></span>(IndsT<span style="color:#f92672"></span>)(dD<span style="color:#f92672"></span>)
+  v<span style="color:#f92672"></span>     <span style="color:#f92672">=</span> eltype<span style="color:#f92672"></span>(IndsT<span style="color:#f92672"></span>)(dD<span style="color:#f92672"></span>)
+  Uinds<span style="color:#f92672"></span> <span style="color:#f92672">=</span> IndsT<span style="color:#f92672"></span>((ind<span style="color:#f92672"></span>(T<span style="color:#f92672"></span>,<span style="color:#ae81ff">1</span>),u<span style="color:#f92672"></span>))
+  Dinds<span style="color:#f92672"></span> <span style="color:#f92672">=</span> IndsT<span style="color:#f92672"></span>((u<span style="color:#f92672"></span>,v<span style="color:#f92672"></span>))
+  dV_<span style="color:#f92672"></span>   <span style="color:#f92672">=</span> CuArrays<span style="color:#f92672"></span><span style="color:#f92672">.</span>zeros<span style="color:#f92672"></span>(ElT<span style="color:#f92672"></span>, length<span style="color:#f92672"></span>(dV<span style="color:#f92672"></span>))
+  copyto!<span style="color:#f92672"></span>(dV_<span style="color:#f92672"></span>, vec<span style="color:#f92672"></span>(dV<span style="color:#f92672"></span>))
+  U<span style="color:#f92672"></span> <span style="color:#f92672">=</span> Tensor<span style="color:#f92672"></span>(Dense<span style="color:#f92672"></span>(dV_<span style="color:#f92672"></span>),Uinds<span style="color:#f92672"></span>)
+  D<span style="color:#f92672"></span> <span style="color:#f92672">=</span> Tensor<span style="color:#f92672"></span>(Diag<span style="color:#f92672"></span>(real<span style="color:#f92672"></span><span style="color:#f92672">.</span>(DM<span style="color:#f92672"></span>)),Dinds<span style="color:#f92672"></span>)
+  <span style="color:#66d9ef">return</span> U<span style="color:#f92672"></span>,D<span style="color:#f92672"></span>
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>This weird looking method of getting <code>dV</code> into <code>dV_</code> is necessary because of the way <code>CuArrays.jl</code> deals with reshapes. As we'll see later it doesn't seem to impact performance too much.
+But of course, the big problem we wanted to solve was contractions. Because the CPU code also works by performing the permutation and calling <code>GEMM</code>, it was relatively easy to pirate that over to the GPU:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#66d9ef">function</span> contract!<span style="color:#f92672"></span>(C<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuArray<span style="color:#f92672"></span>{T<span style="color:#f92672"></span>},
+                   p<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CProps<span style="color:#f92672"></span>,
+                   A<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuArray<span style="color:#f92672"></span>{T<span style="color:#f92672"></span>},
+                   B<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuArray<span style="color:#f92672"></span>{T<span style="color:#f92672"></span>},
+                   α<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Tα<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#ae81ff">1.0</span>,
+                   β<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Tβ<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#ae81ff">0.0</span>) where<span style="color:#f92672"></span> {T<span style="color:#f92672"></span>,Tα<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>,Tβ<span style="color:#f92672"></span><span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>}
+
+  <span style="color:#75715e"># bunch of code to find permutations and permute α and β goes here!</span>
+  CUBLAS<span style="color:#f92672"></span><span style="color:#f92672">.</span>gemm_wrapper!<span style="color:#f92672"></span>(cref<span style="color:#f92672"></span>, tA<span style="color:#f92672"></span>,tB<span style="color:#f92672"></span>,aref<span style="color:#f92672"></span>,bref<span style="color:#f92672"></span>,promote_type<span style="color:#f92672"></span>(T<span style="color:#f92672"></span>,Tα<span style="color:#f92672"></span>)(α<span style="color:#f92672"></span>),promote_type<span style="color:#f92672"></span>(T<span style="color:#f92672"></span>,Tβ<span style="color:#f92672"></span>)(β<span style="color:#f92672"></span>))
+
+  <span style="color:#66d9ef">if</span> p<span style="color:#f92672"></span><span style="color:#f92672">.</span>permuteC<span style="color:#f92672"></span>
+    permutedims!<span style="color:#f92672"></span>(C<span style="color:#f92672"></span>,reshape<span style="color:#f92672"></span>(cref<span style="color:#f92672"></span>,p<span style="color:#f92672"></span><span style="color:#f92672">.</span>newCrange<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>),p<span style="color:#f92672"></span><span style="color:#f92672">.</span>PC<span style="color:#f92672"></span>)
+  <span style="color:#66d9ef">end</span>
+  <span style="color:#66d9ef">return</span>
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>The design of <code>ITensors.jl</code> specifies that the <code>ITensor</code> type itself is not specialiazed on its storage type, so that from the user's point of view, they have a tensor-like object contracting with another tensor-like object, and the developers can worry about how to multiply a diagonal-like rank-6 tensor by a sparse rank-4 tensor. This makes it easier for users to implement the algorithms they need to do their research in, and it's one of the library's strengths. All that was needed to allow an <code>ITensor</code> with GPU-backed storage to play nicely with an <code>ITensor</code> with CPU-backed storage was few lines of edge case handling:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#66d9ef">function</span> contract!!<span style="color:#f92672"></span>(R<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuDenseTensor<span style="color:#f92672"></span>{<span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>,NR<span style="color:#f92672"></span>}, labelsR<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">NTuple</span>{NR<span style="color:#f92672"></span>}, T1<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>DenseTensor<span style="color:#f92672"></span>{<span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>,N1<span style="color:#f92672"></span>}, labelsT1<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">NTuple</span>{N1<span style="color:#f92672"></span>}, T2<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuDenseTensor<span style="color:#f92672"></span>{<span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>,N2<span style="color:#f92672"></span>}, labelsT2<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">NTuple</span>{N2<span style="color:#f92672"></span>}) where<span style="color:#f92672"></span> {NR<span style="color:#f92672"></span>,N1<span style="color:#f92672"></span>,N2<span style="color:#f92672"></span>}
+    <span style="color:#66d9ef">return</span> contract!!<span style="color:#f92672"></span>(R<span style="color:#f92672"></span>, CuDenseTensor<span style="color:#f92672"></span>(cu<span style="color:#f92672"></span>(store<span style="color:#f92672"></span>(T1<span style="color:#f92672"></span>)), inds<span style="color:#f92672"></span>(T1<span style="color:#f92672"></span>)), labelsT1<span style="color:#f92672"></span>, T2<span style="color:#f92672"></span>, labelsT2<span style="color:#f92672"></span>) 
+<span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">function</span> contract!!<span style="color:#f92672"></span>(R<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuDenseTensor<span style="color:#f92672"></span>{<span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>,NR<span style="color:#f92672"></span>}, labelsR<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">NTuple</span>{NR<span style="color:#f92672"></span>}, T1<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuDenseTensor<span style="color:#f92672"></span>{<span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>,N1<span style="color:#f92672"></span>}, labelsT1<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">NTuple</span>{N1<span style="color:#f92672"></span>}, T2<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>DenseTensor<span style="color:#f92672"></span>{<span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Number</span>,N2<span style="color:#f92672"></span>}, labelsT2<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">NTuple</span>{N2<span style="color:#f92672"></span>}) where<span style="color:#f92672"></span> {NR<span style="color:#f92672"></span>,N1<span style="color:#f92672"></span>,N2<span style="color:#f92672"></span>}
+    <span style="color:#66d9ef">return</span> contract!!<span style="color:#f92672"></span>(R<span style="color:#f92672"></span>, T1<span style="color:#f92672"></span>, labelsT1<span style="color:#f92672"></span>, CuDenseTensor<span style="color:#f92672"></span>(cu<span style="color:#f92672"></span>(store<span style="color:#f92672"></span>(T2<span style="color:#f92672"></span>)), inds<span style="color:#f92672"></span>(T2<span style="color:#f92672"></span>)), labelsT2<span style="color:#f92672"></span>) 
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>I chose to copy the CPU storage to the device before the addition or contraction, hoping that this would occur rarely and that the performance gain in the main operation would offset the memory transfer time. Ideally this situation should never occur: we absolutely want to minimize memory transfers. However, if a user makes a mistake and forgets a <code>cuITensor(A)</code>, their code won't error out. In fact, in the latest version of <code>ITensorsGPU.jl</code> this dubious feature is disallowed, since in my code it was always the result of forgetting to initialize something on the GPU which should have been.</p>
+<p>This was enough to get the barebones GPU support working. But I was still worried about the issue with the permutations, especially because the week-long simulations are those which are most memory intensive, and I was worried about running out of space on the device. Could there be a better solution?</p>
+<h1 id="cutensor-and-the-story-of-how-ai-made-my-labour-useless"><code>CUTENSOR</code> and the story of how AI made my labour useless</h1>
+<p>Around this time we became aware of <a href="https://docs.nvidia.com/cuda/cutensor/index.html">CUTENSOR</a>, an NVIDIA library designed exactly for our use case: adding and contracting high rank tensors with indices in arbitrary order. However, this library was, of course, written in C. Luckily Julia makes it pretty easy to wrap C APIs, and we got started doing so in <a href="https://github.com/JuliaGPU/CuArrays.jl/pull/330">this epic PR</a>. During the process of getting these wrappers into a state fit for a public facing library, Tim created some very nice scripts which automate the process of creating Julia wrappers for C functions, <a href="https://github.com/JuliaGPU/CuArrays.jl/pull/421">automating away</a> many hours of labour I had performed years ago to get the sparse linear algebra and solver libraries working. Sic transit gloria mundi, I guess (generating these wrappers was not a glorious process). Now it will be easy for us to integrate changes to the <code>CUTENSOR</code> API over time as more features are added.</p>
+<p><code>CUTENSOR</code>'s internals handle matching up elements for products and sums as part of the contraction process, so the permutations that <code>ITensors.jl</code> performs for a CPU-based <code>ITensor</code> are unnecessary. By overriding a few functions we're able to call the correct internal routines which feed through to <code>CUTENSOR</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#66d9ef">function</span> Base<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">:</span><span style="color:#f92672">+</span>(B<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuDenseTensor<span style="color:#f92672"></span>, A<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuDenseTensor<span style="color:#f92672"></span>)
+  opC<span style="color:#f92672"></span>  <span style="color:#f92672">=</span> CUTENSOR<span style="color:#f92672"></span><span style="color:#f92672">.</span>CUTENSOR_OP_IDENTITY<span style="color:#f92672"></span>
+  opA<span style="color:#f92672"></span>  <span style="color:#f92672">=</span> CUTENSOR<span style="color:#f92672"></span><span style="color:#f92672">.</span>CUTENSOR_OP_IDENTITY<span style="color:#f92672"></span>
+  opAC<span style="color:#f92672"></span> <span style="color:#f92672">=</span> CUTENSOR<span style="color:#f92672"></span><span style="color:#f92672">.</span>CUTENSOR_OP_ADD<span style="color:#f92672"></span>
+  Ais<span style="color:#f92672"></span> <span style="color:#f92672">=</span> inds<span style="color:#f92672"></span>(A<span style="color:#f92672"></span>)
+  Bis<span style="color:#f92672"></span> <span style="color:#f92672">=</span> inds<span style="color:#f92672"></span>(B<span style="color:#f92672"></span>)
+  ind_dict<span style="color:#f92672"></span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">Vector</span>{Index<span style="color:#f92672"></span>}()
+  <span style="color:#66d9ef">for</span> (idx<span style="color:#f92672"></span>, i<span style="color:#f92672"></span>) <span style="color:#66d9ef">in</span> enumerate<span style="color:#f92672"></span>(inds<span style="color:#f92672"></span>(A<span style="color:#f92672"></span>))
+      push!<span style="color:#f92672"></span>(ind_dict<span style="color:#f92672"></span>, i<span style="color:#f92672"></span>)
+  <span style="color:#66d9ef">end</span>
+  Adata<span style="color:#f92672"></span> <span style="color:#f92672">=</span> data<span style="color:#f92672"></span>(store<span style="color:#f92672"></span>(A<span style="color:#f92672"></span>))
+  Bdata<span style="color:#f92672"></span> <span style="color:#f92672">=</span> data<span style="color:#f92672"></span>(store<span style="color:#f92672"></span>(B<span style="color:#f92672"></span>))
+  reshapeBdata<span style="color:#f92672"></span> <span style="color:#f92672">=</span> reshape<span style="color:#f92672"></span>(Bdata<span style="color:#f92672"></span>,dims<span style="color:#f92672"></span>(Bis<span style="color:#f92672"></span>))
+  reshapeAdata<span style="color:#f92672"></span> <span style="color:#f92672">=</span> reshape<span style="color:#f92672"></span>(Adata<span style="color:#f92672"></span>,dims<span style="color:#f92672"></span>(Ais<span style="color:#f92672"></span>))
+  <span style="color:#75715e"># probably a silly way to handle this, but it worked</span>
+  ctainds<span style="color:#f92672"></span> <span style="color:#f92672">=</span> zeros<span style="color:#f92672"></span>(<span style="color:#66d9ef">Int</span>, length<span style="color:#f92672"></span>(Ais<span style="color:#f92672"></span>))
+  ctbinds<span style="color:#f92672"></span> <span style="color:#f92672">=</span> zeros<span style="color:#f92672"></span>(<span style="color:#66d9ef">Int</span>, length<span style="color:#f92672"></span>(Bis<span style="color:#f92672"></span>))
+  <span style="color:#66d9ef">for</span> (ii<span style="color:#f92672"></span>, ia<span style="color:#f92672"></span>) <span style="color:#66d9ef">in</span> enumerate<span style="color:#f92672"></span>(Ais<span style="color:#f92672"></span>)
+      ctainds<span style="color:#f92672"></span>[ii<span style="color:#f92672"></span>] <span style="color:#f92672">=</span> findfirst<span style="color:#f92672"></span>(x<span style="color:#f92672"></span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>x<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>ia<span style="color:#f92672"></span>, ind_dict<span style="color:#f92672"></span>)
+  <span style="color:#66d9ef">end</span>
+  <span style="color:#66d9ef">for</span> (ii<span style="color:#f92672"></span>, ib<span style="color:#f92672"></span>) <span style="color:#66d9ef">in</span> enumerate<span style="color:#f92672"></span>(Bis<span style="color:#f92672"></span>)
+      ctbinds<span style="color:#f92672"></span>[ii<span style="color:#f92672"></span>] <span style="color:#f92672">=</span> findfirst<span style="color:#f92672"></span>(x<span style="color:#f92672"></span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>x<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>ib<span style="color:#f92672"></span>, ind_dict<span style="color:#f92672"></span>)
+  <span style="color:#66d9ef">end</span>
+  ctcinds<span style="color:#f92672"></span> <span style="color:#f92672">=</span> copy<span style="color:#f92672"></span>(ctbinds<span style="color:#f92672"></span>)
+  C<span style="color:#f92672"></span> <span style="color:#f92672">=</span> CuArrays<span style="color:#f92672"></span><span style="color:#f92672">.</span>zeros<span style="color:#f92672"></span>(eltype<span style="color:#f92672"></span>(Bdata<span style="color:#f92672"></span>), dims<span style="color:#f92672"></span>(Bis<span style="color:#f92672"></span>))
+  CUTENSOR<span style="color:#f92672"></span><span style="color:#f92672">.</span>elementwiseBinary!<span style="color:#f92672"></span>(one<span style="color:#f92672"></span>(eltype<span style="color:#f92672"></span>(Adata<span style="color:#f92672"></span>)), reshapeAdata<span style="color:#f92672"></span>, ctainds<span style="color:#f92672"></span>, opA<span style="color:#f92672"></span>, one<span style="color:#f92672"></span>(eltype<span style="color:#f92672"></span>(Bdata<span style="color:#f92672"></span>)), reshapeBdata<span style="color:#f92672"></span>, ctbinds<span style="color:#f92672"></span>, opC<span style="color:#f92672"></span>, C<span style="color:#f92672"></span>, ctcinds<span style="color:#f92672"></span>, opAC<span style="color:#f92672"></span>)
+  copyto!<span style="color:#f92672"></span>(data<span style="color:#f92672"></span>(store<span style="color:#f92672"></span>(B<span style="color:#f92672"></span>)), vec<span style="color:#f92672"></span>(C<span style="color:#f92672"></span>))
+  <span style="color:#66d9ef">return</span> B<span style="color:#f92672"></span>
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>Once these wrappers and their tests were merged into <code>CuArrays.jl</code>, I set about changing up how we were calling the contraction functions on the <code>ITensors.jl</code> side. Dealing with optional dependencies, as <code>CuArrays.jl</code> would have been for <code>ITensors.jl</code>, is still kind of a pain in Julia, so I made a new package, <a href="https://github.com/ITensor/ITensorsGPU.jl"><code>ITensorsGPU.jl</code></a>, to hold all the CUDA-related logic. What's nice is that from the end-user's perspective, they just have copy the tensors to the GPU at the start of the simulation and afterwards everything works mostly seamlessly &ndash; they don't have to concern themselves with index orders or anything. It frees the user to focus more on high-level algorithm design.</p>
+<h1 id="extirpating-memory-copies">Extirpating memory copies</h1>
+<p>Copying memory back and forth from the device is extremely slow, and the code will perform best if we can eliminate as many as possible. One way to see how much time the device is spending on them is using NVIDIA's <a href="https://docs.nvidia.com/cuda/profiler-users-guide/index.html"><code>nvprof</code></a> tool. Working with the cluster means I usually do most of my development over SSH, so I used command line mode, which is really easy:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nvprof ~/software/julia/julia prof_run.jl
+</code></pre></div><p>This generates some output like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">=</span><span style="color:#f92672">=</span>1386746<span style="color:#f92672">=</span><span style="color:#f92672">=</span> Profiling application: julia prof_run.jl
+<span style="color:#f92672">=</span><span style="color:#f92672">=</span>1386746<span style="color:#f92672">=</span><span style="color:#f92672">=</span> Profiling result:
+            Type  Time<span style="color:#f92672">(</span>%<span style="color:#f92672">)</span>      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   14.02%  12.1800s     <span style="color:#ae81ff">80792</span>  150.76us  102.69us  408.00us  void sytd2_upper_cta&lt;double, double, int<span style="color:#f92672">=</span>5&gt;<span style="color:#f92672">(</span>int, double*, int, double*, double*, double*<span style="color:#f92672">)</span>
+                    7.44%  6.46842s   <span style="color:#ae81ff">5077903</span>  1.2730us  1.1190us  54.367us  <span style="color:#f92672">[</span>CUDA memcpy HtoD<span style="color:#f92672">]</span>
+                    6.02%  5.22885s   <span style="color:#ae81ff">4430677</span>  1.1800us     959ns  7.2640us  ptxcall_anonymous19_1
+                    5.06%  4.39301s    <span style="color:#ae81ff">178968</span>  24.546us  8.4480us  81.855us  void cutensor_internal_namespace::tensor_contraction_kernel&lt;cutensor_internal_namespace::tc_config_t&lt;int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>4, int<span style="color:#f92672">=</span>64, int<span style="color:#f92672">=</span>64, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>32, int<span style="color:#f92672">=</span>32, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>4, int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>4, bool<span style="color:#f92672">=</span>1, bool<span style="color:#f92672">=</span>0, bool<span style="color:#f92672">=</span>0, bool<span style="color:#f92672">=</span>1, bool<span style="color:#f92672">=</span>0, cutensorOperator_t<span style="color:#f92672">=</span>1, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, bool<span style="color:#f92672">=</span>0&gt;, double, double, double, double&gt;<span style="color:#f92672">(</span>cutensor_internal_namespace::tc_params_t, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span> const *, int<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> const *, cutensor_internal_namespace::tc_params_t, int<span style="color:#f92672">=</span>64*<span style="color:#f92672">)</span>
+                    4.97%  4.31812s    <span style="color:#ae81ff">346589</span>  12.458us  5.4400us  29.088us  void cutensor_internal_namespace::tensor_contraction_kernel&lt;cutensor_internal_namespace::tc_config_t&lt;int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>4, int<span style="color:#f92672">=</span>64, int<span style="color:#f92672">=</span>64, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>16, int<span style="color:#f92672">=</span>16, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>4, int<span style="color:#f92672">=</span>4, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>4, bool<span style="color:#f92672">=</span>1, bool<span style="color:#f92672">=</span>1, bool<span style="color:#f92672">=</span>0, bool<span style="color:#f92672">=</span>0, bool<span style="color:#f92672">=</span>0, cutensorOperator_t<span style="color:#f92672">=</span>1, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, bool<span style="color:#f92672">=</span>0&gt;, double, double, double, double&gt;<span style="color:#f92672">(</span>cutensor_internal_namespace::tc_params_t, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span> const *, int<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> const *, cutensor_internal_namespace::tc_params_t, int<span style="color:#f92672">=</span>64*<span style="color:#f92672">)</span>
+                    4.96%  4.31109s   <span style="color:#ae81ff">2397744</span>  1.7970us  1.7270us  6.8160us  ptxcall_setindex_kernel__26
+                    4.18%  3.63043s    <span style="color:#ae81ff">228988</span>  15.854us  5.8560us  28.672us  void cutensor_internal_namespace::tensor_contraction_kernel&lt;cutensor_internal_namespace::tc_config_t&lt;int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>4, int<span style="color:#f92672">=</span>64, int<span style="color:#f92672">=</span>64, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>16, int<span style="color:#f92672">=</span>16, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>4, int<span style="color:#f92672">=</span>4, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>4, bool<span style="color:#f92672">=</span>1, bool<span style="color:#f92672">=</span>0, bool<span style="color:#f92672">=</span>0, bool<span style="color:#f92672">=</span>0, bool<span style="color:#f92672">=</span>0, cutensorOperator_t<span style="color:#f92672">=</span>1, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, bool<span style="color:#f92672">=</span>0&gt;, double, double, double, double&gt;<span style="color:#f92672">(</span>cutensor_internal_namespace::tc_params_t, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span> const *, int<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> const *, cutensor_internal_namespace::tc_params_t, int<span style="color:#f92672">=</span>64*<span style="color:#f92672">)</span>
+                    3.41%  2.96655s   <span style="color:#ae81ff">2162240</span>  1.3710us  1.2470us  3.4880us  <span style="color:#f92672">[</span>CUDA memcpy DtoH<span style="color:#f92672">]</span>
+                    2.77%  2.40280s   <span style="color:#ae81ff">1827148</span>  1.3150us  1.0870us  7.3600us  ptxcall_anonymous19_14
+                    2.70%  2.34219s   <span style="color:#ae81ff">1327280</span>  1.7640us  1.5360us  6.5920us  ptxcall_setindex_kernel__15
+                                                                                                                                                                                                                       5424,21       96%
+...
+</code></pre></div><p>You can see the <code>memcpyHtoD</code> there, and it's taking up a lot of time! By carefully going through and creating <code>ITensors</code> with the appropriate storage type in internal routines, like so:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#75715e"># again probably a nicer way to do this</span>
+is_gpu<span style="color:#f92672"></span> <span style="color:#f92672">=</span> all<span style="color:#f92672"></span>([data<span style="color:#f92672"></span>(store<span style="color:#f92672"></span>(A<span style="color:#f92672"></span>[i<span style="color:#f92672"></span>,j<span style="color:#f92672"></span>])) <span style="color:#66d9ef">isa</span> CuArray<span style="color:#f92672"></span> <span style="color:#66d9ef">for</span> i<span style="color:#f92672"></span> <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>Ny<span style="color:#f92672"></span>, j<span style="color:#f92672"></span> <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>Nx<span style="color:#f92672"></span>)
+N<span style="color:#f92672"></span>      <span style="color:#f92672">=</span> spinI<span style="color:#f92672"></span>(findindex<span style="color:#f92672"></span>(A<span style="color:#f92672"></span>[row<span style="color:#f92672"></span>, col<span style="color:#f92672"></span>], <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">i</span><span style="color:#e6db74">t</span><span style="color:#e6db74">e</span><span style="color:#e6db74">&#34;</span>); is_gpu<span style="color:#f92672"></span><span style="color:#f92672">=</span>is_gpu<span style="color:#f92672"></span>)
+
+<span style="color:#66d9ef">function</span> spinI<span style="color:#f92672"></span>(s<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Index<span style="color:#f92672"></span>; is_gpu<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Bool</span><span style="color:#f92672">=</span><span style="color:#66d9ef">false</span>)<span style="color:#f92672">:</span><span style="color:#f92672">:</span>ITensor<span style="color:#f92672"></span>
+    I_data<span style="color:#f92672"></span>      <span style="color:#f92672">=</span> is_gpu<span style="color:#f92672"></span> <span style="color:#f92672">?</span> CuArrays<span style="color:#f92672"></span><span style="color:#f92672">.</span>zeros<span style="color:#f92672"></span>(<span style="color:#66d9ef">Float64</span>, dim<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>)<span style="color:#f92672">*</span>dim<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>)) <span style="color:#f92672">:</span> zeros<span style="color:#f92672"></span>(<span style="color:#66d9ef">Float64</span>, dim<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>), dim<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>))
+    idi<span style="color:#f92672"></span>         <span style="color:#f92672">=</span> diagind<span style="color:#f92672"></span>(reshape<span style="color:#f92672"></span>(I_data<span style="color:#f92672"></span>, dim<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>), dim<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>)), <span style="color:#ae81ff">0</span>)
+    I_data<span style="color:#f92672"></span>[idi<span style="color:#f92672"></span>] <span style="color:#f92672">=</span> is_gpu<span style="color:#f92672"></span> <span style="color:#f92672">?</span> CuArrays<span style="color:#f92672"></span><span style="color:#f92672">.</span>ones<span style="color:#f92672"></span>(<span style="color:#66d9ef">Float64</span>, dim<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>)) <span style="color:#f92672">:</span> ones<span style="color:#f92672"></span>(<span style="color:#66d9ef">Float64</span>, dim<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>))
+    I           <span style="color:#f92672">=</span> is_gpu<span style="color:#f92672"></span> <span style="color:#f92672">?</span> cuITensor<span style="color:#f92672"></span>( I_data<span style="color:#f92672"></span>, IndexSet<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>, s<span style="color:#f92672">&#39;</span>) ) <span style="color:#f92672">:</span> ITensor<span style="color:#f92672"></span>(vec<span style="color:#f92672"></span>(I_data<span style="color:#f92672"></span>), IndexSet<span style="color:#f92672"></span>(s<span style="color:#f92672"></span>, s<span style="color:#f92672">&#39;</span>))
+    <span style="color:#66d9ef">return</span> I
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>it's possible to dramatically cut down on this, getting a final profiling report of</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">=</span><span style="color:#f92672">=</span>3303697<span style="color:#f92672">=</span><span style="color:#f92672">=</span> Profiling application: julia prof_run.jl
+<span style="color:#f92672">=</span><span style="color:#f92672">=</span>3303697<span style="color:#f92672">=</span><span style="color:#f92672">=</span> Profiling result:
+            Type  Time<span style="color:#f92672">(</span>%<span style="color:#f92672">)</span>      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   13.78%  19.2803s    <span style="color:#ae81ff">343307</span>  56.160us  15.328us  7.2638ms  cutensor_internal_namespace::contraction_kernel<span style="color:#f92672">(</span>cutensor_internal_namespace::KernelParam_double_iden_1_2_false_false_double_iden_1_2_false_false_double_1_double_double_tb_128_128_8_simt_sm50_256<span style="color:#f92672">)</span>
+                   13.47%  18.8464s    <span style="color:#ae81ff">440326</span>  42.800us  15.071us  653.75us  cutensor_internal_namespace::contraction_kernel<span style="color:#f92672">(</span>cutensor_internal_namespace::KernelParam_double_iden_1_2_false_false_double_iden_1_2_true_false_double_1_double_double_tb_128_128_8_simt_sm50_256<span style="color:#f92672">)</span>
+                    9.70%  13.5765s    <span style="color:#ae81ff">262876</span>  51.646us  15.360us  197.02us  cutensor_internal_namespace::contraction_kernel<span style="color:#f92672">(</span>cutensor_internal_namespace::KernelParam_double_iden_1_2_true_false_double_iden_1_2_true_false_double_1_double_double_tb_128_128_8_simt_sm50_256<span style="color:#f92672">)</span>
+                    8.90%  12.4562s    <span style="color:#ae81ff">114666</span>  108.63us  15.648us  4.7480ms  cutensor_internal_namespace::contraction_kernel<span style="color:#f92672">(</span>cutensor_internal_namespace::KernelParam_double_iden_1_2_true_false_double_iden_1_2_false_false_double_1_double_double_tb_128_128_8_simt_sm50_256<span style="color:#f92672">)</span>
+                    7.96%  11.1327s    <span style="color:#ae81ff">305932</span>  36.389us  22.559us  76.831us  void gesvdbj_batch_32x16&lt;double, double&gt;<span style="color:#f92672">(</span>int, int const *, int const *, int const *, int, double const *, int, double, double*, double*, int*, double, int, double<span style="color:#f92672">)</span>
+                    5.15%  7.21024s   <span style="color:#ae81ff">2439080</span>  2.9560us  2.0480us  6.8470us  void ormtr_gerc&lt;double, int<span style="color:#f92672">=</span>5, int<span style="color:#f92672">=</span>3, int<span style="color:#f92672">=</span>1&gt;<span style="color:#f92672">(</span>int, double const *, int, int, double*, unsigned long, double const *, int, double const *<span style="color:#f92672">)</span>
+                    3.62%  5.06010s   <span style="color:#ae81ff">1663200</span>  3.0420us  1.6630us  5.8240us  void sytd2_symv_upper&lt;double, int<span style="color:#f92672">=</span>4&gt;<span style="color:#f92672">(</span>int, double const *, double const *, unsigned long, double const *, double*<span style="color:#f92672">)</span>
+                    3.43%  4.80411s   <span style="color:#ae81ff">2439080</span>  1.9690us  1.5680us  5.4390us  void ormtr_gemv_c&lt;double, int<span style="color:#f92672">=</span>4&gt;<span style="color:#f92672">(</span>int, int, double const *, unsigned long, double const *, int, double*<span style="color:#f92672">)</span>
+                    2.84%  3.97216s   <span style="color:#ae81ff">1636800</span>  2.4260us  2.1120us  5.6000us  void larfg_kernel_fast&lt;double, double, int<span style="color:#f92672">=</span>6&gt;<span style="color:#f92672">(</span>int, double*, double*, int, double*<span style="color:#f92672">)</span>
+                    2.57%  3.59984s   <span style="color:#ae81ff">2123225</span>  1.6950us     864ns  90.111us  <span style="color:#f92672">[</span>CUDA memcpy DtoD<span style="color:#f92672">]</span>
+                    2.37%  3.31885s   <span style="color:#ae81ff">1663200</span>  1.9950us  1.1520us  4.5760us  void sytd2_her2k_kernel&lt;double, int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>4&gt;<span style="color:#f92672">(</span>int, double*, unsigned long, double const *, int, double const *<span style="color:#f92672">)</span>
+                    2.25%  3.14692s    <span style="color:#ae81ff">611864</span>  5.1430us  4.6390us  12.704us  void svd_column_rotate_batch_32x16&lt;double, int<span style="color:#f92672">=</span>5, int<span style="color:#f92672">=</span>3&gt;<span style="color:#f92672">(</span>int, int const *, int const *, int, double*, int, double*, int, double const *, int*<span style="color:#f92672">)</span>
+                    2.17%  3.03782s     <span style="color:#ae81ff">54611</span>  55.626us  3.1990us  315.74us  void cutensor_internal_namespace::reduction_kernel&lt;bool<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>2, int<span style="color:#f92672">=</span>6, int<span style="color:#f92672">=</span>256, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>256, bool<span style="color:#f92672">=</span>1, cutensorOperator_t<span style="color:#f92672">=</span>1, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, double, double, double, double, double&gt;<span style="color:#f92672">(</span>double, double const *, double const *, cutensor_internal_namespace::reduction_kernel&lt;bool<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>2, int<span style="color:#f92672">=</span>6, int<span style="color:#f92672">=</span>256, int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>256, bool<span style="color:#f92672">=</span>1, cutensorOperator_t<span style="color:#f92672">=</span>1, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, double, double, double, double, double&gt;, double const *, double const **, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, cutensor_internal_namespace::reduction_params_t<span style="color:#f92672">)</span>
+                    2.11%  2.95838s     <span style="color:#ae81ff">29720</span>  99.541us  30.367us  1.3328ms  cutensor_internal_namespace::contraction_kernel<span style="color:#f92672">(</span>cutensor_internal_namespace::KernelParam_double_iden_1_2_true_false_double_iden_1_2_false_true_double_1_double_double_tb_128_128_8_simt_sm50_256<span style="color:#f92672">)</span>
+                    2.08%  2.91405s   <span style="color:#ae81ff">1663200</span>  1.7520us  1.5040us  4.5440us  void sytd2_compute_w_kernel&lt;double, int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>1&gt;<span style="color:#f92672">(</span>double const *, int, double const *, double const *, int, double*<span style="color:#f92672">)</span>
+                    1.83%  2.56571s   <span style="color:#ae81ff">1384952</span>  1.8520us     992ns  6.0160us  <span style="color:#f92672">[</span>CUDA memcpy DtoH<span style="color:#f92672">]</span>
+                    1.28%  1.79144s    <span style="color:#ae81ff">305932</span>  5.8550us  5.4070us  8.4800us  void svd_row_rotate_batch_32x16&lt;double&gt;<span style="color:#f92672">(</span>int, int const *, int const *, int, double*, int, double const *, int*<span style="color:#f92672">)</span>
+                    1.05%  1.47607s   <span style="color:#ae81ff">1157165</span>  1.2750us     831ns  8.8960us  ptxcall_anonymous21_4
+                    1.03%  1.44738s     <span style="color:#ae81ff">62378</span>  23.203us  10.560us  57.983us  void geqr2_smem&lt;double, double, int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>6, int<span style="color:#f92672">=</span>4&gt;<span style="color:#f92672">(</span>int, int, double*, unsigned long, double*, int<span style="color:#f92672">)</span>
+                    0.72%  1.00992s    <span style="color:#ae81ff">252101</span>  4.0060us  1.5680us  805.62us  void cutensor_internal_namespace::tensor_elementwise_kernel&lt;cutensor_internal_namespace::ElementwiseConfig&lt;unsigned int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>128, unsigned int<span style="color:#f92672">=</span>64, unsigned int<span style="color:#f92672">=</span>2&gt;, cutensor_internal_namespace::ElementwiseStaticOpPack&lt;cutensorOperator_t<span style="color:#f92672">=</span>1, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t, cutensorOperator_t&gt;, double, double, double, double&gt;<span style="color:#f92672">(</span>cutensor_internal_namespace::ElementwiseParameters, int, int, cutensorOperator_t<span style="color:#f92672">=</span>1, unsigned int<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> const *, cutensor_internal_namespace::ElementwiseParameters, unsigned int<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> const *, cutensor_internal_namespace::ElementwiseParameters, cutensor_internal_namespace::ElementwiseConfig&lt;unsigned int<span style="color:#f92672">=</span>1, int<span style="color:#f92672">=</span>128, unsigned int<span style="color:#f92672">=</span>64, unsigned int<span style="color:#f92672">=</span>2&gt; const *, unsigned int<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> const **, bool, bool, bool, bool, cutensor_internal_namespace::ElementwiseOpPack<span style="color:#f92672">)</span>
+                    0.71%  990.60ms     <span style="color:#ae81ff">46039</span>  21.516us  9.3440us  52.063us  void geqr2_smem&lt;double, double, int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>5, int<span style="color:#f92672">=</span>5&gt;<span style="color:#f92672">(</span>int, int, double*, unsigned long, double*, int<span style="color:#f92672">)</span>
+                    0.54%  748.94ms    <span style="color:#ae81ff">139738</span>  5.3590us     895ns  11.776us  void syevj_parallel_order_set_kernel&lt;int<span style="color:#f92672">=</span>512&gt;<span style="color:#f92672">(</span>int, int*<span style="color:#f92672">)</span>
+                    0.51%  707.93ms     <span style="color:#ae81ff">35644</span>  19.861us  12.192us  34.368us  void geqr2_smem&lt;double, double, int<span style="color:#f92672">=</span>8, int<span style="color:#f92672">=</span>7, int<span style="color:#f92672">=</span>3&gt;<span style="color:#f92672">(</span>int, int, double*, unsigned long, double*, int<span style="color:#f92672">)</span>
+                    0.49%  684.11ms    <span style="color:#ae81ff">542074</span>  1.2620us     927ns  5.9200us  copy_info_kernel<span style="color:#f92672">(</span>int, int*<span style="color:#f92672">)</span>
+                    0.48%  669.92ms    <span style="color:#ae81ff">298670</span>  2.2420us  1.2470us  10.144us  <span style="color:#f92672">[</span>CUDA memcpy HtoD<span style="color:#f92672">]</span>
+
+</code></pre></div><p>This run was allowed to go on for longer to show that now the runtime on the GPU is dominated by useful work contracting tensors or computing factorizations.</p>
+<h1 id="head-to-head-performance-fight">Head to head performance fight</h1>
+<p>With a real physics use case to test, the nice folks over at NVIDIA ran a performance comparison for us. These are some representative (actually, rather small) simulations using our code, and you can see that the GPU acceleration is helping a lot.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<figure>
+
+<img src="scaling.png" alt="" >
+
+
+  
+  
+  <figcaption>
+    CPU vs GPU PEPS Scaling
+  </figcaption>
+
+
+</figure>
+
+<p>And now I'm able to run simulations that used to take a week in an hour thanks to the GPU acceleration, with no loss of accuracy so far. We've had a big success using the GPU, and so far haven't run up against the device memory limit. Having a Julia code makes it easier to maintain and easier to reason about new code as it's written. We're looking forward to using this backend to accelerate other tensor network algorithms and make it quicker to test out new ideas.</p>
+<h1 id="some-takeaways">Some Takeaways</h1>
+<ul>
+<li>The <code>CuArrays.jl</code> package makes it pretty easy and pleasant to integrate the GPU into your codebase. However, there are still some pain points (in the sparse linear algebra code especially) if someone is looking for a project to contribute to.</li>
+<li>It's important to pick a problem like this that is about 95% of the way to the perfect problem for the GPU if you want to brag without having to do much work.</li>
+<li>You should actually check to make sure that you aren't copying memory back and forth when you don't need to. If you are copying more than you think you should, you can try to figure out where it's coming from by inserting a <code>stacktrace</code> call into the <code>cudaMemcpy</code> calls at the <a href="https://github.com/JuliaGPU/CUDAdrv.jl/blob/75bf4e4385bd2c431080ec501b9ae6f3d6c771ec/src/memory.jl"><code>CUDAdrv.jl</code></a> package. That should tell you the location up the call stack in your code where the copy to/from the device is triggered.</li>
+</ul>
+
+    </div>
+
+    
+
+
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu52a603635ecebd45650b162dadabb4e5_12861_250x250_fill_q75_box_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="https://kshyatt.github.io/">Katharine Hyatt</a></h5>
+      <h6 class="card-subtitle">Postdoctoral Scholar</h6>
+      <p class="card-text">My research focuses on developing new numerical methods to understand 2D correlated electronic systems, and finding interesting applications in condensed matter physics for these methods. I also moonlight as a sometime <a href="https://julialang.org">Julia language</a> and package developer.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/kslimes" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/kshyatt" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/julia.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    © 2019 &middot; 
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

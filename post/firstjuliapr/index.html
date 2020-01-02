@@ -28,7 +28,7 @@
   
     
   
-  <meta name="description" content="In this post I&rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&rsquo;ll be working off commit 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767 if you want to follow along. (To do so, you can git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767.">
+  <meta name="description" content="In this post I&#39;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&#39;ll be working off commit 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767 if you want to follow along. (To do so, you can git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767.">
 
   
   <link rel="alternate" hreflang="en-us" href="https://kshyatt.github.io/post/firstjuliapr/">
@@ -81,7 +81,7 @@
   
   
   
-  <link rel="stylesheet" href="/css/academic.min.1884ccbe79662c38d99b291260b58a24.css">
+  <link rel="stylesheet" href="/css/academic.min.7e979ed716defd683dbcd19db381e87f.css">
 
   
 
@@ -114,7 +114,7 @@
   <meta property="og:site_name" content="Katharine Hyatt">
   <meta property="og:url" content="https://kshyatt.github.io/post/firstjuliapr/">
   <meta property="og:title" content="Making a first Julia pull request | Katharine Hyatt">
-  <meta property="og:description" content="In this post I&rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&rsquo;ll be working off commit 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767 if you want to follow along. (To do so, you can git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767."><meta property="og:image" content="https://kshyatt.github.io/img/icon-192.png">
+  <meta property="og:description" content="In this post I&#39;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&#39;ll be working off commit 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767 if you want to follow along. (To do so, you can git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767."><meta property="og:image" content="https://kshyatt.github.io/img/icon-192.png">
   <meta property="twitter:image" content="https://kshyatt.github.io/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -166,7 +166,7 @@
       "url": "https://kshyatt.github.io/img/icon-512.png"
     }
   },
-  "description": "In this post I\u0026rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We\u0026rsquo;ll be working off commit 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767 if you want to follow along. (To do so, you can git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767."
+  "description": "In this post I'm going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We'll be working off commit 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767 if you want to follow along. (To do so, you can git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767."
 }
 </script>
 
@@ -606,88 +606,56 @@
   <div class="article-container">
 
     <div class="article-style">
-      
-
-<p>In this post I&rsquo;m going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We&rsquo;ll be working off commit <code>0b0a394b3e7741d38f00dbb29895b6ba6a7d0767</code> if you want to follow along. (To do so, you can <code>git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767</code>. Keep in mind this will put you in the dreaded detached <code>HEAD</code> state.) I do almost all my development on macOS and Linux, so some of the shell commands will be a little different if you&rsquo;re on Windows.</p>
-
+      <p>In this post I'm going to go through my step-by-step process of finding some code in base Julia which is not covered by tests, adding tests which do cover it, checking to make sure the tests pass, and finally opening a pull request to have my changes merged in to Julia itself. We'll be working off commit <code>0b0a394b3e7741d38f00dbb29895b6ba6a7d0767</code> if you want to follow along. (To do so, you can <code>git checkout 0b0a394b3e7741d38f00dbb29895b6ba6a7d0767</code>. Keep in mind this will put you in the dreaded detached <code>HEAD</code> state.) I do almost all my development on macOS and Linux, so some of the shell commands will be a little different if you're on Windows.</p>
 <h1 id="prereqs">Prereqs</h1>
-
-<p>To get started, we&rsquo;re going to need a few things:</p>
-
+<p>To get started, we're going to need a few things:</p>
 <ul>
 <li>Some basic <code>git</code> knowledge: <code>git add</code>, <code>git clone</code>, <code>git commit</code>, <code>git checkout</code>, and <code>git push</code>. If you need an introduction to <code>git</code>, some decent options are:
-
 <ul>
-<li><a href="https://help.github.com/articles/git-and-github-learning-resources/" target="_blank">The GitHub help pages</a></li>
-<li><a href="https://git-scm.com/docs" target="_blank">The official git docs</a></li>
-<li><a href="https://www.codecademy.com/learn/learn-git" target="_blank">The codecademy intro to git tutorial</a>, which is free</li>
-</ul></li>
+<li><a href="https://help.github.com/articles/git-and-github-learning-resources/">The GitHub help pages</a></li>
+<li><a href="https://git-scm.com/docs">The official git docs</a></li>
+<li><a href="https://www.codecademy.com/learn/learn-git">The codecademy intro to git tutorial</a>, which is free</li>
+</ul>
+</li>
 <li>A source build of Julia, from <code>git clone git@github.com:JuliaLang/julia.git</code> (I use SSH, HTTPS is fine too)</li>
 <li>A fork of Julia, since most people making their first pull requests will not have the ability to push branches to the main julia repository.</li>
 </ul>
-
 <h1 id="zeroth-step-setting-up-our-fork">Zeroth Step: Setting Up Our Fork</h1>
-
-<p>Having <a href="https://help.github.com/articles/fork-a-repo/" target="_blank">forked</a> the <a href="https://github.com/julialang/julia" target="_blank">main julia repository</a> to your GitHub account, you&rsquo;re ready to create a local <a href="https://git-scm.com/docs/git-clone" target="_blank">clone</a> and let it know about both the upstream repos.</p>
-
+<p>Having <a href="https://help.github.com/articles/fork-a-repo/">forked</a> the <a href="https://github.com/julialang/julia">main julia repository</a> to your GitHub account, you're ready to create a local <a href="https://git-scm.com/docs/git-clone">clone</a> and let it know about both the upstream repos.</p>
 <p>I usually clone julia into a subdirectory of my home directory called <code>projects</code>, so that on a new machine what happens is:</p>
-
-<pre><code class="language-bash">cd ~ # move to the home directory
-mkdir -p projects # create the projects directory if it doesn't already exist, otherwise do nothing
-cd projects # move to the kshyatt/projects directory
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd ~ <span style="color:#75715e"># move to the home directory</span>
+mkdir -p projects <span style="color:#75715e"># create the projects directory if it doesn&#39;t already exist, otherwise do nothing</span>
+cd projects <span style="color:#75715e"># move to the kshyatt/projects directory</span>
 git clone git@github.com:JuliaLang/julia.git
-</code></pre>
-
-<p>This will copy the repository from GitHub, including the current state of all the source code as well as all its history. We can look at the <em>remotes</em> of our clone to see other copies of the julia repository our clone is aware of (can fetch/pull/push against). Since we cloned from GitHub, the repository already knows about it:</p>
-
-<pre><code class="language-bash">~/projects $ cd julia # move down into the julia directory post clone
-~/projects/julia $ git remote -v # list remotes and their URLs
-origin	git@github.com:JuliaLang/julia.git (fetch)
-origin	git@github.com:JuliaLang/julia.git (push)
-</code></pre>
-
-<p>If you were using HTTPS, this would look like:</p>
-
-<pre><code class="language-bash">~/projects $ cd julia # move down into the julia directory post clone
-~/projects/julia $ git remote -v # list remotes and their URLs
-origin	https://github.com/JuliaLang/julia.git (fetch)
-origin	https://github.com/JuliaLang/julia.git (push)
-</code></pre>
-
-<p>So our repository knows about its &ldquo;parent&rdquo;. But we probably don&rsquo;t have the ability to write directly to the main Julia repositiory (yet &ndash; who knows what the future holds?), which means we won&rsquo;t be able to create our own branches there. Instead, we will need to use a repository copy we do have the ability to write to &ndash; our fork &ndash; to make our coming changes visible to the wide world. If we cloned from the JuliaLang repo, we need to add another remote for our fork. Usually this will have a URL like: <code>https://github.com/$USERNAME/julia.git</code> or <code>git@github.com:$USERNAME/julia.git</code> where <code>$USERNAME</code> is your GitHub username. To let <code>git</code> know about the second remote, we use <a href="https://git-scm.com/docs/git-remote" target="_blank"><code>git remote add</code></a>:</p>
-
-<pre><code class="language-bash">git remote add $REMOTE_NAME git@github.com:$USERNAME/julia.git
-</code></pre>
-
-<p><code>$REMOTE_NAME</code> is the <em>local</em> alias we want to call the second remote by. The remote we cloned from (JuliaLang) gets the alias <code>origin</code>. You can pick any alias you like which doesn&rsquo;t conflict with an existing one. I often use <code>kshyatt</code> because even in the grim depths of 3:24am I can usually remember my own name. So when I do the remote add, it looks like:</p>
-
-<pre><code class="language-bash">git remote add kshyatt git@github.com:kshyatt/julia.git
-</code></pre>
-
-<p>And afterwards, if we look at the remotes <code>git</code> knows about:</p>
-
-<pre><code class="language-bash">~/projects/julia $ git remote -v # list remotes and their URLs
-kshyatt	git@github.com:kshyatt/julia.git (fetch)
-kshyatt	git@github.com:kshyatt/julia.git (push)
-origin	git@github.com:JuliaLang/julia.git (fetch)
-origin	git@github.com:JuliaLang/julia.git (push)
-</code></pre>
-
-<p>And again, with HTTPS this would be:</p>
-
-<pre><code class="language-bash">~/projects/julia $ git remote -v # list remotes and their URLs
-kshyatt	https://github.com/kshyatt/julia.git (fetch)
-kshyatt	https://github.com/kshyatt/julia.git (push)
-origin	https://github.com/JuliaLang/julia.git (fetch)
-origin	https://github.com/JuliaLang/julia.git (push)
-</code></pre>
-
-<p>With a fork and local knowledge of it, we&rsquo;re ready to find some changes to make.</p>
-
+</code></pre></div><p>This will copy the repository from GitHub, including the current state of all the source code as well as all its history. We can look at the <em>remotes</em> of our clone to see other copies of the julia repository our clone is aware of (can fetch/pull/push against). Since we cloned from GitHub, the repository already knows about it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~/projects $ cd julia <span style="color:#75715e"># move down into the julia directory post clone</span>
+~/projects/julia $ git remote -v <span style="color:#75715e"># list remotes and their URLs</span>
+origin	git@github.com:JuliaLang/julia.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
+origin	git@github.com:JuliaLang/julia.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
+</code></pre></div><p>If you were using HTTPS, this would look like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~/projects $ cd julia <span style="color:#75715e"># move down into the julia directory post clone</span>
+~/projects/julia $ git remote -v <span style="color:#75715e"># list remotes and their URLs</span>
+origin	https://github.com/JuliaLang/julia.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
+origin	https://github.com/JuliaLang/julia.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
+</code></pre></div><p>So our repository knows about its &ldquo;parent&rdquo;. But we probably don't have the ability to write directly to the main Julia repositiory (yet &ndash; who knows what the future holds?), which means we won't be able to create our own branches there. Instead, we will need to use a repository copy we do have the ability to write to &ndash; our fork &ndash; to make our coming changes visible to the wide world. If we cloned from the JuliaLang repo, we need to add another remote for our fork. Usually this will have a URL like: <code>https://github.com/$USERNAME/julia.git</code> or <code>git@github.com:$USERNAME/julia.git</code> where <code>$USERNAME</code> is your GitHub username. To let <code>git</code> know about the second remote, we use <a href="https://git-scm.com/docs/git-remote"><code>git remote add</code></a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git remote add $REMOTE_NAME git@github.com:$USERNAME/julia.git
+</code></pre></div><p><code>$REMOTE_NAME</code> is the <em>local</em> alias we want to call the second remote by. The remote we cloned from (JuliaLang) gets the alias <code>origin</code>. You can pick any alias you like which doesn't conflict with an existing one. I often use <code>kshyatt</code> because even in the grim depths of 3:24am I can usually remember my own name. So when I do the remote add, it looks like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git remote add kshyatt git@github.com:kshyatt/julia.git
+</code></pre></div><p>And afterwards, if we look at the remotes <code>git</code> knows about:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~/projects/julia $ git remote -v <span style="color:#75715e"># list remotes and their URLs</span>
+kshyatt	git@github.com:kshyatt/julia.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
+kshyatt	git@github.com:kshyatt/julia.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
+origin	git@github.com:JuliaLang/julia.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
+origin	git@github.com:JuliaLang/julia.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
+</code></pre></div><p>And again, with HTTPS this would be:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~/projects/julia $ git remote -v <span style="color:#75715e"># list remotes and their URLs</span>
+kshyatt	https://github.com/kshyatt/julia.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
+kshyatt	https://github.com/kshyatt/julia.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
+origin	https://github.com/JuliaLang/julia.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
+origin	https://github.com/JuliaLang/julia.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
+</code></pre></div><p>With a fork and local knowledge of it, we're ready to find some changes to make.</p>
 <h1 id="the-hunt-for-red-lines">The Hunt for Red Lines</h1>
-
 <p>There are many kinds of contributions a person can make to an open source project:</p>
-
 <ul>
 <li>New features</li>
 <li>Performance improvements</li>
@@ -696,193 +664,127 @@ origin	https://github.com/JuliaLang/julia.git (push)
 <li>Documentation improvements</li>
 <li>Usage examples</li>
 </ul>
-
-<p>If you&rsquo;re just starting out contributing to Julia, and don&rsquo;t have an obvious idea for a feature or a performance enhancement you could write, writing tests or improving docs are a great way to get started. People often disagree about the desirability of a new feature but I almost never see anyone say we should have fewer tests! Writing tests is a good way to learn how Julia works &ndash; or doesn&rsquo;t, if you find a bug. We don&rsquo;t want to write tests just for the sake of having them, though &ndash; we want to test as many julia features as possible in as little time as possible. If we&rsquo;re writing new tests, it&rsquo;s always a good idea to keep the test coverage in mind. Test coverage measures which lines of base (and stdlib) Julia are exercised by the tests. We keep this information current at <a href="https://codecov.io/gh/julialang/julia" target="_blank">codecov</a>. Here&rsquo;s a screenshot:</p>
-
-<p><img src="codecovlanding.png" alt="Codecov landing page" /></p>
-
+<p>If you're just starting out contributing to Julia, and don't have an obvious idea for a feature or a performance enhancement you could write, writing tests or improving docs are a great way to get started. People often disagree about the desirability of a new feature but I almost never see anyone say we should have fewer tests! Writing tests is a good way to learn how Julia works &ndash; or doesn't, if you find a bug. We don't want to write tests just for the sake of having them, though &ndash; we want to test as many julia features as possible in as little time as possible. If we're writing new tests, it's always a good idea to keep the test coverage in mind. Test coverage measures which lines of base (and stdlib) Julia are exercised by the tests. We keep this information current at <a href="https://codecov.io/gh/julialang/julia">codecov</a>. Here's a screenshot:</p>
+<p><img src="codecovlanding.png" alt="Codecov landing page"></p>
 <p>We can see the attractive sunburst picture, and a history of recent commits showing their total coverage percentage. On a lark, I picked <code>base/</code> to go hunting for uncovered lines.</p>
-
-<p><img src="basecov.png" alt="Base coverage" /></p>
-
-<p>Here we see each file, with its total lines, covered lines, uncovered lines, and coverage percentage. If we want to increase coverage, we want to pick a file with less than 100% of its lines covered. Keep in mind that these numbers may be less than the true coverage, because right now the coverage-enabled runs of the tests are all done on Unix and some code in Julia is Windows or BSD specific. Tests for such code aren&rsquo;t run by the coverage measurement script.</p>
-
+<p><img src="basecov.png" alt="Base coverage"></p>
+<p>Here we see each file, with its total lines, covered lines, uncovered lines, and coverage percentage. If we want to increase coverage, we want to pick a file with less than 100% of its lines covered. Keep in mind that these numbers may be less than the true coverage, because right now the coverage-enabled runs of the tests are all done on Unix and some code in Julia is Windows or BSD specific. Tests for such code aren't run by the coverage measurement script.</p>
 <p>I happened to scroll down until I came across <code>base/secretbuffer.jl</code>. This file had a lot of uncovered lines, so I thought I had a decent chance of finding some code I could write tests to cover:</p>
+<p><img src="findingsecretbuffer.png" alt="Secretbuffer"></p>
+<p>Clicking on the Codecov link opens up an annotated version of the source file, with green coloring representing lines which are covered by tests, and red coloring representing lines which are not. Scrolling down the file, I came across the <code>write</code> method, which writes some data packed into a <code>UInt8</code> into the secret buffer's data:</p>
+<p><img src="sbwritemissing.png" alt="Red lines"></p>
+<p>In order to test this, it would probably be good to have some sense of what it does. Having been using Julia since 2015, I probably have a bad heuristic for how easy this is to understand &ndash; if you are looking at it and can't figure it out in about 5 minutes, there's absolutely no shame in logging onto the <a href="https://julialang.slack.com/">Julia Slack</a> and asking! We have <code>#my-first-pr</code> and <code>#helpdesk</code> channels exactly for this. The type itself is defined earlier in the file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#66d9ef">mutable</span> <span style="color:#66d9ef">struct</span> SecretBuffer<span style="color:#f92672"></span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">IO</span>
+    data<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Vector</span>{<span style="color:#66d9ef">UInt8</span>}
+    size<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Int</span>
+    ptr<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">Int</span>
 
-<p><img src="findingsecretbuffer.png" alt="Secretbuffer" /></p>
-
-<p>Clicking on the Codecov link opens up an annotated version of the source file, with green coloring representing lines which are covered by tests, and red coloring representing lines which are not. Scrolling down the file, I came across the <code>write</code> method, which writes some data packed into a <code>UInt8</code> into the secret buffer&rsquo;s data:</p>
-
-<p><img src="sbwritemissing.png" alt="Red lines" /></p>
-
-<p>In order to test this, it would probably be good to have some sense of what it does. Having been using Julia since 2015, I probably have a bad heuristic for how easy this is to understand &ndash; if you are looking at it and can&rsquo;t figure it out in about 5 minutes, there&rsquo;s absolutely no shame in logging onto the <a href="https://julialang.slack.com/" target="_blank">Julia Slack</a> and asking! We have <code>#my-first-pr</code> and <code>#helpdesk</code> channels exactly for this. The type itself is defined earlier in the file:</p>
-
-<pre><code class="language-julia">mutable struct SecretBuffer &lt;: IO
-    data::Vector{UInt8}
-    size::Int
-    ptr::Int
-
-    function SecretBuffer(; sizehint=128)
-        s = new(Vector{UInt8}(undef, sizehint), 0, 1)
-        finalizer(final_shred!, s)
-        return s
-    end
-end
-</code></pre>
-
-<p>My attempt at an explanation</p>
-
+    <span style="color:#66d9ef">function</span> SecretBuffer<span style="color:#f92672"></span>(; sizehint<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#ae81ff">128</span>)
+        s<span style="color:#f92672"></span> <span style="color:#f92672">=</span> new<span style="color:#f92672"></span>(<span style="color:#66d9ef">Vector</span>{<span style="color:#66d9ef">UInt8</span>}(undef<span style="color:#f92672"></span>, sizehint<span style="color:#f92672"></span>), <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>)
+        finalizer<span style="color:#f92672"></span>(final_shred!<span style="color:#f92672"></span>, s<span style="color:#f92672"></span>)
+        <span style="color:#66d9ef">return</span> s<span style="color:#f92672"></span>
+    <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>My attempt at an explanation</p>
 <ul>
-<li><code>SecretBuffer</code>, like the name implies, is a type which contains some <code>data</code> which you&rsquo;d like to keep secret from prying eyes</li>
+<li><code>SecretBuffer</code>, like the name implies, is a type which contains some <code>data</code> which you'd like to keep secret from prying eyes</li>
 <li>It contains information about the total amount of information stored, in the <code>size</code> field</li>
 <li>It contains information about where in the <code>data</code> we are currently reading or writing - the <code>pointer</code> field</li>
 </ul>
-
-<p>This analogy is a little fuzzy, but if you&rsquo;re confused, imagine the buffer is a piece of paper on which we&rsquo;ve written a message in code. The <code>size</code> is the total number of letters in the message, and the <code>pointer</code> is the letter we are trying to encode or decode at the moment. Then the <code>write</code> function attempts to insert an unsigned 8 bit integer <code>b</code> at the <code>ptr</code> of the input <code>SecretBuffer</code>. The uncovered lines are there to deal with the case where the <code>SecretBuffer</code>&rsquo;s data array is totally full (the <code>ptr</code> is past its <code>length</code>). In the paper analogy, this would mean that we wrote all the way to the bottom right corner and need to turn over to a fresh page.</p>
-
+<p>This analogy is a little fuzzy, but if you're confused, imagine the buffer is a piece of paper on which we've written a message in code. The <code>size</code> is the total number of letters in the message, and the <code>pointer</code> is the letter we are trying to encode or decode at the moment. Then the <code>write</code> function attempts to insert an unsigned 8 bit integer <code>b</code> at the <code>ptr</code> of the input <code>SecretBuffer</code>. The uncovered lines are there to deal with the case where the <code>SecretBuffer</code>'s data array is totally full (the <code>ptr</code> is past its <code>length</code>). In the paper analogy, this would mean that we wrote all the way to the bottom right corner and need to turn over to a fresh page.</p>
 <h1 id="writing-the-test">Writing the test</h1>
-
 <p>To test this case, what I chose to do was:</p>
-
 <ul>
 <li>Create a small <code>SecretBuffer</code> and write up to its data size</li>
 <li>Write a little more data, so that it will have to call this untested code and extend <code>data</code> in-place</li>
 <li>Make sure all the data I wrote survived the process</li>
 </ul>
-
-<p>Julia&rsquo;s tests live in the <code>test/</code> directory, which is in the top-level with <code>base/</code> and <code>stdlib/</code>. From my julia clone, I can see what it contains:</p>
-
-<pre><code class="language-bash">ls ~/projects/julia/test
-</code></pre>
-
-<p>If you do this, you&rsquo;ll see there is a file called <code>test/secretbuffer.jl</code>. That looks promising, and indeed, it&rsquo;s where tests for <code>SecretBuffer</code> are (as opposed to tests for another kind of buffer, put there as a prank). Now you can open your favorite text editor and modify the file. I like to see if there is an obvious place to add the tests in the file &ndash; for example, if I&rsquo;m testing a function for subtracting complex numbers, and there are already a bunch of tests for adding them, that would be a natural location to add my test.</p>
-
-<p>Julia test files tend to be organized into <code>testset</code>s, which group similar tests and make it easier to pinpoint where the problem is when one fails. Since we&rsquo;re testing something specific, it makes sense to add our own little testset nested inside the main <code>SecretBuffers</code> testset (as the others are):</p>
-
-<pre><code class="language-julia">    @testset &quot;write! past data size&quot; begin
-        # ready to test some stuff in here!
-    end
-</code></pre>
-
-<p>Testsets get a name, so that if they fail we can see what&rsquo;s broken. It&rsquo;s best to write something descriptive for this rather than &ldquo;aaaaa&rdquo;,  &ldquo;aaaab&rdquo;,  etc. Following what I wrote above, I need to create a small <code>SecretBuffer</code>&hellip;</p>
-
-<pre><code class="language-julia">    @testset &quot;write! past data size&quot; begin
-        sb = SecretBuffer(sizehint=2)
-    end
-</code></pre>
-
-<p>Where <code>sizehint</code> tells Julia how big to make the initial internal <code>data</code> array (you can see this in the type definition I copied above). Now I need to write some data to the buffer to read the end of the data array, which has two slots currently. I picked the biggest integer <code>UInt8</code> can represent, because its bits will all be non-zero (here I am anticipating what I&rsquo;m going to test at the end).</p>
-
-<pre><code class="language-julia">    @testset &quot;write! past data size&quot; begin
-        sb = SecretBuffer(sizehint=2)
-        # data vector will not grow
-        bits = typemax(UInt8)
-        write(sb, bits)
-        write(sb, bits)
-    end
-</code></pre>
-
-<p>Now the data vector is fully saturated, and we will test the growing part of it by trying to write one more time:</p>
-
-<pre><code class="language-julia">    @testset &quot;write! past data size&quot; begin
-        sb = SecretBuffer(sizehint=2)
-        # data vector will not grow
-        bits = typemax(UInt8)
-        write(sb, bits)
-        write(sb, bits)
-        # data vector must grow
-        write(sb, bits)
-    end
-</code></pre>
-
-<p>Finally, it would be good to make sure this write didn&rsquo;t silently fail somehow or corrupt the previously written data, so we are going to read back the buffer and make sure its contents are what we expect, which is a <code>String</code> with three identical elements:</p>
-
-<pre><code class="language-julia">    @testset &quot;write! past data size and unsafe_convert&quot; begin
-        sb = SecretBuffer(sizehint=2)
-        # data vector will not grow
-        bits = typemax(UInt8)
-        write(sb, bits)
-        write(sb, bits)
-        # data vector must grow
-        write(sb, bits)
-        seek(sb, 0)
-        @test read(sb, String) == &quot;\xff\xff\xff&quot;
-        shred!(sb)
-    end
-</code></pre>
-
-<p>We <code>seek</code> back to the start of the data to make sure we capture all three elements. We read the buffer as a <code>String</code> and compare with what the result should be. How did I know it would be three <code>\xff</code>?</p>
-
-<pre><code class="language-julia">julia&gt; String([typemax(UInt8)])
-&quot;\xff&quot;
-</code></pre>
-
-<p>We can make sure the test works by running it. I nearly always use the Makefile to do this, because it will catch whitespace errors, which I make prodiguously.</p>
-
-<pre><code class="language-bash">cd ~/projects/julia
+<p>Julia's tests live in the <code>test/</code> directory, which is in the top-level with <code>base/</code> and <code>stdlib/</code>. From my julia clone, I can see what it contains:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ls ~/projects/julia/test
+</code></pre></div><p>If you do this, you'll see there is a file called <code>test/secretbuffer.jl</code>. That looks promising, and indeed, it's where tests for <code>SecretBuffer</code> are (as opposed to tests for another kind of buffer, put there as a prank). Now you can open your favorite text editor and modify the file. I like to see if there is an obvious place to add the tests in the file &ndash; for example, if I'm testing a function for subtracting complex numbers, and there are already a bunch of tests for adding them, that would be a natural location to add my test.</p>
+<p>Julia test files tend to be organized into <code>testset</code>s, which group similar tests and make it easier to pinpoint where the problem is when one fails. Since we're testing something specific, it makes sense to add our own little testset nested inside the main <code>SecretBuffers</code> testset (as the others are):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia">    <span style="color:#a6e22e">@testset</span><span style="color:#f92672"></span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">w</span><span style="color:#e6db74">r</span><span style="color:#e6db74">i</span><span style="color:#e6db74">t</span><span style="color:#e6db74">e</span><span style="color:#e6db74">!</span><span style="color:#e6db74"> </span><span style="color:#e6db74">p</span><span style="color:#e6db74">a</span><span style="color:#e6db74">s</span><span style="color:#e6db74">t</span><span style="color:#e6db74"> </span><span style="color:#e6db74">d</span><span style="color:#e6db74">a</span><span style="color:#e6db74">t</span><span style="color:#e6db74">a</span><span style="color:#e6db74"> </span><span style="color:#e6db74">s</span><span style="color:#e6db74">i</span><span style="color:#e6db74">z</span><span style="color:#e6db74">e</span><span style="color:#e6db74">&#34;</span> <span style="color:#66d9ef">begin</span>
+        <span style="color:#75715e"># ready to test some stuff in here!</span>
+    <span style="color:#66d9ef">end</span>
+</code></pre></div><p>Testsets get a name, so that if they fail we can see what's broken. It's best to write something descriptive for this rather than &ldquo;aaaaa&rdquo;,  &ldquo;aaaab&rdquo;,  etc. Following what I wrote above, I need to create a small <code>SecretBuffer</code>&hellip;</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia">    <span style="color:#a6e22e">@testset</span><span style="color:#f92672"></span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">w</span><span style="color:#e6db74">r</span><span style="color:#e6db74">i</span><span style="color:#e6db74">t</span><span style="color:#e6db74">e</span><span style="color:#e6db74">!</span><span style="color:#e6db74"> </span><span style="color:#e6db74">p</span><span style="color:#e6db74">a</span><span style="color:#e6db74">s</span><span style="color:#e6db74">t</span><span style="color:#e6db74"> </span><span style="color:#e6db74">d</span><span style="color:#e6db74">a</span><span style="color:#e6db74">t</span><span style="color:#e6db74">a</span><span style="color:#e6db74"> </span><span style="color:#e6db74">s</span><span style="color:#e6db74">i</span><span style="color:#e6db74">z</span><span style="color:#e6db74">e</span><span style="color:#e6db74">&#34;</span> <span style="color:#66d9ef">begin</span>
+        sb<span style="color:#f92672"></span> <span style="color:#f92672">=</span> SecretBuffer<span style="color:#f92672"></span>(sizehint<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+    <span style="color:#66d9ef">end</span>
+</code></pre></div><p>Where <code>sizehint</code> tells Julia how big to make the initial internal <code>data</code> array (you can see this in the type definition I copied above). Now I need to write some data to the buffer to read the end of the data array, which has two slots currently. I picked the biggest integer <code>UInt8</code> can represent, because its bits will all be non-zero (here I am anticipating what I'm going to test at the end).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia">    <span style="color:#a6e22e">@testset</span><span style="color:#f92672"></span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">w</span><span style="color:#e6db74">r</span><span style="color:#e6db74">i</span><span style="color:#e6db74">t</span><span style="color:#e6db74">e</span><span style="color:#e6db74">!</span><span style="color:#e6db74"> </span><span style="color:#e6db74">p</span><span style="color:#e6db74">a</span><span style="color:#e6db74">s</span><span style="color:#e6db74">t</span><span style="color:#e6db74"> </span><span style="color:#e6db74">d</span><span style="color:#e6db74">a</span><span style="color:#e6db74">t</span><span style="color:#e6db74">a</span><span style="color:#e6db74"> </span><span style="color:#e6db74">s</span><span style="color:#e6db74">i</span><span style="color:#e6db74">z</span><span style="color:#e6db74">e</span><span style="color:#e6db74">&#34;</span> <span style="color:#66d9ef">begin</span>
+        sb<span style="color:#f92672"></span> <span style="color:#f92672">=</span> SecretBuffer<span style="color:#f92672"></span>(sizehint<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+        <span style="color:#75715e"># data vector will not grow</span>
+        bits<span style="color:#f92672"></span> <span style="color:#f92672">=</span> typemax<span style="color:#f92672"></span>(<span style="color:#66d9ef">UInt8</span>)
+        write<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, bits<span style="color:#f92672"></span>)
+        write<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, bits<span style="color:#f92672"></span>)
+    <span style="color:#66d9ef">end</span>
+</code></pre></div><p>Now the data vector is fully saturated, and we will test the growing part of it by trying to write one more time:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia">    <span style="color:#a6e22e">@testset</span><span style="color:#f92672"></span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">w</span><span style="color:#e6db74">r</span><span style="color:#e6db74">i</span><span style="color:#e6db74">t</span><span style="color:#e6db74">e</span><span style="color:#e6db74">!</span><span style="color:#e6db74"> </span><span style="color:#e6db74">p</span><span style="color:#e6db74">a</span><span style="color:#e6db74">s</span><span style="color:#e6db74">t</span><span style="color:#e6db74"> </span><span style="color:#e6db74">d</span><span style="color:#e6db74">a</span><span style="color:#e6db74">t</span><span style="color:#e6db74">a</span><span style="color:#e6db74"> </span><span style="color:#e6db74">s</span><span style="color:#e6db74">i</span><span style="color:#e6db74">z</span><span style="color:#e6db74">e</span><span style="color:#e6db74">&#34;</span> <span style="color:#66d9ef">begin</span>
+        sb<span style="color:#f92672"></span> <span style="color:#f92672">=</span> SecretBuffer<span style="color:#f92672"></span>(sizehint<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+        <span style="color:#75715e"># data vector will not grow</span>
+        bits<span style="color:#f92672"></span> <span style="color:#f92672">=</span> typemax<span style="color:#f92672"></span>(<span style="color:#66d9ef">UInt8</span>)
+        write<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, bits<span style="color:#f92672"></span>)
+        write<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, bits<span style="color:#f92672"></span>)
+        <span style="color:#75715e"># data vector must grow</span>
+        write<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, bits<span style="color:#f92672"></span>)
+    <span style="color:#66d9ef">end</span>
+</code></pre></div><p>Finally, it would be good to make sure this write didn't silently fail somehow or corrupt the previously written data, so we are going to read back the buffer and make sure its contents are what we expect, which is a <code>String</code> with three identical elements:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia">    <span style="color:#a6e22e">@testset</span><span style="color:#f92672"></span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">w</span><span style="color:#e6db74">r</span><span style="color:#e6db74">i</span><span style="color:#e6db74">t</span><span style="color:#e6db74">e</span><span style="color:#e6db74">!</span><span style="color:#e6db74"> </span><span style="color:#e6db74">p</span><span style="color:#e6db74">a</span><span style="color:#e6db74">s</span><span style="color:#e6db74">t</span><span style="color:#e6db74"> </span><span style="color:#e6db74">d</span><span style="color:#e6db74">a</span><span style="color:#e6db74">t</span><span style="color:#e6db74">a</span><span style="color:#e6db74"> </span><span style="color:#e6db74">s</span><span style="color:#e6db74">i</span><span style="color:#e6db74">z</span><span style="color:#e6db74">e</span><span style="color:#e6db74"> </span><span style="color:#e6db74">a</span><span style="color:#e6db74">n</span><span style="color:#e6db74">d</span><span style="color:#e6db74"> </span><span style="color:#e6db74">u</span><span style="color:#e6db74">n</span><span style="color:#e6db74">s</span><span style="color:#e6db74">a</span><span style="color:#e6db74">f</span><span style="color:#e6db74">e</span><span style="color:#e6db74">_</span><span style="color:#e6db74">c</span><span style="color:#e6db74">o</span><span style="color:#e6db74">n</span><span style="color:#e6db74">v</span><span style="color:#e6db74">e</span><span style="color:#e6db74">r</span><span style="color:#e6db74">t</span><span style="color:#e6db74">&#34;</span> <span style="color:#66d9ef">begin</span>
+        sb<span style="color:#f92672"></span> <span style="color:#f92672">=</span> SecretBuffer<span style="color:#f92672"></span>(sizehint<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+        <span style="color:#75715e"># data vector will not grow</span>
+        bits<span style="color:#f92672"></span> <span style="color:#f92672">=</span> typemax<span style="color:#f92672"></span>(<span style="color:#66d9ef">UInt8</span>)
+        write<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, bits<span style="color:#f92672"></span>)
+        write<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, bits<span style="color:#f92672"></span>)
+        <span style="color:#75715e"># data vector must grow</span>
+        write<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, bits<span style="color:#f92672"></span>)
+        seek<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, <span style="color:#ae81ff">0</span>)
+        <span style="color:#a6e22e">@test</span><span style="color:#f92672"></span> read<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>, String<span style="color:#f92672"></span>) <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xff</span><span style="color:#ae81ff">\xff</span><span style="color:#ae81ff">\xff</span><span style="color:#e6db74">&#34;</span>
+        shred!<span style="color:#f92672"></span>(sb<span style="color:#f92672"></span>)
+    <span style="color:#66d9ef">end</span>
+</code></pre></div><p>We <code>seek</code> back to the start of the data to make sure we capture all three elements. We read the buffer as a <code>String</code> and compare with what the result should be. How did I know it would be three <code>\xff</code>?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia">julia<span style="color:#f92672"></span><span style="color:#f92672">&gt;</span> String<span style="color:#f92672"></span>([typemax<span style="color:#f92672"></span>(<span style="color:#66d9ef">UInt8</span>)])
+<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xff</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>We can make sure the test works by running it. I nearly always use the Makefile to do this, because it will catch whitespace errors, which I make prodiguously.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd ~/projects/julia
 make test-secretbuffer
-</code></pre>
-
-<p>You can run any test in <code>test/</code> this way, for example <code>make test-arrayops</code> works too. Assuming the tests pass, we are ready to commit and move on. If they don&rsquo;t pass, you&rsquo;ll need to look at the error message and try to figure out how to fix the test and/or the code it&rsquo;s supposed to be testing.</p>
-
+</code></pre></div><p>You can run any test in <code>test/</code> this way, for example <code>make test-arrayops</code> works too. Assuming the tests pass, we are ready to commit and move on. If they don't pass, you'll need to look at the error message and try to figure out how to fix the test and/or the code it's supposed to be testing.</p>
 <h1 id="commiting-and-pushing">Commiting and pushing</h1>
-
-<p>We need to commit our changes and push them to a remote so that we can open a pull request, which will let someone review the proposed changes and (hopefully) merge them. Although it&rsquo;s possible to do this from your <code>master</code> branch, this can very quickly lead to tears. It&rsquo;s better to:</p>
-
+<p>We need to commit our changes and push them to a remote so that we can open a pull request, which will let someone review the proposed changes and (hopefully) merge them. Although it's possible to do this from your <code>master</code> branch, this can very quickly lead to tears. It's better to:</p>
 <ol>
 <li>Make a new <code>git</code> branch</li>
 <li>Commit the changes there</li>
 <li>Push that branch to your fork</li>
 <li>Open a pull request from the branch on your fork</li>
 </ol>
-
-<p>We can use <a href="https://www.git-scm.com/docs/git-checkout" target="_blank"><code>git checkout -b</code></a> to both create a new branch and move over onto it, which will drag all our changes along with. <code>git checkout -b</code> is a shorter way of saying <code>git branch $BRANCH_NAME &amp;&amp; git checkout $BRANCH_NAME</code>. You can choose whatever you like for the branch name, but I tend to prepend with my initials and then use a short description of what the changes were. As an example:</p>
-
-<pre><code class="language-bash">git checkout -b ksh/sbtest
-</code></pre>
-
-<p>Now we&rsquo;re ready to <a href="https://www.git-scm.com/docs/git-commit" target="_blank">commit</a>. Since the change was just to one file, and pretty small, we can do a command-line commit and bypass the editor. We&rsquo;ll commit and pass the <code>-m</code> flag with an accompanying <em>commit message</em>, which will tell everyone what the changes do.</p>
-
-<pre><code class="language-bash">git commit test/secretbuffer.jl -m &quot;Added test for write-ing past the pre-existing data length&quot;
-</code></pre>
-
-<p>I told <code>git</code> which file(s) to use in the commit and the message to attach to them. The commit will be made to the <code>ksh/sbtest</code> branch. Now I&rsquo;m ready to push. Because, for the purposes of this example, I don&rsquo;t have write access to <code>JuliaLang/julia</code>, I will push to my fork at <code>kshyatt/julia</code> and open the pull request from there. All I have to do is tell <code>git</code> to push to the <code>kshyatt</code> remote I created at the start of this post.</p>
-
-<pre><code class="language-bash">~/projects/julia $ git push kshyatt ksh/sbtest
-Enumerating objects: 7, done.
-Counting objects: 100% (7/7), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (4/4), done.
-Writing objects: 100% (4/4), 613 bytes | 306.00 KiB/s, done.
-Total 4 (delta 3), reused 0 (delta 0)
-remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+<p>We can use <a href="https://www.git-scm.com/docs/git-checkout"><code>git checkout -b</code></a> to both create a new branch and move over onto it, which will drag all our changes along with. <code>git checkout -b</code> is a shorter way of saying <code>git branch $BRANCH_NAME &amp;&amp; git checkout $BRANCH_NAME</code>. You can choose whatever you like for the branch name, but I tend to prepend with my initials and then use a short description of what the changes were. As an example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git checkout -b ksh/sbtest
+</code></pre></div><p>Now we're ready to <a href="https://www.git-scm.com/docs/git-commit">commit</a>. Since the change was just to one file, and pretty small, we can do a command-line commit and bypass the editor. We'll commit and pass the <code>-m</code> flag with an accompanying <em>commit message</em>, which will tell everyone what the changes do.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git commit test/secretbuffer.jl -m <span style="color:#e6db74">&#34;Added test for write-ing past the pre-existing data length&#34;</span>
+</code></pre></div><p>I told <code>git</code> which file(s) to use in the commit and the message to attach to them. The commit will be made to the <code>ksh/sbtest</code> branch. Now I'm ready to push. Because, for the purposes of this example, I don't have write access to <code>JuliaLang/julia</code>, I will push to my fork at <code>kshyatt/julia</code> and open the pull request from there. All I have to do is tell <code>git</code> to push to the <code>kshyatt</code> remote I created at the start of this post.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~/projects/julia $ git push kshyatt ksh/sbtest
+Enumerating objects: 7, <span style="color:#66d9ef">done</span>.
+Counting objects: 100% <span style="color:#f92672">(</span>7/7<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+Delta compression using up to <span style="color:#ae81ff">8</span> threads
+Compressing objects: 100% <span style="color:#f92672">(</span>4/4<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+Writing objects: 100% <span style="color:#f92672">(</span>4/4<span style="color:#f92672">)</span>, <span style="color:#ae81ff">613</span> bytes | 306.00 KiB/s, <span style="color:#66d9ef">done</span>.
+Total <span style="color:#ae81ff">4</span> <span style="color:#f92672">(</span>delta 3<span style="color:#f92672">)</span>, reused <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>delta 0<span style="color:#f92672">)</span>
+remote: Resolving deltas: 100% <span style="color:#f92672">(</span>3/3<span style="color:#f92672">)</span>, completed with <span style="color:#ae81ff">3</span> local objects.
 remote: 
-remote: Create a pull request for 'ksh/sbtest' on GitHub by visiting:
+remote: Create a pull request <span style="color:#66d9ef">for</span> <span style="color:#e6db74">&#39;ksh/sbtest&#39;</span> on GitHub by visiting:
 remote:      https://github.com/kshyatt/julia/pull/new/ksh/sbtest
 remote: 
 To github.com:kshyatt/julia.git
- * [new branch]            ksh/sbtest -&gt; ksh/sbtest
-</code></pre>
-
-<p>Hooray! The push to my remote succeeded. The changes have been propagated &ldquo;upstream&rdquo; and can be used to open the pull request.</p>
-
+ * <span style="color:#f92672">[</span>new branch<span style="color:#f92672">]</span>            ksh/sbtest -&gt; ksh/sbtest
+</code></pre></div><p>Hooray! The push to my remote succeeded. The changes have been propagated &ldquo;upstream&rdquo; and can be used to open the pull request.</p>
 <p><em>Important Note</em>: Make sure to open the pull request from <code>JuliaLang/julia</code>, and <em>not</em> from your fork!</p>
-
-<p>To open the PR, I open up the <a href="https://github.com/JuliaLang/julia" target="_blank">main Julia repo</a> and lo and behold, GitHub has a suggestion for me! I sure do want to make this pull request, so I hit the green button that says &ldquo;Compare and Pull Request&rdquo;.</p>
-
-<p><img src="forkbutton.png" alt="Comparing with Julia" /></p>
-
+<p>To open the PR, I open up the <a href="https://github.com/JuliaLang/julia">main Julia repo</a> and lo and behold, GitHub has a suggestion for me! I sure do want to make this pull request, so I hit the green button that says &ldquo;Compare and Pull Request&rdquo;.</p>
+<p><img src="forkbutton.png" alt="Comparing with Julia"></p>
 <p>That leads to the comparison screen, where I can see my proposed changes and write some comments describing what they do.</p>
-
-<p><img src="openpr.png" alt="PR editing" /></p>
-
-<p>GitHub has also helpfully used my commit message to title the pull request, and I think it&rsquo;s quite a nice title so I will leave it be. This PR is pretty self-explanatory so I won&rsquo;t write a description in the big text box provided, but it doesn&rsquo;t hurt to do this if you think it might not be obvious what your code does. Don&rsquo;t worry about requesting a reviewer or adding labels if this is your first PR - a maintainer can handle that for you. If everything looks ok, press the &ldquo;Create pull request&rdquo; button. At this point, you can wait for some reviews and maintainers can give you detailed help if your PR needs some changes. It&rsquo;s very common for a PR to need some tweaks &ndash; it happens to me all the time! Although it can feel a little discouraging to have to keep making changes, maintainers are devoting the time to re-reviewing your PR because they think it&rsquo;s good and want it to be the best it can be (just like Julia as a whole). If you want to see the real-life PR that I created in making this post, it&rsquo;s right <a href="https://github.com/JuliaLang/julia/pull/30921" target="_blank">here</a>.</p>
-
+<p><img src="openpr.png" alt="PR editing"></p>
+<p>GitHub has also helpfully used my commit message to title the pull request, and I think it's quite a nice title so I will leave it be. This PR is pretty self-explanatory so I won't write a description in the big text box provided, but it doesn't hurt to do this if you think it might not be obvious what your code does. Don't worry about requesting a reviewer or adding labels if this is your first PR - a maintainer can handle that for you. If everything looks ok, press the &ldquo;Create pull request&rdquo; button. At this point, you can wait for some reviews and maintainers can give you detailed help if your PR needs some changes. It's very common for a PR to need some tweaks &ndash; it happens to me all the time! Although it can feel a little discouraging to have to keep making changes, maintainers are devoting the time to re-reviewing your PR because they think it's good and want it to be the best it can be (just like Julia as a whole). If you want to see the real-life PR that I created in making this post, it's right <a href="https://github.com/JuliaLang/julia/pull/30921">here</a>.</p>
 <p>Less than half a minute after I opened the pull request, super speedy reviewer Matt Bauman thought it was alright to merge it.</p>
-
-<p><img src="review.png" alt="Matt attack" /></p>
-
-<p>Now we just had to wait for the continuous integration (CI) servers to run the tests. There are CI servers for Windows, Linux, macOS, ARM, and freeBSD. If &ldquo;the lights turn green&rdquo; (all tests passed), and someone has approved the PR, it should be merged very soon. If 24 hours have passed and it hasn&rsquo;t been merged, feel free to ping the person who approved the PR and ask them if they can merge it for you. Sometimes these things fall by the wayside. Even if CI fails, it may be an incidental failure unrelated to your changes. If it is related, someone will be happy to help you figure out what the problem is, or you can dig through the logs yourself to try to figure it out. If no one reviews your PR after a day or two, you can post a comment on the PR asking for review, or come onto Slack and bug us about it.</p>
+<p><img src="review.png" alt="Matt attack"></p>
+<p>Now we just had to wait for the continuous integration (CI) servers to run the tests. There are CI servers for Windows, Linux, macOS, ARM, and freeBSD. If &ldquo;the lights turn green&rdquo; (all tests passed), and someone has approved the PR, it should be merged very soon. If 24 hours have passed and it hasn't been merged, feel free to ping the person who approved the PR and ask them if they can merge it for you. Sometimes these things fall by the wayside. Even if CI fails, it may be an incidental failure unrelated to your changes. If it is related, someone will be happy to help you figure out what the problem is, or you can dig through the logs yourself to try to figure it out. If no one reviews your PR after a day or two, you can post a comment on the PR asking for review, or come onto Slack and bug us about it.</p>
 
     </div>
 
@@ -931,7 +833,7 @@ To github.com:kshyatt/julia.git
     <div class="media-body">
       <h5 class="card-title"><a href="https://kshyatt.github.io/">Katharine Hyatt</a></h5>
       <h6 class="card-subtitle">Postdoctoral Scholar</h6>
-      <p class="card-text">My research focuses on developing new numerical methods to understand 2D correlated electronic systems, and finding interesting applications in condensed matter physics for these methods. I also moonlight as a sometime <a href="https://julialang.org" target="_blank">Julia language</a> and package developer.</p>
+      <p class="card-text">My research focuses on developing new numerical methods to understand 2D correlated electronic systems, and finding interesting applications in condensed matter physics for these methods. I also moonlight as a sometime <a href="https://julialang.org">Julia language</a> and package developer.</p>
       <ul class="network-icon" aria-hidden="true">
   
     
@@ -1118,7 +1020,7 @@ To github.com:kshyatt/julia.git
   
 
   <p class="powered-by">
-    &copy; 2019 &middot; 
+    © 2019 &middot; 
 
     Powered by the
     <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for

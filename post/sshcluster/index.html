@@ -28,7 +28,7 @@
   
     
   
-  <meta name="description" content="A Journey Through Laziness Quite often, I&rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).
+  <meta name="description" content="A Journey Through Laziness Quite often, I&#39;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).
 This is kind of a pain, so I tried out using ClusterManagers.">
 
   
@@ -82,7 +82,7 @@ This is kind of a pain, so I tried out using ClusterManagers.">
   
   
   
-  <link rel="stylesheet" href="/css/academic.min.1884ccbe79662c38d99b291260b58a24.css">
+  <link rel="stylesheet" href="/css/academic.min.7e979ed716defd683dbcd19db381e87f.css">
 
   
 
@@ -115,7 +115,7 @@ This is kind of a pain, so I tried out using ClusterManagers.">
   <meta property="og:site_name" content="Katharine Hyatt">
   <meta property="og:url" content="https://kshyatt.github.io/post/sshcluster/">
   <meta property="og:title" content="Running Cluster Jobs Remotely  | Katharine Hyatt">
-  <meta property="og:description" content="A Journey Through Laziness Quite often, I&rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).
+  <meta property="og:description" content="A Journey Through Laziness Quite often, I&#39;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).
 This is kind of a pain, so I tried out using ClusterManagers."><meta property="og:image" content="https://kshyatt.github.io/img/icon-192.png">
   <meta property="twitter:image" content="https://kshyatt.github.io/img/icon-192.png"><meta property="og:locale" content="en-us">
   
@@ -168,7 +168,7 @@ This is kind of a pain, so I tried out using ClusterManagers."><meta property="o
       "url": "https://kshyatt.github.io/img/icon-512.png"
     }
   },
-  "description": "A Journey Through Laziness Quite often, I\u0026rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).\nThis is kind of a pain, so I tried out using ClusterManagers."
+  "description": "A Journey Through Laziness Quite often, I'm working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).\nThis is kind of a pain, so I tried out using ClusterManagers."
 }
 </script>
 
@@ -608,77 +608,55 @@ This is kind of a pain, so I tried out using ClusterManagers."><meta property="o
   <div class="article-container">
 
     <div class="article-style">
-      
-
-<h2 id="a-journey-through-laziness">A Journey Through Laziness</h2>
-
-<p>Quite often, I&rsquo;m working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).</p>
-
-<p>This is kind of a pain, so I tried out using <a href="https://github.com/JuliaParallel/ClusterManagers.jl" target="_blank">ClusterManagers.jl</a> and julia&rsquo;s native <code>addprocs</code> and remote worker functionality to automate this a bit.</p>
-
+      <h2 id="a-journey-through-laziness">A Journey Through Laziness</h2>
+<p>Quite often, I'm working at my desktop in my campus office. The compute cluster on campus does not allow me to SSH directly to nodes or to spawn jobs, so usually you SSH into the head node and queue the jobs (which may be julia jobs, if I want to run some fancy parallel Julia code).</p>
+<p>This is kind of a pain, so I tried out using <a href="https://github.com/JuliaParallel/ClusterManagers.jl">ClusterManagers.jl</a> and julia's native <code>addprocs</code> and remote worker functionality to automate this a bit.</p>
 <p>I have key-based login set up from <code>desktop</code> to <code>cluster</code> (the head node), and from <code>cluster</code> to its worker nodes.
-Let&rsquo;s call my script <code>my_bad_science.jl</code> (I read somewhere that just like in the code itself, your writing about the code should contain
+Let's call my script <code>my_bad_science.jl</code> (I read somewhere that just like in the code itself, your writing about the code should contain
 descriptive names).</p>
-
 <p>First, I wanted to open a REPL on the desktop (I could make this a script too, of course). All the below examples are julia 0.5.0.
 Then I opened an SSH tunnel to the cluster:</p>
-
-<pre><code class="language-julia">julia&gt; addprocs([(&quot;cluster_hostname&quot;,1)], tunnel=true, max_parallel=1, exename=&quot;/home/kshyatt/julia/v0.5/julia&quot;, sshflags=&quot;-vv&quot;)
-</code></pre>
-
-<p>I passed <code>-vv</code> (verbose) to SSH because otherwise the Julia worker tends to time out. <code>exename</code> is there to tell julia that it&rsquo;s not installed in the same place on the cluster as it is on my desktop.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia">julia<span style="color:#f92672"></span><span style="color:#f92672">&gt;</span> addprocs<span style="color:#f92672"></span>([(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">c</span><span style="color:#e6db74">l</span><span style="color:#e6db74">u</span><span style="color:#e6db74">s</span><span style="color:#e6db74">t</span><span style="color:#e6db74">e</span><span style="color:#e6db74">r</span><span style="color:#e6db74">_</span><span style="color:#e6db74">h</span><span style="color:#e6db74">o</span><span style="color:#e6db74">s</span><span style="color:#e6db74">t</span><span style="color:#e6db74">n</span><span style="color:#e6db74">a</span><span style="color:#e6db74">m</span><span style="color:#e6db74">e</span><span style="color:#e6db74">&#34;</span>,<span style="color:#ae81ff">1</span>)], tunnel<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#66d9ef">true</span>, max_parallel<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, exename<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">/</span><span style="color:#e6db74">h</span><span style="color:#e6db74">o</span><span style="color:#e6db74">m</span><span style="color:#e6db74">e</span><span style="color:#e6db74">/</span><span style="color:#e6db74">k</span><span style="color:#e6db74">s</span><span style="color:#e6db74">h</span><span style="color:#e6db74">y</span><span style="color:#e6db74">a</span><span style="color:#e6db74">t</span><span style="color:#e6db74">t</span><span style="color:#e6db74">/</span><span style="color:#e6db74">j</span><span style="color:#e6db74">u</span><span style="color:#e6db74">l</span><span style="color:#e6db74">i</span><span style="color:#e6db74">a</span><span style="color:#e6db74">/</span><span style="color:#e6db74">v</span><span style="color:#e6db74">0</span><span style="color:#e6db74">.</span><span style="color:#e6db74">5</span><span style="color:#e6db74">/</span><span style="color:#e6db74">j</span><span style="color:#e6db74">u</span><span style="color:#e6db74">l</span><span style="color:#e6db74">i</span><span style="color:#e6db74">a</span><span style="color:#e6db74">&#34;</span>, sshflags<span style="color:#f92672"></span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">-</span><span style="color:#e6db74">v</span><span style="color:#e6db74">v</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>I passed <code>-vv</code> (verbose) to SSH because otherwise the Julia worker tends to time out. <code>exename</code> is there to tell julia that it's not installed in the same place on the cluster as it is on my desktop.</p>
 <p>The output looks like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#75715e"># a bunch of verbose SSH chat happens here</span>
+<span style="color:#75715e"># removed to protect the guilty/innocent</span>
+<span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>element<span style="color:#f92672"></span> <span style="color:#66d9ef">Array</span>{<span style="color:#66d9ef">Int64</span>,<span style="color:#ae81ff">1</span>}<span style="color:#f92672">:</span>
+ <span style="color:#ae81ff">2</span>
+</code></pre></div><p>Just like any other call to <code>addprocs</code>. Perfect! Now, on the remote head node, which is my worker, I will pull in my script:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#75715e"># my bad science script</span>
 
-<pre><code class="language-julia"># a bunch of verbose SSH chat happens here
-# removed to protect the guilty/innocent
-1-element Array{Int64,1}:
- 2
-</code></pre>
+<span style="color:#66d9ef">using</span> ClusterManagers<span style="color:#f92672"></span><span style="color:#f92672">.</span>jl<span style="color:#f92672"></span>
 
-<p>Just like any other call to <code>addprocs</code>. Perfect! Now, on the remote head node, which is my worker, I will pull in my script:</p>
+<span style="color:#75715e"># our cluster uses PBS so</span>
+ClusterManagers<span style="color:#f92672"></span><span style="color:#f92672">.</span>addprocs_pbs<span style="color:#f92672"></span>(<span style="color:#ae81ff">12</span>)
 
-<pre><code class="language-julia"># my bad science script
+<span style="color:#75715e"># now that the workers will have been loaded</span>
+<span style="color:#75715e"># I need to import the packages I need to do</span>
+<span style="color:#75715e"># the cool stuff</span>
 
-using ClusterManagers.jl
+<span style="color:#66d9ef">using</span> Distributions<span style="color:#f92672"></span>
+<span style="color:#66d9ef">using</span> research_utils<span style="color:#f92672"></span> <span style="color:#75715e"># a private package of mine</span>
 
-# our cluster uses PBS so
-ClusterManagers.addprocs_pbs(12)
+<span style="color:#75715e">#fill up some parameter arrays</span>
+Ls<span style="color:#f92672"></span> <span style="color:#f92672">=</span> collect<span style="color:#f92672"></span>(<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">20</span>)
+w<span style="color:#f92672"></span>  <span style="color:#f92672">=</span> <span style="color:#ae81ff">10.</span> <span style="color:#75715e"># disorder strength</span>
+d<span style="color:#f92672"></span>  <span style="color:#f92672">=</span> Uniform<span style="color:#f92672"></span>(<span style="color:#f92672">-</span>w<span style="color:#f92672"></span>, w<span style="color:#f92672"></span>)
+disorder<span style="color:#f92672"></span> <span style="color:#f92672">=</span> [rand<span style="color:#f92672"></span>(d<span style="color:#f92672"></span>, L<span style="color:#f92672"></span>) <span style="color:#66d9ef">for</span> L<span style="color:#f92672"></span> <span style="color:#66d9ef">in</span> Ls<span style="color:#f92672"></span>]
 
-# now that the workers will have been loaded
-# I need to import the packages I need to do
-# the cool stuff
+Hs<span style="color:#f92672"></span> <span style="color:#f92672">=</span> pmap<span style="color:#f92672"></span>(makeHamiltonians<span style="color:#f92672"></span>, Ls<span style="color:#f92672"></span>, disorder<span style="color:#f92672"></span>)   
 
-using Distributions
-using research_utils # a private package of mine
-
-#fill up some parameter arrays
-Ls = collect(8:2:20)
-w  = 10. # disorder strength
-d  = Uniform(-w, w)
-disorder = [rand(d, L) for L in Ls]
-
-Hs = pmap(makeHamiltonians, Ls, disorder)   
-
-# some code down here to write out the
-# Hamiltonians to HDF5 - it's gross :(
-</code></pre>
-
-<p>What this will do is spawn a 12 worker job on the cluster, do the work, and write the results <em>on the cluster</em>. I could also have this script return something to the master worker on my desktop, if I wanted (perhaps timing information?).</p>
-
+<span style="color:#75715e"># some code down here to write out the</span>
+<span style="color:#75715e"># Hamiltonians to HDF5 - it&#39;s gross :(</span>
+</code></pre></div><p>What this will do is spawn a 12 worker job on the cluster, do the work, and write the results <em>on the cluster</em>. I could also have this script return something to the master worker on my desktop, if I wanted (perhaps timing information?).</p>
 <p>Finally, on my desktop REPL, all I need to do is:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia">julia<span style="color:#f92672"></span><span style="color:#f92672">&gt;</span> rr<span style="color:#f92672"></span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">@spawnat</span><span style="color:#f92672"></span> <span style="color:#ae81ff">2</span> include<span style="color:#f92672"></span>(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">m</span><span style="color:#e6db74">y</span><span style="color:#e6db74">_</span><span style="color:#e6db74">b</span><span style="color:#e6db74">a</span><span style="color:#e6db74">d</span><span style="color:#e6db74">_</span><span style="color:#e6db74">s</span><span style="color:#e6db74">c</span><span style="color:#e6db74">i</span><span style="color:#e6db74">e</span><span style="color:#e6db74">n</span><span style="color:#e6db74">c</span><span style="color:#e6db74">e</span><span style="color:#e6db74">.</span><span style="color:#e6db74">j</span><span style="color:#e6db74">l</span><span style="color:#e6db74">&#34;</span>)
+Future<span style="color:#f92672"></span>(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">5</span>,<span style="color:#66d9ef">Nullable</span>{<span style="color:#66d9ef">Any</span>}())
 
-<pre><code class="language-julia">julia&gt; rr = @spawnat 2 include(&quot;my_bad_science.jl&quot;)
-Future(2,1,5,Nullable{Any}())
-
-julia&gt; wait(rr)
-</code></pre>
-
-<p><code>@spawnat</code> returns a <code>Future</code>, and we need to <code>wait</code> for it to be finished. Or, we could <code>schedule</code> it and merrily go on our way, periodically checking to see if <code>rr</code> is finished.</p>
-
-<p>One could also imagine a fancier version of this, plotting data as it comes in from the cluster head node on one&rsquo;s desktop (so we could use something a bit prettier than <code>UnicodePlots.jl</code>). For that you might need a <code>RemoteChannel</code>.</p>
-
-<p>This is pretty short but it dramatically improved my lazing about, watching-job-results-come-in workflow. I hope it&rsquo;s useful to someone else!</p>
+julia<span style="color:#f92672"></span><span style="color:#f92672">&gt;</span> wait<span style="color:#f92672"></span>(rr<span style="color:#f92672"></span>)
+</code></pre></div><p><code>@spawnat</code> returns a <code>Future</code>, and we need to <code>wait</code> for it to be finished. Or, we could <code>schedule</code> it and merrily go on our way, periodically checking to see if <code>rr</code> is finished.</p>
+<p>One could also imagine a fancier version of this, plotting data as it comes in from the cluster head node on one's desktop (so we could use something a bit prettier than <code>UnicodePlots.jl</code>). For that you might need a <code>RemoteChannel</code>.</p>
+<p>This is pretty short but it dramatically improved my lazing about, watching-job-results-come-in workflow. I hope it's useful to someone else!</p>
 
     </div>
 
@@ -727,7 +705,7 @@ julia&gt; wait(rr)
     <div class="media-body">
       <h5 class="card-title"><a href="https://kshyatt.github.io/">Katharine Hyatt</a></h5>
       <h6 class="card-subtitle">Postdoctoral Scholar</h6>
-      <p class="card-text">My research focuses on developing new numerical methods to understand 2D correlated electronic systems, and finding interesting applications in condensed matter physics for these methods. I also moonlight as a sometime <a href="https://julialang.org" target="_blank">Julia language</a> and package developer.</p>
+      <p class="card-text">My research focuses on developing new numerical methods to understand 2D correlated electronic systems, and finding interesting applications in condensed matter physics for these methods. I also moonlight as a sometime <a href="https://julialang.org">Julia language</a> and package developer.</p>
       <ul class="network-icon" aria-hidden="true">
   
     
@@ -914,7 +892,7 @@ julia&gt; wait(rr)
   
 
   <p class="powered-by">
-    &copy; 2019 &middot; 
+    © 2019 &middot; 
 
     Powered by the
     <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
