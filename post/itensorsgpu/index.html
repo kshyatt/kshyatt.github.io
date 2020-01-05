@@ -28,7 +28,7 @@
   
     
   
-  <meta name="description" content="Introduction/Roadmap Last year at JuliaCon, Matt Fishman and I gave a talk about our ongoing effort to port the ITensor code from C&#43;&#43; to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based contraction backend and were looking forward to some significant speedups. We ended up completing this integration, and saw runtimes for representative parameters go from one week to one hour. In this post I&#39;m going to go over:">
+  <meta name="description" content="Introduction/Roadmap Last year at JuliaCon, Matt Fishman and I gave a talk about our ongoing effort to port the ITensor code from C&#43;&#43; to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based tensor contraction backend and were looking forward to some significant speedups. We ended up completing this integration, and saw runtimes for representative parameters go from one week to one hour. In this post I&#39;m going to go over:">
 
   
   <link rel="alternate" hreflang="en-us" href="https://kshyatt.github.io/post/itensorsgpu/">
@@ -114,13 +114,13 @@
   <meta property="og:site_name" content="Katharine Hyatt">
   <meta property="og:url" content="https://kshyatt.github.io/post/itensorsgpu/">
   <meta property="og:title" content="Accelerating Tensor Computations in Julia with the GPU | Katharine Hyatt">
-  <meta property="og:description" content="Introduction/Roadmap Last year at JuliaCon, Matt Fishman and I gave a talk about our ongoing effort to port the ITensor code from C&#43;&#43; to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based contraction backend and were looking forward to some significant speedups. We ended up completing this integration, and saw runtimes for representative parameters go from one week to one hour. In this post I&#39;m going to go over:"><meta property="og:image" content="https://kshyatt.github.io/img/icon-192.png">
+  <meta property="og:description" content="Introduction/Roadmap Last year at JuliaCon, Matt Fishman and I gave a talk about our ongoing effort to port the ITensor code from C&#43;&#43; to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based tensor contraction backend and were looking forward to some significant speedups. We ended up completing this integration, and saw runtimes for representative parameters go from one week to one hour. In this post I&#39;m going to go over:"><meta property="og:image" content="https://kshyatt.github.io/img/icon-192.png">
   <meta property="twitter:image" content="https://kshyatt.github.io/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
       <meta property="article:published_time" content="2019-12-30T13:45:19-05:00">
     
-    <meta property="article:modified_time" content="2020-01-02T14:58:22-05:00">
+    <meta property="article:modified_time" content="2020-01-05T14:19:03-05:00">
   
 
   
@@ -151,7 +151,7 @@
   "headline": "Accelerating Tensor Computations in Julia with the GPU",
   
   "datePublished": "2019-12-30T13:45:19-05:00",
-  "dateModified": "2020-01-02T14:58:22-05:00",
+  "dateModified": "2020-01-05T14:19:03-05:00",
   
   "author": {
     "@type": "Person",
@@ -166,7 +166,7 @@
       "url": "https://kshyatt.github.io/img/icon-512.png"
     }
   },
-  "description": "Introduction/Roadmap Last year at JuliaCon, Matt Fishman and I gave a talk about our ongoing effort to port the ITensor code from C++ to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based contraction backend and were looking forward to some significant speedups. We ended up completing this integration, and saw runtimes for representative parameters go from one week to one hour. In this post I'm going to go over:"
+  "description": "Introduction/Roadmap Last year at JuliaCon, Matt Fishman and I gave a talk about our ongoing effort to port the ITensor code from C++ to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based tensor contraction backend and were looking forward to some significant speedups. We ended up completing this integration, and saw runtimes for representative parameters go from one week to one hour. In this post I'm going to go over:"
 }
 </script>
 
@@ -474,7 +474,7 @@
           Last updated on
       
     
-    Jan 2, 2020
+    Jan 5, 2020
   </span>
   
 
@@ -483,7 +483,7 @@
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    19 min read
+    20 min read
   </span>
   
 
@@ -609,7 +609,7 @@
 
     <div class="article-style">
       <h1 id="introductionroadmap">Introduction/Roadmap</h1>
-<p>Last year at JuliaCon, Matt Fishman and I gave a <a href="https://www.youtube.com/watch?v=A2ypJkA26co">talk</a> about our ongoing effort to port the <a href="http://itensor.org">ITensor</a> code from C++ to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based contraction backend and were looking forward to some significant speedups. We ended up completing this integration, and saw runtimes for representative parameters go from one week to one hour. In this post I'm going to go over:</p>
+<p>Last year at JuliaCon, Matt Fishman and I gave a <a href="https://www.youtube.com/watch?v=A2ypJkA26co">talk</a> about our ongoing effort to port the <a href="http://itensor.org">ITensor</a> code from C++ to Julia. At the time, I mentioned that we had begun trying to integrate a GPU-based tensor contraction backend and were looking forward to some significant speedups. We ended up completing this integration, and saw runtimes for representative parameters go from one week to one hour. In this post I'm going to go over:</p>
 <ul>
 <li>The physics problem we were writing code to solve</li>
 <li>Why the GPU is a good candidate to accelerate our simulations to solve this problem</li>
@@ -620,8 +620,8 @@
 <h1 id="what-is-itensor">What is ITensor</h1>
 <p>To understand why we thought this would be fruitful, and some performance traps we could already anticipate before writing a single line of GPU code, you have to understand a bit about the problem we're trying to solve.
 Tensor network algorithms are a very active area of research at the intersection of condensed matter physics, high energy physics, quantum information, and computer science. DMRG, which is the most successful numerical method for condensed matter systems in 1D, wasn't originally formulated as a tensor network algorithm, but &ldquo;tensor network speak&rdquo; turns out to be a natural language with which to discuss DMRG and its descendants. (If you're not sure what it's meant to solve, imagine a long chain of quantum objects, each with a fretful relationship with their neighbours. Will they overcome their differences and work together to form a magnet, or continue arguing with each other and fail to come to a consensus? DMRG is an efficient way to answer this question.) All this is to say that there's this class of algorithms physicists (and increasingly computer scientists) are interested in and they work well.</p>
-<p>The driving idea of a tensor network algorithm is to take some high-dimensional optimization problem (solving for groundstates of quantum many body systems is an example of this, since the full dimension of the system grows exponentially in the number of constituent particles) and compress it down to a much lower dimensional problem while retaining most of the important features. We do this by taking a <code>d^N</code> length vector, where <code>d</code> is the number of degrees of freedom of each constituent, and <code>N</code> is the number of constituents, and breaking it down into a set of multidimensionsal tensors, the number of which hopefully scales like <code>N</code> or at least much less than exponentially.</p>
-<p>If you've studied linear algebra before, you've seen some simple examples of tensors: scalars, vectors, and matrices. We say a scalar is a 0-rank tensor, a vector a 1-rank tensor (since it has one index), a matrix a 2-rank tensor (since it has two indices), and then there are higher rank tensors, with three or more indices. When we multiply two matrices <code>A_ij</code> and <code>B_jk</code> together to get <code>C_ik</code>, we're performing a &ldquo;tensor contratction&rdquo;. Similarly, if we had high-rank tensors <code>A_ijkl</code> and <code>B_lmin</code>, we could contract them to get <code>C_jkmn</code>.</p>
+<p>The driving idea of a tensor network algorithm is to take some high-dimensional optimization problem (solving for groundstates (eigenvectors corresponding to the minimal eigenvalue) of quantum many body systems is an example of this, since the full dimension of the system grows exponentially in the number of constituent particles) and compress it down to a much lower dimensional problem while retaining most of the important features. We do this by taking a <code>d^N</code> length vector, where <code>d</code> is the number of degrees of freedom of each constituent, and <code>N</code> is the number of constituents, and breaking it down into a set of multidimensionsal tensors, the number of which hopefully scales like <code>N</code> or at least much less than exponentially.</p>
+<p>If you've studied linear algebra before, you've seen some simple examples of tensors: scalars, vectors, and matrices. We say a scalar is a 0-rank tensor, a vector a 1-rank tensor (since it has one index), a matrix a 2-rank tensor (since it has two indices), and then there are higher rank tensors, with three or more indices. When we multiply two matrices <code>A_ij</code> and <code>B_jk</code> together to get <code>C_ik</code>, we're performing a &ldquo;tensor contratction&rdquo;, and we compute <code>C_ik</code> by ssumming over indices <code>i</code> and <code>j</code>. Similarly, if we had high-rank tensors <code>A_ijkl</code> and <code>B_lmin</code>, we could contract them to get <code>C_jkmn</code> - again, by summing over indices <code>i</code> and <code>l</code>.</p>
 <p>Most tensor network algorithms are based on performing this decomposition and then iteratively improving it towards a target vector. Usually in physics that target is a physical state, but tensor networks have also been used for machine learning tasks and can represent quantum error correcting codes as well.</p>
 <p>ITensor is a C++ package dedicated to providing both high level algorithms using tensor networks, like DMRG, and the low-level building blocks to create your own. ITensor makes it easy to create tensors out of indices, perform linear algebra factorizations (such as QR or SVD) on them, without forcing the user to worry about index ordering. You can read the ITensor tutorials for more information or watch our talk.</p>
 <h1 id="why-use-the-gpu">Why use the GPU</h1>
@@ -726,7 +726,7 @@ But of course, the big problem we wanted to solve was contractions. Because the 
 </code></pre></div><p>I chose to copy the CPU storage to the device before the addition or contraction, hoping that this would occur rarely and that the performance gain in the main operation would offset the memory transfer time. Ideally this situation should never occur: we absolutely want to minimize memory transfers. However, if a user makes a mistake and forgets a <code>cuITensor(A)</code>, their code won't error out. In fact, in the latest version of <a href="https://github.com/ITensor/ITensorsGPU.jl"><code>ITensorsGPU.jl</code></a> this dubious feature is disallowed, since in my code it was always the result of forgetting to initialize something on the GPU which should have been.</p>
 <p>This was enough to get the barebones GPU support working. But I was still worried about the issue with the permutations, especially because the week-long simulations are those which are most memory intensive, and I was worried about running out of space on the device. Could there be a better solution?</p>
 <h1 id="cutensor-and-the-story-of-how-computers-made-my-labour-useless"><code>CUTENSOR</code> and the story of how computers made my labour useless</h1>
-<p>Around this time we became aware of <a href="https://docs.nvidia.com/cuda/cutensor/index.html">CUTENSOR</a>, an NVIDIA library designed exactly for our use case: adding and contracting high rank tensors with indices in arbitrary order. However, this library was, of course, written in C. Luckily Julia makes it pretty easy to wrap C APIs, and we got started doing so in <a href="https://github.com/JuliaGPU/CuArrays.jl/pull/330">this epic PR</a> to <code>CuArrays.jl</code>. <code>CuArrays.jl</code> already provides nice high- and low-level wrappers of CUDA C libraries in Julia, not only for dense or sparse linear algebra but also for random number generation and neural network primitives. So adding a multi-dimensional array library was a natural fit. During the process of getting these wrappers into a state fit for a public facing library, Tim created some very nice scripts which automate the process of creating Julia wrappers for C functions, <a href="https://github.com/JuliaGPU/CuArrays.jl/pull/421">automating away</a> many hours of labour I had performed years ago to get the sparse linear algebra and solver libraries working. Sic transit gloria mundi, I guess (generating these wrappers was not a glorious process). Now it will be easy for us to integrate changes to the <code>CUTENSOR</code> API over time as more features are added.</p>
+<p>Around this time we became aware of <a href="https://docs.nvidia.com/cuda/cutensor/index.html">CUTENSOR</a>, an NVIDIA library designed exactly for our use case: adding and contracting high rank tensors with indices in arbitrary order. However, this library was, of course, written in C. Luckily Julia makes it pretty easy to wrap C APIs, and we got started doing so in <a href="https://github.com/JuliaGPU/CuArrays.jl/pull/330">this epic PR</a> to <code>CuArrays.jl</code>. <code>CuArrays.jl</code> already provides nice high- and low-level wrappers of CUDA C libraries in Julia, not only for dense or sparse linear algebra but also for random number generation and neural network primitives. So adding a multi-dimensional array library was a natural fit. During the process of getting these wrappers into a state fit for a public facing library, Tim Besard created some very nice scripts which automate the process of creating Julia wrappers for C functions, <a href="https://github.com/JuliaGPU/CuArrays.jl/pull/421">automating away</a> many hours of labour I had performed years ago to get the sparse linear algebra and solver libraries working. Sic transit gloria mundi, I guess (generating these wrappers was not a glorious process). Now it will be easy for us to integrate changes to the <code>CUTENSOR</code> API over time as more features are added.</p>
 <p><code>CUTENSOR</code>'s internals handle matching up elements for products and sums as part of the contraction process, so the permutations that <code>ITensors.jl</code> performs for a CPU-based <code>ITensor</code> are unnecessary. By overriding a few functions we're able to call the correct internal routines which feed through to <code>CUTENSOR</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-julia" data-lang="julia"><span style="color:#66d9ef">function</span> Base<span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#f92672">:</span><span style="color:#f92672">+</span>(B<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuDenseTensor<span style="color:#f92672"></span>, A<span style="color:#f92672"></span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>CuDenseTensor<span style="color:#f92672"></span>)
   opC<span style="color:#f92672"></span>  <span style="color:#f92672">=</span> CUTENSOR<span style="color:#f92672"></span><span style="color:#f92672">.</span>CUTENSOR_OP_IDENTITY<span style="color:#f92672"></span>
@@ -849,7 +849,8 @@ N<span style="color:#f92672"></span>      <span style="color:#f92672">=</span> s
 
 </figure>
 
-<p>And now I'm able to run simulations that used to take a week in an hour thanks to the GPU acceleration, with no loss of accuracy so far. We've had a big success using the GPU, and so far haven't run up against the device memory limit. Having a Julia code makes it easier to maintain and easier to reason about new code as it's written. We're looking forward to using this backend to accelerate other tensor network algorithms and make it quicker to test out new ideas.</p>
+<p>The <code>x</code>-axis in this figure is a little opaque - it refers to varying problem sizes we might want to simulate, specifically an <code>N</code> by <code>N</code> lattice with a maximum tensor interior dimension of <code>m</code> - thus, <code>N - m</code> in the labels.
+And now I'm able to run simulations that used to take a week in an hour thanks to the GPU acceleration, with no loss of accuracy so far. We've had a big success using the GPU, and so far haven't run up against the device memory limit. Having a Julia code makes it easier to maintain and easier to reason about new code as it's written. We're looking forward to using this backend to accelerate other tensor network algorithms and make it quicker to test out new ideas.</p>
 <h1 id="some-takeaways">Some Takeaways</h1>
 <ul>
 <li>The <code>CuArrays.jl</code> package makes it pretty easy and pleasant to integrate the GPU into your codebase. However, there are still some pain points (in the sparse linear algebra code especially) if someone is looking for a project to contribute to.</li>
